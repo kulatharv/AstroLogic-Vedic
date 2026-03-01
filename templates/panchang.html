@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AstroLogic | Panchang</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+body{
+  background: radial-gradient(circle at top,#06192d,#010812);
+  color:#fff;
+  font-family:"Segoe UI", sans-serif;
+}
+
+.main-header{
+  background:rgba(2,10,20,0.9);
+  backdrop-filter:blur(10px);
+}
+
+.navbar-brand{
+  color:#f5c16c !important;
+}
+
+.card-box{
+  background:rgba(255,255,255,0.05);
+  border-radius:15px;
+  padding:20px;
+  margin-bottom:20px;
+  border:1px solid rgba(255,255,255,0.05);
+}
+
+.highlight-box{
+  background:linear-gradient(135deg,#f5c16c,#d89b3c);
+  color:#000;
+  border-radius:15px;
+  padding:25px;
+}
+
+.progress{
+  height:8px;
+}
+/* HEADER */
+.main-header{
+  background:rgba(2,10,20,0.9);
+  backdrop-filter:blur(10px);
+  height:80px;
+}
+
+.navbar-brand{
+  color:#f5c16c !important;
+  font-weight:600;
+}
+
+.nav-link{
+  color:#cfcfcf !important;
+}
+
+.nav-link:hover,
+.nav-link.active{
+  color:#f5c16c !important;
+}
+
+/* BUTTONS */
+.btn-gold{
+  background:linear-gradient(135deg,#f5c16c,#d89b3c);
+  border:none;
+  color:#000;
+}
+
+.btn-outline-gold{
+  border:1px solid #f5c16c;
+  color:#f5c16c;
+}
+
+.btn-outline-gold:hover{
+  background:#f5c16c;
+  color:#000;
+}
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<nav class="navbar navbar-expand-lg fixed-top main-header">
+  <div class="container">
+    <a class="navbar-brand" href="/">AstroLogic</a>
+
+    <div class="collapse navbar-collapse">
+      <ul class="navbar-nav mx-auto">
+        <li class="nav-item"><a class="nav-link " href="/">Home</a></li>
+        <li class="nav-item"><a class="nav-link active" href="/panchang">Panchang</a></li>
+        <li class="nav-item"><a class="nav-link" href="/kundali">Kundali</a></li>
+        <li class="nav-item"><a class="nav-link" href="/horoscope">Horoscope</a></li>
+        <li class="nav-item"><a class="nav-link" href="/prediction">Predictions</a></li>
+        <li class="nav-item"><a class="nav-link" href="/blogs">Blogs</a></li>
+        <li class="nav-item"><a class="nav-link" href="/about">About</a></li>
+      </ul>
+      <a href="/panchang" class="btn btn-gold btn-sm">Today’s Panchang</a>
+    </div>
+  </div>
+</nav>
+
+<div class="container mt-5">
+
+<h5 class="text-info text-center">TODAY'S COSMIC CALENDAR</h5>
+<h1 class="text-warning text-center">Daily Panchang</h1>
+
+<h6 id="liveTime" class="text-center text-secondary mt-2"></h6>
+
+<!-- CITY SELECTOR -->
+<div class="text-center mt-4">
+<select id="citySelect" class="form-select w-50 mx-auto">
+  <option>Pune</option>
+  <option>Mumbai</option>
+  <option>Delhi</option>
+  <option>Bangalore</option>
+</select>
+
+<button onclick="loadPanchang()" class="btn btn-warning mt-3">
+Load Panchang
+</button>
+</div>
+
+<!-- DATE -->
+<div class="highlight-box text-center mt-5">
+  <h6>Today</h6>
+  <h4 id="date"></h4>
+  <p id="moonPhase"></p>
+</div>
+
+<!-- MAIN GRID -->
+<div class="row mt-5">
+
+<div class="col-md-4">
+<div class="card-box">
+<h6>Tithi</h6>
+<h4 id="tithi"></h4>
+<div class="progress mt-2">
+  <div id="tithiBar" class="progress-bar bg-warning"></div>
+</div>
+<p id="tithiEnd" class="text-secondary mt-2"></p>
+</div>
+</div>
+
+<div class="col-md-4">
+<div class="card-box">
+<h6>Nakshatra</h6>
+<h4 id="nakshatra"></h4>
+<p id="nakshatraEnd" class="text-secondary"></p>
+</div>
+</div>
+
+<div class="col-md-4">
+<div class="card-box">
+<h6>Yoga</h6>
+<h4 id="yoga"></h4>
+<p id="yogaEnd" class="text-secondary"></p>
+</div>
+</div>
+
+<div class="col-md-4">
+<div class="card-box">
+<h6>Karana</h6>
+<h4 id="karana"></h4>
+<p id="karanaEnd" class="text-secondary"></p>
+</div>
+</div>
+
+<div class="col-md-4">
+<div class="card-box">
+<h6>Sunrise</h6>
+<h4 id="sunrise"></h4>
+</div>
+</div>
+
+<div class="col-md-4">
+<div class="card-box">
+<h6>Sunset</h6>
+<h4 id="sunset"></h4>
+</div>
+</div>
+
+</div>
+
+<!-- IN-AUSPICIOUS TIMINGS -->
+<h4 class="mt-5 text-info">Inauspicious Timings</h4>
+<div class="row mt-3">
+
+<div class="col-md-4">
+<div class="card-box">
+<h6>Rahu Kaal</h6>
+<h4 id="rahu"></h4>
+</div>
+</div>
+
+<div class="col-md-4">
+<div class="card-box">
+<h6>Yamaganda</h6>
+<h4 id="yamaganda"></h4>
+</div>
+</div>
+
+<div class="col-md-4">
+<div class="card-box">
+<h6>Gulika</h6>
+<h4 id="gulika"></h4>
+</div>
+</div>
+
+</div>
+
+<!-- AUSPICIOUS -->
+<h4 class="mt-5 text-success">Auspicious Timings</h4>
+<div class="row mt-3">
+
+<div class="col-md-6">
+<div class="card-box">
+<h6>Abhijit Muhurat</h6>
+<h4 id="abhijit"></h4>
+</div>
+</div>
+
+<div class="col-md-6">
+<div class="card-box">
+<h6>Brahma Muhurat</h6>
+<h4 id="brahma"></h4>
+</div>
+</div>
+
+</div>
+
+<!-- PLANETS -->
+<h4 class="mt-5 text-warning">Planetary Positions</h4>
+
+<div class="card-box mt-3">
+<table class="table table-dark table-striped">
+<thead>
+<tr>
+<th>Planet</th>
+<th>Sign</th>
+<th>Degree</th>
+<th>Nakshatra</th>
+</tr>
+</thead>
+<tbody id="planetTable"></tbody>
+</table>
+</div>
+
+</div>
+
+<script>
+
+// Live clock
+function updateTime(){
+  const now = new Date();
+  document.getElementById("liveTime").innerText =
+    now.toLocaleString();
+}
+setInterval(updateTime,1000);
+updateTime();
+
+
+async function loadPanchang(){
+
+  let city = document.getElementById("citySelect").value;
+
+  const res = await fetch("/api/panchang",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({city})
+  });
+
+  const data = await res.json();
+
+  console.log("API RESPONSE:", data);
+
+  // =========================
+  // HEADER
+  // =========================
+
+  document.getElementById("date").innerText = data.date;
+  document.getElementById("moonPhase").innerText = data.moon_phase;
+
+  // =========================
+  // MAIN PANCHANG
+  // =========================
+
+  document.getElementById("tithi").innerText = data.tithi;
+  document.getElementById("tithiBar").style.width =
+    data.tithi_progress + "%";
+  document.getElementById("tithiEnd").innerText =
+    data.tithi_end || "";
+
+  document.getElementById("nakshatra").innerText = data.nakshatra;
+  document.getElementById("nakshatraEnd").innerText =
+    data.nakshatra_end || "";
+
+  document.getElementById("yoga").innerText = data.yoga;
+  document.getElementById("yogaEnd").innerText =
+    data.yoga_end || "";
+
+  document.getElementById("karana").innerText = data.karana;
+  document.getElementById("karanaEnd").innerText =
+    data.karana_end || "";
+
+  // =========================
+  // SUN TIMES
+  // =========================
+
+  document.getElementById("sunrise").innerText = data.sunrise;
+  document.getElementById("sunset").innerText = data.sunset;
+
+  // =========================
+  // IN-AUSPICIOUS
+  // =========================
+
+  document.getElementById("rahu").innerText = data.rahu;
+  document.getElementById("yamaganda").innerText = data.yamaganda;
+  document.getElementById("gulika").innerText = data.gulika;
+
+  // =========================
+  // AUSPICIOUS
+  // =========================
+
+  document.getElementById("abhijit").innerText = data.abhijit;
+  document.getElementById("brahma").innerText = data.brahma;
+
+  // =========================
+  // PLANETS TABLE
+  // =========================
+
+  let table = "";
+
+  data.planets.forEach(p=>{
+    table += `
+      <tr>
+        <td>${p.name}</td>
+        <td>${p.sign}</td>
+        <td>${p.degree}</td>
+        <td>${p.nakshatra}</td>
+      </tr>
+    `;
+  });
+
+  document.getElementById("planetTable").innerHTML = table;
+}
+
+// Load default
+loadPanchang();
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AstroLogic | Daily Horoscope</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+body{
+  background: radial-gradient(circle at top, #06192d, #010812);
+  color:#fff;
+  font-family:"Segoe UI", sans-serif;
+}
+
+.main-header{
+  background:rgba(2,10,20,0.9);
+  backdrop-filter:blur(10px);
+  height:80px;
+}
+.navbar-brand{ color:#f5c16c !important; }
+.nav-link{ color:#cfcfcf !important; }
+.nav-link:hover,.nav-link.active{ color:#f5c16c !important; }
+
+.page{
+  padding-top:120px;
+  padding-bottom:80px;
+}
+.title{ color:#f5c16c; }
+.subtle{
+  color:#9bdcff;
+  font-size:13px;
+  text-transform:uppercase;
+  letter-spacing:1px;
+}
+
+.zodiac-strip{
+  display:flex;
+  overflow-x:auto;
+  gap:14px;
+  padding:12px 0;
+}
+.zodiac{
+  min-width:100px;
+  text-align:center;
+  padding:12px;
+  border-radius:14px;
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.08);
+  cursor:pointer;
+  transition:0.3s;
+}
+.zodiac.active{
+  background:linear-gradient(135deg,#f5c16c,#d89b3c);
+  color:#000;
+}
+.zodiac span{
+  display:block;
+  font-size:14px;
+  margin-top:6px;
+}
+
+.horoscope-box{
+  margin-top:40px;
+  max-width:800px;
+  margin-left:auto;
+  margin-right:auto;
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:18px;
+  padding:30px;
+  text-align:center;
+}
+.horo-title{ color:#f5c16c; }
+.horo-text{
+  font-size:18px;
+  opacity:0.95;
+  min-height:120px;
+}
+.swipe-hint{
+  font-size:13px;
+  color:#9bdcff;
+  margin-top:10px;
+}
+.loading{
+  opacity:0.6;
+  font-style:italic;
+}
+/* HEADER */
+.main-header{
+  background:rgba(2,10,20,0.9);
+  backdrop-filter:blur(10px);
+  height:80px;
+}
+
+.navbar-brand{
+  color:#f5c16c !important;
+  font-weight:600;
+}
+
+.nav-link{
+  color:#cfcfcf !important;
+}
+
+.nav-link:hover,
+.nav-link.active{
+  color:#f5c16c !important;
+}
+
+/* BUTTONS */
+.btn-gold{
+  background:linear-gradient(135deg,#f5c16c,#d89b3c);
+  border:none;
+  color:#000;
+}
+
+.btn-outline-gold{
+  border:1px solid #f5c16c;
+  color:#f5c16c;
+}
+
+.btn-outline-gold:hover{
+  background:#f5c16c;
+  color:#000;
+}
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<nav class="navbar navbar-expand-lg fixed-top main-header">
+  <div class="container">
+    <a class="navbar-brand" href="/">AstroLogic</a>
+
+    <div class="collapse navbar-collapse">
+      <ul class="navbar-nav mx-auto">
+        <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="/panchang">Panchang</a></li>
+        <li class="nav-item"><a class="nav-link" href="/kundali">Kundali</a></li>
+        <li class="nav-item"><a class="nav-link active" href="/horoscope">Horoscope</a></li>
+        <li class="nav-item"><a class="nav-link" href="/prediction">Predictions</a></li>
+        <li class="nav-item"><a class="nav-link" href="/blogs">Blogs</a></li>
+        <li class="nav-item"><a class="nav-link" href="/about">About</a></li>
+      </ul>
+      <a href="/panchang" class="btn btn-gold btn-sm">Today’s Panchang</a>
+    </div>
+  </div>
+</nav>
+
+<section class="page">
+<div class="container">
+
+  <div class="text-center mb-4">
+    <span class="subtle">Daily Zodiac Guidance</span>
+    <h1 class="display-6 title mt-2">Daily Horoscope</h1>
+    <p class="text-secondary">Select your zodiac sign to see today’s prediction</p>
+  </div>
+
+  <div class="zodiac-strip">
+    <div class="zodiac active" data-sign="Aries">♈<span>Aries</span></div>
+    <div class="zodiac" data-sign="Taurus">♉<span>Taurus</span></div>
+    <div class="zodiac" data-sign="Gemini">♊<span>Gemini</span></div>
+    <div class="zodiac" data-sign="Cancer">♋<span>Cancer</span></div>
+    <div class="zodiac" data-sign="Leo">♌<span>Leo</span></div>
+    <div class="zodiac" data-sign="Virgo">♍<span>Virgo</span></div>
+    <div class="zodiac" data-sign="Libra">♎<span>Libra</span></div>
+    <div class="zodiac" data-sign="Scorpio">♏<span>Scorpio</span></div>
+    <div class="zodiac" data-sign="Sagittarius">♐<span>Sagittarius</span></div>
+    <div class="zodiac" data-sign="Capricorn">♑<span>Capricorn</span></div>
+    <div class="zodiac" data-sign="Aquarius">♒<span>Aquarius</span></div>
+    <div class="zodiac" data-sign="Pisces">♓<span>Pisces</span></div>
+  </div>
+
+  <div class="horoscope-box" id="horoscopeBox">
+    <h3 class="horo-title" id="signTitle">Aries</h3>
+    <p class="horo-text loading" id="horoText">
+      Loading today's horoscope...
+    </p>
+    <div class="swipe-hint">← Swipe or click zodiac to change →</div>
+  </div>
+
+</div>
+</section>
+
+<script>
+const zodiacEls = document.querySelectorAll(".zodiac");
+const signTitle = document.getElementById("signTitle");
+const horoText = document.getElementById("horoText");
+
+// 🔥 CHANGE THIS TO YOUR DEPLOYED BACKEND URL
+const BASE_URL = "http://127.0.0.1:8000";
+
+async function fetchHoroscope(sign){
+  horoText.classList.add("loading");
+  horoText.innerText = "Fetching horoscope...";
+
+  try{
+    const res = await fetch(`${BASE_URL}/api/daily-horoscope/${sign}`);
+    const data = await res.json();
+
+    if(data.horoscope){
+      horoText.innerText = data.horoscope;
+    }else if(data.prediction){
+      horoText.innerText = data.prediction;
+    }else{
+      horoText.innerText = "No horoscope available today.";
+    }
+
+  }catch(err){
+    horoText.innerText = "Server error. Please try again later.";
+  }
+
+  horoText.classList.remove("loading");
+}
+
+zodiacEls.forEach(el=>{
+  el.addEventListener("click",()=>{
+    zodiacEls.forEach(z=>z.classList.remove("active"));
+    el.classList.add("active");
+
+    const sign = el.dataset.sign;
+    signTitle.innerText = sign;
+
+    fetchHoroscope(sign);
+  });
+});
+
+// Load Aries by default
+fetchHoroscope("Aries");
+
+/* Swipe Support */
+let startX = 0;
+document.getElementById("horoscopeBox").addEventListener("touchstart",e=>{
+  startX = e.touches[0].clientX;
+});
+document.getElementById("horoscopeBox").addEventListener("touchend",e=>{
+  let diff = e.changedTouches[0].clientX - startX;
+  let currentIndex = [...zodiacEls].findIndex(z=>z.classList.contains("active"));
+  if(diff > 50 && currentIndex > 0){
+    zodiacEls[currentIndex-1].click();
+  }
+  if(diff < -50 && currentIndex < zodiacEls.length-1){
+    zodiacEls[currentIndex+1].click();
+  }
+});
+</script>
+
+</body>
+</html>

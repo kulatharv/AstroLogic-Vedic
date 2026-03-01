@@ -1,0 +1,430 @@
+
+<!--
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>AstroLogic | Discover Your Pattern</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+body{
+background: radial-gradient(circle at top,#06192d,#010812);
+color:#fff;
+}
+.brand{color:#f5c16c;}
+.glass{
+background:rgba(255,255,255,0.04);
+border:1px solid rgba(255,255,255,0.08);
+border-radius:20px;
+padding:40px;
+}
+.hidden{display:none;}
+/* HEADER */
+.main-header{
+  background:rgba(2,10,20,0.9);
+  backdrop-filter:blur(10px);
+  height:80px;
+}
+
+.navbar-brand{
+  color:#f5c16c !important;
+  font-weight:600;
+}
+
+.nav-link{
+  color:#cfcfcf !important;
+}
+
+.nav-link:hover,
+.nav-link.active{
+  color:#f5c16c !important;
+}
+
+/* BUTTONS */
+.btn-gold{
+  background:linear-gradient(135deg,#f5c16c,#d89b3c);
+  border:none;
+  color:#000;
+}
+
+.btn-outline-gold{
+  border:1px solid #f5c16c;
+  color:#f5c16c;
+}
+
+.btn-outline-gold:hover{
+  background:#f5c16c;
+  color:#000;
+}
+</style>
+</head>
+
+<body>
+HEADER 
+<nav class="navbar navbar-expand-lg fixed-top main-header">
+  <div class="container">
+    <a class="navbar-brand" href="/">AstroLogic</a>
+
+    <div class="collapse navbar-collapse">
+      <ul class="navbar-nav mx-auto">
+        <li class="nav-item"><a class="nav-link active" href="/">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="/panchang">Panchang</a></li>
+        <li class="nav-item"><a class="nav-link" href="/kundali">Kundali</a></li>
+        <li class="nav-item"><a class="nav-link" href="/horoscope">Horoscope</a></li>
+        <li class="nav-item"><a class="nav-link" href="/prediction">Predictions</a></li>
+        <li class="nav-item"><a class="nav-link" href="/blogs">Blogs</a></li>
+        <li class="nav-item"><a class="nav-link" href="/about">About</a></li>
+      </ul>
+      <a href="/panchang" class="btn btn-gold btn-sm">Today’s Panchang</a>
+    </div>
+  </div>
+</nav>
+<div class="container" style="padding-top:120px">
+
+<div class="glass text-center">
+<h1 class="brand">Discover Your Pattern</h1>
+
+<div class="row mt-4">
+<div class="col-md-3"><input id="name" class="form-control" placeholder="Name"></div>
+<div class="col-md-3"><input id="date" type="date" class="form-control"></div>
+<div class="col-md-3"><input id="time" type="time" class="form-control"></div>
+<div class="col-md-3"><input id="place" class="form-control" placeholder="Birth Place"></div>
+</div>
+
+<button class="btn btn-warning mt-4" onclick="generate()">Reveal</button>
+</div>
+
+<div class="glass mt-5 hidden" id="result">
+<h3 class="brand">Your Core Energies</h3>
+<p><b>Rashi:</b> <span id="rashi"></span></p>
+<p><b>Nakshatra:</b> <span id="nakshatra"></span></p>
+<p><b>Dominant:</b> <span id="dominant"></span></p>
+<p id="final"></p>
+</div>
+
+</div>
+
+<script>
+async function generate(){
+const name=document.getElementById("name").value;
+const date=document.getElementById("date").value;
+const time=document.getElementById("time").value;
+const place=document.getElementById("place").value;
+
+const [year,month,day]=date.split("-");
+const [hour,minute]=time.split(":");
+
+const res=await fetch("/api/generate-chart",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({
+name,year:+year,month:+month,day:+day,
+hour:+hour,minute:+minute,place
+})
+});
+
+const data=await res.json();
+
+document.getElementById("rashi").innerText=data.rashi;
+document.getElementById("nakshatra").innerText=data.nakshatra;
+document.getElementById("dominant").innerText=data.dominant;
+document.getElementById("final").innerText=data.final_message;
+
+document.getElementById("result").classList.remove("hidden");
+}
+</script>
+
+</body>
+</html>
+
+--------------------------------
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>AI Prediction</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-dark text-light">
+
+<div class="container mt-5">
+  <h2 class="text-warning text-center">AI Astrology Prediction</h2>
+
+  <div class="row mt-4">
+    <div class="col-md-3"><input id="year" class="form-control" placeholder="Year"></div>
+    <div class="col-md-3"><input id="month" class="form-control" placeholder="Month"></div>
+    <div class="col-md-3"><input id="day" class="form-control" placeholder="Day"></div>
+    <div class="col-md-3"><input id="hour" class="form-control" placeholder="Hour"></div>
+  </div>
+
+  <div class="text-center mt-3">
+    <button onclick="generatePrediction()" class="btn btn-warning">Generate</button>
+  </div>
+
+  <div class="mt-5">
+    <h5 class="text-info">Marriage Interpretation</h5>
+    <div id="marriageResult"></div>
+  </div>
+
+  <div class="mt-4">
+    <h5 class="text-info">Career Interpretation</h5>
+    <div id="careerResult"></div>
+  </div>
+</div>
+
+<script>
+window.generatePrediction = async function() {
+
+  const year = document.getElementById("year").value;
+  const month = document.getElementById("month").value;
+  const day = document.getElementById("day").value;
+  const hour = document.getElementById("hour").value;
+
+  const response = await fetch("/api/prediction", {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({
+      year: parseInt(year),
+      month: parseInt(month),
+      day: parseInt(day),
+      hour: parseFloat(hour)
+    })
+  });
+
+  const data = await response.json();
+
+  document.getElementById("marriageResult").innerText =
+    data.marriage_prediction;
+
+  document.getElementById("careerResult").innerText =
+    data.career_prediction;
+};
+</script>
+
+</body>
+</html>
+
+-->
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>AstroLogic | AI Prediction</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+body{
+  background: radial-gradient(circle at top, #06192d, #010812);
+  color:#ffffff;
+  font-family:"Segoe UI", sans-serif;
+  overflow-x:hidden;
+}
+
+/* HEADER */
+.main-header{
+  background:rgba(2,10,20,0.9);
+  backdrop-filter:blur(10px);
+  height:80px;
+}
+
+.navbar-brand{
+  color:#f5c16c !important;
+  font-weight:600;
+}
+
+.nav-link{
+  color:#cfcfcf !important;
+}
+
+.nav-link:hover,
+.nav-link.active{
+  color:#f5c16c !important;
+}
+
+/* BUTTONS */
+.btn-gold{
+  background:linear-gradient(135deg,#f5c16c,#d89b3c);
+  border:none;
+  color:#000;
+}
+
+.btn-outline-gold{
+  border:1px solid #f5c16c;
+  color:#f5c16c;
+}
+
+.btn-outline-gold:hover{
+  background:#f5c16c;
+  color:#000;
+}
+
+/* TEXT */
+.brand{
+  color:#f5c16c;
+  letter-spacing:1px;
+}
+
+.subtle{
+  color:#9bdcff;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  font-size:13px;
+}
+
+/* GLASS CARD */
+.glass{
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:20px;
+  padding:40px;
+}
+
+/* INPUTS */
+.form-control{
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.1);
+  color:#fff;
+}
+
+.form-control:focus{
+  background:rgba(255,255,255,0.08);
+  color:#fff;
+  border-color:#f5c16c;
+  box-shadow:none;
+}
+
+.hidden{display:none;}
+
+.chat-box{
+  max-height:250px;
+  overflow-y:auto;
+}
+
+.form-control::placeholder {
+  color: #ffffff !important;
+  opacity: 1; /* ensures full white */
+}
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<nav class="navbar navbar-expand-lg fixed-top main-header">
+  <div class="container">
+    <a class="navbar-brand" href="/">AstroLogic</a>
+    <ul class="navbar-nav mx-auto">
+      <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+      <li class="nav-item"><a class="nav-link" href="/panchang">Panchang</a></li>
+      <li class="nav-item"><a class="nav-link" href="/kundali">Kundali</a></li>
+
+      <li class="nav-item"><a class="nav-link" href="/horoscope">Horoscope</a></li>
+      <li class="nav-item"><a class="nav-link active" href="/prediction">Predictions</a></li>
+      <li class="nav-item"><a class="nav-link" href="/blogs">Blogs</a></li>
+      <li class="nav-item"><a class="nav-link" href="/about">About</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="container" style="padding-top:140px; padding-bottom:80px;">
+
+  <!-- INPUT SECTION -->
+  <div class="glass text-center">
+    <span class="subtle">AI-Based Insight Engine</span>
+    <h2 class="brand mt-2">Discover Your Pattern</h2>
+
+    <div class="row mt-4 g-3">
+      <div class="col-md-3">
+        <input id="year" type="number" class="form-control" placeholder="Year">
+      </div>
+      <div class="col-md-3">
+        <input id="month" type="number" class="form-control" placeholder="Month">
+      </div>
+      <div class="col-md-3">
+        <input id="day" type="number" class="form-control" placeholder="Day">
+      </div>
+      <div class="col-md-3">
+        <input id="hour" type="number" step="0.01" class="form-control" placeholder="Hour (16.30)">
+      </div>
+    </div>
+
+    <button class="btn btn-gold mt-4 px-4" onclick="generatePrediction()">
+      Reveal Insights
+    </button>
+  </div>
+
+  <!-- RESULT SECTION -->
+  <div id="resultSection" class="hidden mt-5">
+
+    <div class="glass mb-4">
+      <h5 class="brand">Marriage Interpretation</h5>
+      <div id="marriageSummary" class="mt-3"></div>
+    </div>
+
+    <div class="glass mb-4">
+      <h5 class="brand">Career Interpretation</h5>
+      <div id="careerSummary" class="mt-3"></div>
+    </div>
+
+  </div>
+
+  <!-- CHAT SECTION -->
+  <div class="glass mt-4">
+    <h5 class="brand">AstroAI Chat</h5>
+    <div id="chatBox" class="chat-box mt-3"></div>
+
+    <div class="input-group mt-3">
+      <input type="text" id="chatInput" class="form-control" placeholder="Ask about health, marriage, career...">
+      <button class="btn btn-outline-gold" onclick="sendMessage()">Send</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+async function generatePrediction(){
+
+  const response = await fetch("/api/prediction",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({
+      year:parseInt(document.getElementById("year").value),
+      month:parseInt(document.getElementById("month").value),
+      day:parseInt(document.getElementById("day").value),
+      hour:parseFloat(document.getElementById("hour").value)
+    })
+  });
+
+  const data = await response.json();
+
+  document.getElementById("marriageSummary").innerText = data.marriage_prediction;
+  document.getElementById("careerSummary").innerText = data.career_prediction;
+
+  document.getElementById("resultSection").classList.remove("hidden");
+}
+
+async function sendMessage(){
+
+  const msg = document.getElementById("chatInput").value;
+
+  const response = await fetch("/api/chat",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({message:msg})
+  });
+
+  const data = await response.json();
+
+  document.getElementById("chatBox").innerHTML +=
+    `<p><b>You:</b> ${msg}</p>
+     <p style="color:#9bdcff;"><b>AstroAI:</b> ${data.reply}</p>`;
+
+  document.getElementById("chatInput").value="";
+}
+</script>
+
+</body>
+</html>

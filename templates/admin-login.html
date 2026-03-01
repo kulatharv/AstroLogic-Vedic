@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>AstroLogic | Admin Login</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+body{
+  background: radial-gradient(circle at top,#06192d,#010812);
+  color:#fff;
+  font-family:"Segoe UI", sans-serif;
+  height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.glass{
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:16px;
+  padding:40px;
+  width:400px;
+}
+input{
+  background:rgba(255,255,255,0.08) !important;
+  border:1px solid rgba(255,255,255,0.15) !important;
+  color:#fff !important;
+}
+input::placeholder{
+  color:#ccc;
+}
+.btn-gold{
+  background:linear-gradient(135deg,#f5c16c,#d89b3c);
+  border:none;
+  color:#000;
+}
+</style>
+</head>
+
+<body>
+
+<div class="glass">
+  <h4 class="text-warning mb-4 text-center">Admin Login</h4>
+
+  {% if error %}
+    <div class="alert alert-danger">{{ error }}</div>
+  {% endif %}
+
+  <form method="POST">
+    <div class="mb-3">
+      <input name="username" class="form-control" placeholder="Username" required>
+    </div>
+
+    <div class="mb-3">
+      <input name="password" type="password" class="form-control" placeholder="Password" required>
+    </div>
+
+    <button class="btn btn-gold w-100">Login</button>
+  </form>
+</div>
+
+</body>
+</html>

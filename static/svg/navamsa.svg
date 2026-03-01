@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="600" height="400" viewBox="0 0 600 400"
+     xmlns="http://www.w3.org/2000/svg">
+
+<style>
+  .border { stroke:black; stroke-width:2.5; fill:#e5c7a6; }
+  .line { stroke:black; stroke-width:2; }
+  .num { font-size:18px; font-family:Arial; font-weight:bold; fill:black; }
+</style>
+
+<!-- Background + Border -->
+<rect x="10" y="10" width="580" height="380" class="border"/>
+
+<!-- Outer diagonals -->
+<line x1="10" y1="10" x2="590" y2="390" class="line"/>
+<line x1="590" y1="10" x2="10" y2="390" class="line"/>
+
+<!-- Central diamond -->
+<polygon points="300,10 590,200 300,390 10,200"
+         class="line" fill="none"/>
+
+<!-- ================= HOUSE NUMBERS ================= -->
+
+<!-- Top Left -->
+<text x="120" y="70" class="num">2</text>   <!-- moved upward -->
+<text x="90" y="110" class="num">3</text>
+
+<!-- Top Center -->
+<text x="295" y="110" class="num">1</text>
+
+<!-- Top Right -->
+<text x="450" y="90" class="num">12</text>
+<text x="480" y="110" class="num">11</text>
+
+<!-- Center Left -->
+<text x="190" y="190" class="num">4</text>
+
+<!-- Center -->
+<text x="290" y="230" class="num">7</text>  <!-- moved downward -->
+
+<!-- Center Right -->
+<text x="360" y="190" class="num">10</text>
+
+<!-- Bottom Left -->
+<text x="120" y="300" class="num">5</text>
+<text x="150" y="320" class="num">6</text>
+
+<!-- Bottom Right -->
+<text x="450" y="320" class="num">8</text>  <!-- moved downward -->
+<text x="480" y="280" class="num">9</text>
+
+</svg>

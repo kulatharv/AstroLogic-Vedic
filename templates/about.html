@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AstroLogic | About</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+body{
+  background: radial-gradient(circle at top, #06192d, #010812);
+  color:#ffffff;
+  font-family:"Segoe UI", sans-serif;
+}
+
+/* HEADER */
+.main-header{
+  background:rgba(2,10,20,0.95);
+  backdrop-filter:blur(10px);
+  height:80px;
+}
+.navbar-brand{ color:#f5c16c !important; }
+.nav-link{ color:#cfcfcf !important; }
+.nav-link:hover,.nav-link.active{ color:#f5c16c !important; }
+
+/* PAGE */
+.page{
+  padding-top:120px;
+  padding-bottom:80px;
+}
+
+.title{
+  color:#f5c16c;
+}
+
+.section{
+  max-width:900px;
+  margin:0 auto 40px auto;
+}
+
+.section h3{
+  color:#9bdcff;
+  margin-bottom:15px;
+}
+
+.section p{
+  line-height:1.8;
+  opacity:0.9;
+}
+
+.footer{
+  text-align:center;
+  padding:20px;
+  font-size:14px;
+  opacity:0.6;
+}
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<nav class="navbar navbar-expand-lg fixed-top main-header">
+  <div class="container">
+    <a class="navbar-brand" href="/">AstroLogic</a>
+    <ul class="navbar-nav mx-auto">
+      <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+      <li class="nav-item"><a class="nav-link" href="/panchang">Panchang</a></li>
+      <li class="nav-item"><a class="nav-link" href="/kundali">Kundali</a></li>      
+      <li class="nav-item"><a class="nav-link" href="/horoscope">Horoscope</a></li>
+      <li class="nav-item"><a class="nav-link" href="/prediction">Predictions</a></li>
+      <li class="nav-item"><a class="nav-link" href="/blogs">Blogs</a></li>
+      <li class="nav-item"><a class="nav-link active" href="/about">About</a></li>
+    </ul>
+  </div>
+</nav>
+
+<section class="page">
+<div class="container">
+
+  <div class="text-center mb-5">
+    <h1 class="display-5 title">About AstroLogic</h1>
+    <p class="text-secondary">
+      Integrating Vedic Astrology with Artificial Intelligence
+    </p>
+  </div>
+
+  <div class="section">
+    <h3>Overview</h3>
+    <p>
+      AstroLogic is an AI-integrated astrology platform designed to provide
+      structured, intelligent, and scalable astrological insights.
+      The platform combines traditional Vedic principles with modern
+      backend architecture to deliver reliable and dynamic predictions.
+    </p>
+  </div>
+
+  <div class="section">
+    <h3>Core Features</h3>
+    <p>
+      The system includes daily horoscope services, Panchang calculations,
+      Kundali generation, and AI-enhanced prediction modules.
+      The architecture supports modular expansion for weekly, monthly,
+      and personalized astrological services.
+    </p>
+  </div>
+
+  <div class="section">
+    <h3>Technology Stack</h3>
+    <p>
+      AstroLogic is built using FastAPI for backend services, Jinja templates
+      for server-side rendering, and a responsive frontend powered by Bootstrap.
+      Planetary calculations are structured for integration with Swiss Ephemeris,
+      while AI modules enhance interpretation and prediction generation.
+    </p>
+  </div>
+
+  <div class="section">
+    <h3>Vision</h3>
+    <p>
+      The vision of AstroLogic is to create a scalable, AI-driven astrology
+      ecosystem that bridges classical astrological computation with
+      modern intelligent systems. The platform is designed to evolve
+      toward fully personalized, data-driven astrological analysis.
+    </p>
+  </div>
+
+</div>
+</section>
+
+<div class="footer">
+  © 2026 AstroLogic. All rights reserved.
+</div>
+
+</body>
+</html>

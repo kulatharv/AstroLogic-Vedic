@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AstroLogic | Discover the Pattern</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+body{
+  background: radial-gradient(circle at top, #06192d, #010812);
+  color:#ffffff;
+  font-family:"Segoe UI", sans-serif;
+  overflow-x:hidden;
+}
+
+.hero{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  padding-top:100px;
+}
+
+/* HEADER */
+.main-header{
+  background:rgba(2,10,20,0.9);
+  backdrop-filter:blur(10px);
+  height:80px;
+}
+
+.navbar-brand{
+  color:#f5c16c !important;
+  font-weight:600;
+}
+
+.nav-link{
+  color:#cfcfcf !important;
+}
+
+.nav-link:hover,
+.nav-link.active{
+  color:#f5c16c !important;
+}
+
+/* BUTTONS */
+.btn-gold{
+  background:linear-gradient(135deg,#f5c16c,#d89b3c);
+  border:none;
+  color:#000;
+}
+
+.btn-outline-gold{
+  border:1px solid #f5c16c;
+  color:#f5c16c;
+}
+
+.btn-outline-gold:hover{
+  background:#f5c16c;
+  color:#000;
+}
+
+/* TEXT */
+.brand{
+  color:#f5c16c;
+  letter-spacing:1px;
+}
+
+.statement{
+  font-size:20px;
+  max-width:460px;
+  opacity:0.9;
+}
+
+.subtle{
+  color:#9bdcff;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  font-size:13px;
+}
+
+/* CONSTELLATION */
+.constellation{
+  position:relative;
+  width:460px;
+  height:460px;
+  margin:auto;
+  animation: float 10s ease-in-out infinite;
+}
+
+.constellation::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(2px 2px at 30% 20%, #8adfff, transparent),
+    radial-gradient(1px 1px at 70% 70%, #8adfff, transparent),
+    radial-gradient(1.5px 1.5px at 50% 90%, #8adfff, transparent);
+  opacity:0.35;
+}
+
+.node{
+  position:absolute;
+  width:14px;
+  height:14px;
+  background:#7ee7ff;
+  border-radius:50%;
+  box-shadow:0 0 16px #3bdcff;
+  animation:pulse 6s infinite;
+  cursor:pointer;
+}
+
+.node span{
+  position:absolute;
+  top:-28px;
+  left:50%;
+  transform:translateX(-50%);
+  font-size:13px;
+  color:#bff3ff;
+  opacity:0;
+  transition:0.3s;
+}
+
+.node:hover span{
+  opacity:1;
+}
+
+/* ANIMATIONS */
+@keyframes pulse{
+  0%{ transform:scale(1); }
+  50%{ transform:scale(1.6); }
+  100%{ transform:scale(1); }
+}
+
+@keyframes float{
+  0%{ transform:translateY(0); }
+  50%{ transform:translateY(-18px); }
+  100%{ transform:translateY(0); }
+}
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<nav class="navbar navbar-expand-lg fixed-top main-header">
+  <div class="container">
+    <a class="navbar-brand" href="/">AstroLogic</a>
+
+    <div class="collapse navbar-collapse">
+      <ul class="navbar-nav mx-auto">
+        <li class="nav-item"><a class="nav-link active" href="/">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="/panchang">Panchang</a></li>
+        <li class="nav-item"><a class="nav-link" href="/kundali">Kundali</a></li>
+        <li class="nav-item"><a class="nav-link" href="/horoscope">Horoscope</a></li>
+        <li class="nav-item"><a class="nav-link" href="/prediction">Predictions</a></li>
+        <li class="nav-item"><a class="nav-link" href="/blogs">Blogs</a></li>
+        <li class="nav-item"><a class="nav-link" href="/about">About</a></li>
+      </ul>
+      <div class="d-flex gap-2">
+  <a href="/panchang" class="btn btn-gold btn-sm">Today’s Panchang</a>
+  <a href="/admin/blogs" class="btn btn-outline-gold btn-sm">Admin</a>
+</div>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+<div class="container">
+<div class="row align-items-center">
+
+<!-- LEFT -->
+<div class="col-lg-6">
+  <span class="subtle">AWARENESS • TIMING • CHOICE</span>
+  <h1 class="display-4 brand mt-2">
+    Nothing Happens<br>Without a Pattern.
+  </h1>
+  <p class="statement mt-3">
+    AstroLogic reveals how time and zodiac energies interact —
+    helping you move from reaction to awareness.
+  </p>
+
+  <div class="mt-4">
+    <a href="/horoscope" class="btn btn-gold btn-lg me-2">Explore Today</a>
+    <a href="/prediction" class="btn btn-outline-gold btn-lg">Know Your Phase</a>
+  </div>
+</div>
+
+<!-- RIGHT -->
+<div class="col-lg-6 mt-5">
+  <p class="text-center text-secondary mb-2">
+    Click a Zodiac to View Horoscope
+  </p>
+
+  <div class="constellation">
+
+    <div class="node" style="top:40px; left:230px;" onclick="go('Aries')">
+      <span>Aries</span>
+    </div>
+
+    <div class="node" style="top:120px; left:350px;" onclick="go('Taurus')">
+      <span>Taurus</span>
+    </div>
+
+    <div class="node" style="top:230px; left:400px;" onclick="go('Gemini')">
+      <span>Gemini</span>
+    </div>
+
+    <div class="node" style="top:340px; left:300px;" onclick="go('Cancer')">
+      <span>Cancer</span>
+    </div>
+
+    <div class="node" style="top:400px; left:230px;" onclick="go('Leo')">
+      <span>Leo</span>
+    </div>
+
+    <div class="node" style="top:340px; left:120px;" onclick="go('Virgo')">
+      <span>Virgo</span>
+    </div>
+
+    <div class="node" style="top:230px; left:60px;" onclick="go('Libra')">
+      <span>Libra</span>
+    </div>
+
+    <div class="node" style="top:120px; left:120px;" onclick="go('Scorpio')">
+      <span>Scorpio</span>
+    </div>
+
+  </div>
+</div>
+
+</div>
+</div>
+</section>
+
+<script>
+function go(sign){
+  window.location.href = `/horoscope?sign=${sign}`;
+}
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

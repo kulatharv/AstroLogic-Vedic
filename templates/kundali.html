@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AstroLogic | Professional Birth Kundali</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+body{
+  background: radial-gradient(circle at top,#06192d,#010812);
+  color:#fff;
+  font-family:"Segoe UI", sans-serif;
+}
+.section-card{
+  background:rgba(255,255,255,0.05);
+  border-radius:15px;
+  padding:25px;
+  margin-bottom:30px;
+  border:1px solid rgba(255,255,255,0.08);
+}
+.section-title{
+  color:#f5c16c;
+  margin-bottom:20px;
+}
+.chart-box{
+  background:#0b1f36;
+  padding:20px;
+  border-radius:15px;
+  text-align:center;
+}
+.table-dark th, .table-dark td{
+  text-align:center;
+}
+/* HEADER */
+.main-header{
+  background:rgba(2,10,20,0.9);
+  backdrop-filter:blur(10px);
+  height:80px;
+}
+
+.navbar-brand{
+  color:#f5c16c !important;
+  font-weight:600;
+}
+
+.nav-link{
+  color:#cfcfcf !important;
+}
+
+.nav-link:hover,
+.nav-link.active{
+  color:#f5c16c !important;
+}
+
+
+/* BUTTONS */
+.btn-gold{
+  background:linear-gradient(135deg,#f5c16c,#d89b3c);
+  border:none;
+  color:#000;
+}
+
+.btn-outline-gold{
+  border:1px solid #f5c16c;
+  color:#f5c16c;
+}
+
+.btn-outline-gold:hover{
+  background:#f5c16c;
+  color:#000;
+}
+</style>
+</head>
+
+<body>
+<!-- HEADER -->
+<!-- HEADER -->
+<nav class="navbar navbar-expand-lg fixed-top main-header">
+  <div class="container">
+    <a class="navbar-brand" href="/">AstroLogic</a>
+
+    <!-- Mobile Toggle Button -->
+    <button class="navbar-toggler text-white border-0" type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarContent"
+            aria-controls="navbarContent"
+            aria-expanded="false"
+            aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarContent">
+      <ul class="navbar-nav mx-auto">
+        <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="/panchang">Panchang</a></li>
+        <li class="nav-item"><a class="nav-link active" href="/kundali">Kundali</a></li>
+        <li class="nav-item"><a class="nav-link" href="/horoscope">Horoscope</a></li>
+        <li class="nav-item"><a class="nav-link" href="/prediction">Predictions</a></li>
+        <li class="nav-item"><a class="nav-link" href="/blogs">Blogs</a></li>
+        <li class="nav-item"><a class="nav-link" href="/about">About</a></li>
+      </ul>
+
+      <a href="/panchang" class="btn btn-gold btn-sm">Today’s Panchang</a>
+    </div>
+  </div>
+</nav>
+<div class="container mt-5">
+
+<!-- PAGE CONTENT -->
+<section style="padding-top:100px;">
+  <div class="container">
+
+    <h2 class="text-center text-warning mb-5">
+      Professional Birth Kundali Report
+    </h2>
+
+  </div>
+</section>
+<!-- ================= INPUT SECTION ================= -->
+<div class="section-card">
+<h4 class="section-title">Generate Birth Kundali</h4>
+
+<div class="row g-3">
+
+<div class="col-md-3">
+<input type="text" id="fullName" class="form-control" placeholder="Full Name" required>
+</div>
+
+<div class="col-md-2">
+<input type="date" id="dob" class="form-control" required>
+</div>
+
+<div class="col-md-2">
+<input type="time" id="tob" class="form-control" required>
+</div>
+
+<div class="col-md-3">
+<input type="text" id="city" class="form-control" placeholder="Birth City" required>
+</div>
+
+<div class="col-md-2">
+<!-- Button handled by JS event listener -->
+<button id="generateBtn" class="btn btn-warning w-100">
+Generate
+</button>
+</div>
+
+</div>
+</div>
+
+<!-- ================= BIRTH DETAILS ================= -->
+<div class="section-card">
+<h4 class="section-title">Birth Details</h4>
+
+<div class="row">
+
+<div class="col-md-4">
+<p><b>Name:</b> <span id="displayName">-</span></p>
+<p><b>Date:</b> <span id="displayDob">-</span></p>
+<p><b>Time:</b> <span id="displayTob">-</span></p>
+<p><b>Place:</b> <span id="displayCity">-</span></p>
+</div>
+
+<div class="col-md-4">
+<p><b>Lagna:</b> <span id="displayLagna">-</span></p>
+<p><b>Moon Sign:</b> <span id="moonSign">-</span></p>
+<p><b>Nakshatra:</b> <span id="nakshatra">-</span></p>
+<p><b>Ayanamsa:</b> <span id="ayanamsa">-</span></p>
+</div>
+
+<div class="col-md-4">
+<p><b>Tithi:</b> <span id="tithi">-</span></p>
+<p><b>Yoga:</b> <span id="birthYoga">-</span></p>
+<p><b>Karana:</b> <span id="karana">-</span></p>
+<p><b>Dasha Balance:</b> <span id="dashaBalance">-</span></p>
+</div>
+
+</div>
+</div>
+
+<!-- ================= CHARTS ================= -->
+<div class="section-card">
+<h4 class="section-title">Charts</h4>
+
+<div class="row">
+
+<div class="col-md-6">
+<!-- ================= SVG CHART ================= -->
+<div class="section-card text-center">
+<h4 class="section-title">D1 - Rashi Chart</h4>
+
+<!-- INLINE SVG -->
+<svg viewBox="0 0 600 400">
+
+<!-- Background -->
+<rect x="10" y="10" width="580" height="380"
+      fill="#e5c7a6" stroke="black" stroke-width="2"/>
+
+<!-- Diagonals -->
+<line x1="10" y1="10" x2="590" y2="390" stroke="black" stroke-width="2"/>
+<line x1="590" y1="10" x2="10" y2="390" stroke="black" stroke-width="2"/>
+
+<!-- Diamond -->
+<polygon points="300,10 590,200 300,390 10,200"
+         stroke="black" stroke-width="2" fill="none"/>
+
+<!-- House Numbers -->
+<text x="120" y="70" class="num">2</text>
+<text x="90" y="110" class="num">3</text>
+<text x="295" y="110" class="num">1</text>
+<text x="450" y="90" class="num">12</text>
+<text x="480" y="110" class="num">11</text>
+<text x="190" y="190" class="num">4</text>
+<text x="290" y="230" class="num">7</text>
+<text x="360" y="190" class="num">10</text>
+<text x="120" y="300" class="num">5</text>
+<text x="150" y="320" class="num">6</text>
+<text x="450" y="320" class="num">8</text>
+<text x="480" y="280" class="num">9</text>
+
+<!-- Planet Placeholders (IMPORTANT FOR JS) -->
+<text id="house1" x="295" y="140" class="planet"></text>
+<text id="house2" x="120" y="90" class="planet"></text>
+<text id="house3" x="90" y="130" class="planet"></text>
+<text id="house4" x="200" y="210" class="planet"></text>
+<text id="house5" x="120" y="330" class="planet"></text>
+<text id="house6" x="170" y="350" class="planet"></text>
+<text id="house7" x="300" y="260" class="planet"></text>
+<text id="house8" x="450" y="350" class="planet"></text>
+<text id="house9" x="500" y="300" class="planet"></text>
+<text id="house10" x="380" y="210" class="planet"></text>
+<text id="house11" x="480" y="140" class="planet"></text>
+<text id="house12" x="430" y="90" class="planet"></text>
+
+</svg>
+
+</div>
+
+</div>
+
+<div id="d9ChartContainer" class="col-md-6">
+<!-- ================= SVG CHART ================= -->
+<div class="section-card text-center">
+<h4 class="section-title">D9 - Navamsa Chart</h4>
+
+<!-- INLINE SVG -->
+<svg viewBox="0 0 600 400">
+
+<!-- Background -->
+<rect x="10" y="10" width="580" height="380"
+      fill="#e5c7a6" stroke="black" stroke-width="2"/>
+
+<!-- Diagonals -->
+<line x1="10" y1="10" x2="590" y2="390" stroke="black" stroke-width="2"/>
+<line x1="590" y1="10" x2="10" y2="390" stroke="black" stroke-width="2"/>
+
+<!-- Diamond -->
+<polygon points="300,10 590,200 300,390 10,200"
+         stroke="black" stroke-width="2" fill="none"/>
+
+<!-- House Numbers -->
+<text x="120" y="70" class="num">2</text>
+<text x="90" y="110" class="num">3</text>
+<text x="295" y="110" class="num">1</text>
+<text x="450" y="90" class="num">12</text>
+<text x="480" y="110" class="num">11</text>
+<text x="190" y="190" class="num">4</text>
+<text x="290" y="230" class="num">7</text>
+<text x="360" y="190" class="num">10</text>
+<text x="120" y="300" class="num">5</text>
+<text x="150" y="320" class="num">6</text>
+<text x="450" y="320" class="num">8</text>
+<text x="480" y="280" class="num">9</text>
+
+<!-- Planet Placeholders (IMPORTANT FOR JS) -->
+<text id="dhouse1" x="295" y="140" class="planet"></text>
+<text id="dhouse2" x="120" y="90" class="planet"></text>
+<text id="dhouse3" x="90" y="130" class="planet"></text>
+<text id="dhouse4" x="200" y="210" class="planet"></text>
+<text id="dhouse5" x="120" y="330" class="planet"></text>
+<text id="dhouse6" x="170" y="350" class="planet"></text>
+<text id="house7" x="300" y="260" class="planet"></text>
+<text id="dhouse8" x="450" y="350" class="planet"></text>
+<text id="house9" x="500" y="300" class="planet"></text>
+<text id="dhouse10" x="380" y="210" class="planet"></text>
+<text id="dhouse11" x="480" y="140" class="planet"></text>
+<text id="dhouse12" x="430" y="90" class="planet"></text>
+
+</svg>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+<!-- ================= PLANETARY POSITIONS ================= -->
+<div class="section-card">
+<h4 class="section-title">Planetary Positions</h4>
+
+<table class="table table-dark table-striped">
+<thead>
+<tr>
+<th>Planet</th>
+<th>Sign</th>
+<th>Degree</th>
+<th>House</th>
+<th>Nakshatra</th>
+<th>Strength</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody id="planetTable">
+<!-- JS will insert rows here -->
+</tbody>
+</table>
+</div>
+
+<!-- ================= HOUSE ANALYSIS ================= -->
+<div class="section-card">
+<h4 class="section-title">House-wise Analysis</h4>
+<div id="houseAnalysis">-</div>
+</div>
+
+<!-- ================= YOGAS & DOSHAS ================= -->
+<div class="section-card">
+<h4 class="section-title">Yogas & Doshas</h4>
+<div class="row">
+
+<div class="col-md-6">
+<h5>Major Yogas</h5>
+<ul id="yogaList"></ul>
+</div>
+
+<div class="col-md-6">
+<h5>Dosha Analysis</h5>
+<ul id="doshaList"></ul>
+</div>
+
+</div>
+</div>
+
+<!-- ================= DASHA ================= -->
+<div class="section-card">
+<h4 class="section-title">Current Dasha</h4>
+<p><b>Mahadasha:</b> <span id="mahadasha">-</span></p>
+<p><b>Antardasha:</b> <span id="antardasha">-</span></p>
+<p><b>Remaining Period:</b> <span id="dashaPeriod">-</span></p>
+</div>
+
+<!-- ================= LIFE ANALYSIS ================= -->
+ <!--
+<div class="section-card">
+<h4 class="section-title">Life Area Analysis</h4>
+
+<div class="row">
+
+<div class="col-md-6">
+<h5>Career</h5>
+<p id="career">-</p>
+
+<h5>Wealth</h5>
+<p id="wealth">-</p>
+</div>
+
+<div class="col-md-6">
+<h5>Marriage</h5>
+<p id="marriage">-</p>
+
+<h5>Health</h5>
+<p id="health">-</p>
+</div>
+
+</div>
+</div>-->
+<div class="row text-center mb-4 ">
+
+  <div class="col-md-2 col-6">
+    <div class="result-card">
+      <h6>Overall</h6>
+      <h3 id="overallScore">0</h3>
+      <div class="progress">
+        <div id="overallBar" class="progress-bar bg-primary"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-2 col-6">
+    <div class="result-card">
+      <h6>Career</h6>
+      <h3 id="careerScore">0</h3>
+      <div class="progress">
+        <div id="careerBar" class="progress-bar bg-warning"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-2 col-6">
+    <div class="result-card">
+      <h6>Finance</h6>
+      <h3 id="financeScore">0</h3>
+      <div class="progress">
+        <div id="financeBar" class="progress-bar bg-success"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-2 col-6">
+    <div class="result-card">
+      <h6>Relationship</h6>
+      <h3 id="relationshipScore">0</h3>
+      <div class="progress">
+        <div id="relationshipBar" class="progress-bar bg-info"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-2 col-6">
+    <div class="result-card">
+      <h6>Health</h6>
+      <h3 id="healthScore">0</h3>
+      <div class="progress">
+        <div id="healthBar" class="progress-bar bg-danger"></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<!-- ================= REMEDIES ================= 
+<div class="section-card">
+<h4 class="section-title">Recommended Remedies</h4>
+<ul id="remedies"></ul>
+</div>
+-->
+<!-- ================= CHAT SECTION ================= 
+<div class="section-card">
+<h4 class="section-title">Astrology AI Chat</h4>
+
+<div id="chatBox" 
+     style="height:300px; overflow-y:auto; 
+            background:#081726; padding:15px; 
+            border-radius:10px; margin-bottom:15px;">
+</div>
+
+<div class="input-group">
+    <input type="text" id="chatInput" 
+           class="form-control" 
+           placeholder="Ask about your career, marriage, health...">
+    <button class="btn btn-warning" onclick="sendMessage()">
+        Send
+    </button>
+</div>
+</div>-->
+</div>
+
+<!-- JS FILE -->
+<script src="/static/js/kundali.js"></script>
+
+
+</body>
+</html>

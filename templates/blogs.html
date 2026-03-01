@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AstroLogic | Blogs</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+body{
+  background: radial-gradient(circle at top, #06192d, #010812);
+  color:#ffffff;
+  font-family:"Segoe UI", sans-serif;
+}
+
+/* HEADER */
+.main-header{
+  background:rgba(2,10,20,0.95);
+  backdrop-filter:blur(10px);
+  height:80px;
+}
+.navbar-brand{ color:#f5c16c !important; }
+.nav-link{ color:#cfcfcf !important; }
+.nav-link:hover,.nav-link.active{ color:#f5c16c !important; }
+
+/* PAGE */
+.page{
+  padding-top:120px;
+  padding-bottom:80px;
+}
+
+.title{
+  color:#f5c16c;
+}
+
+.blog-card{
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:16px;
+  padding:25px;
+  transition:0.3s ease;
+  height:100%;
+}
+
+.blog-card:hover{
+  transform:translateY(-5px);
+  border-color:#f5c16c;
+}
+
+.blog-title{
+  color:#9bdcff;
+  font-size:20px;
+  margin-bottom:10px;
+}
+
+.blog-meta{
+  font-size:13px;
+  opacity:0.6;
+  margin-bottom:15px;
+}
+
+.blog-desc{
+  opacity:0.85;
+  line-height:1.6;
+  margin-bottom:20px;
+}
+
+.read-more{
+  text-decoration:none;
+  color:#f5c16c;
+  font-weight:500;
+}
+
+.read-more:hover{
+  text-decoration:underline;
+}
+
+.footer{
+  text-align:center;
+  padding:20px;
+  font-size:14px;
+  opacity:0.6;
+}
+/* BUTTONS */
+.btn-gold{
+  background:linear-gradient(135deg,#f5c16c,#d89b3c);
+  border:none;
+  color:#000;
+}
+
+.btn-outline-gold{
+  border:1px solid #f5c16c;
+  color:#f5c16c;
+}
+
+.btn-outline-gold:hover{
+  background:#f5c16c;
+  color:#000;
+}
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<nav class="navbar navbar-expand-lg fixed-top main-header">
+  <div class="container">
+    <a class="navbar-brand" href="/">AstroLogic</a>
+
+    <div class="collapse navbar-collapse">
+      <ul class="navbar-nav mx-auto">
+        <li class="nav-item"><a class="nav-link " href="/">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="/panchang">Panchang</a></li>
+        <li class="nav-item"><a class="nav-link" href="/kundali">Kundali</a></li>
+        <li class="nav-item"><a class="nav-link" href="/horoscope">Horoscope</a></li>
+        <li class="nav-item"><a class="nav-link" href="/prediction">Predictions</a></li>
+        <li class="nav-item"><a class="nav-link active" href="/blogs">Blogs</a></li>
+        <li class="nav-item"><a class="nav-link" href="/about">About</a></li>
+      </ul>
+      <a href="/panchang" class="btn btn-gold btn-sm">Today’s Panchang</a>
+    </div>
+  </div>
+</nav>
+
+<section class="page">
+<div class="container">
+
+  <div class="text-center mb-5">
+    <h1 class="display-5 title">Astrology Insights</h1>
+    <p class="text-secondary">
+      Articles on Vedic astrology, planetary movements, and intelligent prediction systems
+    </p>
+  </div>
+
+<div class="row g-4" id="blogContainer">
+  <!-- Blogs will load dynamically here -->
+</div>
+
+</div>
+</section>
+
+<div class="footer">
+  © 2026 AstroLogic. All rights reserved.
+</div>
+
+</body>
+<script>
+async function loadBlogs() {
+  try {
+    const res = await fetch("/api/blogs");
+    const data = await res.json();
+
+    console.log("BLOG API RESPONSE:", data);
+
+    const blogs = Array.isArray(data) ? data : data.blogs;
+
+    const container = document.getElementById("blogContainer");
+    container.innerHTML = "";
+
+    if (!blogs || blogs.length === 0) {
+      container.innerHTML = `
+        <div class="col-12 text-center">
+          <p style="opacity:0.6">No blogs available yet.</p>
+        </div>`;
+      return;
+    }
+
+    blogs.forEach(blog => {
+      const title = blog.title || "Untitled";
+      const content = blog.content || "";
+      const createdAt = blog.created_at
+        ? new Date(blog.created_at).toDateString()
+        : "";
+
+      container.innerHTML += `
+        <div class="col-md-6 col-lg-4">
+          <div class="blog-card">
+            <div class="blog-title">${title}</div>
+            <div class="blog-meta">${createdAt}</div>
+            <div class="blog-desc">
+              ${content.substring(0, 120)}...
+            </div>
+            <a href="/blog/${blog.id}" class="read-more">Read More</a>
+          </div>
+        </div>
+      `;
+    });
+
+  } catch (error) {
+    console.error("Error loading blogs:", error);
+  }
+}
+
+loadBlogs();
+</script>
+</html>
