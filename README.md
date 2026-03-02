@@ -1,4 +1,4 @@
-# 🔮 AstroLogic AI  
+# AstroLogic AI  
 ### AI-Powered Vedic Astrology Platform
 
 AstroLogic AI is a full-stack Vedic astrology platform built using **FastAPI, Swiss Ephemeris, and AI LLM integration**.  
