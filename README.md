@@ -74,18 +74,17 @@ It provides Kundali generation, Panchang, Daily Horoscope with caching, AI-based
 
 
 AstroLogic-AI/
-│
-├── main.py
-├── api/
-├── astro_engine/
-├── models/
-├── services/
-├── templates/
-├── static/
-├── database/
-├── requirements.txt
-├── .gitignore
-└── README.md
+  - main.py
+  - api/
+  - astro_engine/
+  - models/
+  - services/
+  - templates/
+  - static/
+  - database/
+  - requirements.txt
+  - .gitignore
+  - README.md
 
 
 ---
