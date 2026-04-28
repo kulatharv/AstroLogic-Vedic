@@ -24,7 +24,7 @@ router = APIRouter(prefix="/api", tags=["API"])
 class PanchangRequest(BaseModel):
     city: str
 
-@router.post("/panchang.html")
+@router.post("/panchang")
 def panchang_city(request: PanchangRequest):
     return get_full_panchang(request.city)
 
@@ -69,7 +69,7 @@ def get_coordinates(city):
     return cities.get(city, (18.5204, 73.8567))
 
 
-@router.post("/kundali.html")
+@router.post("/kundali")
 def get_kundali(data: KundaliRequest):
 
     lat, lon = get_coordinates(data.city)
@@ -173,7 +173,7 @@ def get_coordinates(city: str):
     return (18.5204, 73.8567)  # default: Pune
 
 
-@router.post("/kundali.html")
+@router.post("/kundali")
 def get_kundali(data: KundaliRequest):
     lat, lon = get_coordinates(data.city)
 
@@ -216,7 +216,7 @@ class KundaliRequest(BaseModel):
     city:   str
 
 
-@router.post("/kundali.html")
+@router.post("/kundali")
 def get_kundali(data: KundaliRequest):
     coords = get_city(data.city)
     if coords is None:
@@ -391,7 +391,7 @@ class ChatRequest(BaseModel):
 # ==================================================
 # 🔮 PREDICTION MODULE
 # ==================================================
-@router.post("/prediction.html")
+@router.post("/prediction")
 def generate_prediction(data: PredictionRequest):
 
     global last_generated_chart
@@ -496,7 +496,7 @@ def get_db():
 
 # ------------------ Get All Blogs ------------------
 
-@router.get("/blogs.html")
+@router.get("/blogs")
 def get_blogs(db: Session = Depends(get_db)):
     blogs = db.query(Blog).order_by(Blog.id.desc()).all()
     return blogs
@@ -515,7 +515,7 @@ def get_blog(blog_id: int, db: Session = Depends(get_db)):
 #---------------- admin blog -----------------
 from fastapi import Form
 
-@router.post("/blogs.html")
+@router.post("/blogs")
 def create_blog(
     title: str = Form(...),
     content: str = Form(...),
