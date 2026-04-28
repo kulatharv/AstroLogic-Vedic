@@ -1,0 +1,644 @@
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AstroLogic | Life Domain Predictions</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --gold:#f5c16c;--gold2:#d89b3c;--gold-dim:rgba(245,193,108,.12);
+  --gold-border:rgba(245,193,108,.28);--blue:#9bdcff;--green:#4ade80;
+  --red:#f87171;--purple:#c084fc;--orange:#fb923c;
+  --surface:rgba(255,255,255,.04);--surface2:rgba(255,255,255,.07);
+  --border:rgba(255,255,255,.08);--border2:rgba(255,255,255,.13);
+  --text:#e8e8e8;--text-dim:rgba(232,232,232,.52);--hh:68px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:radial-gradient(ellipse 140% 70% at 50% -5%,#0c2a4a,#010812);
+  color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:
+    radial-gradient(1px 1px at 12% 18%,rgba(155,220,255,.3),transparent),
+    radial-gradient(1px 1px at 78% 8%,rgba(245,193,108,.25),transparent),
+    radial-gradient(1px 1px at 45% 65%,rgba(155,220,255,.18),transparent),
+    radial-gradient(1px 1px at 90% 40%,rgba(245,193,108,.2),transparent)}
+
+/* ── HEADER ── */
+header{position:sticky;top:0;height:var(--hh);background:rgba(1,8,18,.95);
+  backdrop-filter:blur(24px);border-bottom:1px solid var(--border);z-index:1000;display:flex;align-items:center}
+.hdr{width:100%;max-width:1200px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:20px}
+.brand{font-family:'Cinzel',serif;font-size:19px;font-weight:600;color:var(--gold)!important;
+  text-decoration:none;letter-spacing:1.5px;flex-shrink:0}
+.brand sup{font-size:9px;opacity:.6;font-weight:400;vertical-align:super}
+nav{flex:1}
+nav ul{display:flex;gap:2px;list-style:none;justify-content:center}
+nav ul li a{font-size:13px;font-weight:500;color:var(--text-dim)!important;
+  text-decoration:none;padding:6px 10px;border-radius:7px;transition:.2s;display:block}
+nav ul li a:hover,nav ul li a.active{color:var(--gold)!important;background:var(--gold-dim)}
+.hdr-btns{display:flex;gap:8px;flex-shrink:0}
+.btn-g{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#000;font-weight:600;
+  font-size:12.5px;padding:7px 16px;border-radius:7px;border:none;cursor:pointer;
+  text-decoration:none;transition:.2s;white-space:nowrap;font-family:'Inter',sans-serif}
+.btn-g:hover{filter:brightness(1.1);transform:translateY(-1px);color:#000}
+.ham{display:none;flex-direction:column;gap:5px;cursor:pointer;margin-left:auto;padding:6px}
+.ham span{width:22px;height:2px;background:var(--text);border-radius:2px}
+.mob-nav{display:none;position:fixed;top:var(--hh);left:0;right:0;background:rgba(1,8,18,.97);
+  border-bottom:1px solid var(--border);padding:16px 24px 24px;z-index:999;flex-direction:column;gap:4px}
+.mob-nav.open{display:flex}
+.mob-nav a{font-size:15px;color:var(--text-dim);text-decoration:none;padding:10px 14px;border-radius:8px;transition:.2s}
+.mob-nav a:hover,.mob-nav a.active{color:var(--gold);background:var(--gold-dim)}
+.mob-btns{display:flex;gap:8px;margin-top:12px;padding-top:12px;border-top:1px solid var(--border)}
+
+/* ── LAYOUT ── */
+.page-wrap{position:relative;z-index:1;padding-top:28px;padding-bottom:80px}
+.container{max-width:1100px;margin:0 auto;padding:0 24px}
+
+/* ── HERO ── */
+.page-hero{text-align:center;margin-bottom:28px}
+.eyebrow{font-size:11px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--blue);margin-bottom:8px;display:block}
+.page-title{font-family:'Cinzel',serif;font-size:clamp(22px,4vw,36px);font-weight:600;color:var(--gold);margin-bottom:6px}
+.divider{width:50px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:10px auto 8px}
+.page-sub{font-size:12.5px;color:var(--text-dim)}
+
+/* ── INPUT FORM ── */
+.form-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:24px}
+.form-title{font-family:'Cinzel',serif;font-size:12px;font-weight:700;color:var(--gold);
+  letter-spacing:1px;text-transform:uppercase;margin-bottom:18px;
+  display:flex;align-items:center;gap:8px}
+.form-title::after{content:'';flex:1;height:1px;background:var(--border)}
+.form-grid{display:grid;grid-template-columns:1fr 1fr 1fr 1.4fr auto;gap:12px;align-items:end}
+.inp-grp label{display:block;font-size:11px;font-weight:600;letter-spacing:.5px;
+  text-transform:uppercase;color:var(--text-dim);margin-bottom:6px}
+.inp-grp input,.inp-grp select{width:100%;background:rgba(255,255,255,.06)!important;
+  border:1px solid var(--border2)!important;color:#fff!important;border-radius:8px;
+  padding:10px 12px;font-size:13.5px;font-family:'Inter',sans-serif}
+.inp-grp input:focus,.inp-grp select:focus{outline:none;border-color:var(--gold)!important}
+.inp-grp input::placeholder{color:rgba(255,255,255,.3)!important}
+.inp-grp select option{background:#0d1f35}
+.ac-wrap{position:relative}
+.ac-list{position:absolute;top:calc(100% + 2px);left:0;right:0;background:#0d1f35;
+  border:1px solid var(--gold-border);border-radius:8px;max-height:190px;overflow-y:auto;
+  z-index:99;display:none}
+.ac-list li{padding:8px 12px;cursor:pointer;font-size:13px;color:#ddd;list-style:none}
+.ac-list li:hover{background:var(--gold-dim);color:var(--gold)}
+
+/* ── DOMAIN TABS ── */
+.domain-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:24px}
+.d-tab{display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:10px;
+  border:1px solid var(--border);background:var(--surface);cursor:pointer;
+  font-size:12.5px;font-weight:500;color:var(--text-dim);transition:.2s}
+.d-tab:hover{border-color:var(--border2);color:var(--text)}
+.d-tab.active{border-color:var(--gold-border);background:var(--gold-dim);color:var(--gold)}
+.d-tab .tab-icon{font-size:16px}
+.d-tab .tab-score{font-size:10px;padding:1px 6px;border-radius:10px;margin-left:2px;
+  background:rgba(255,255,255,.08);color:var(--text-dim)}
+.d-tab.active .tab-score{background:var(--gold-dim);color:var(--gold)}
+
+/* ── OVERVIEW SCORES ── */
+.overview-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:24px}
+.ov-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;
+  padding:14px;text-align:center;cursor:pointer;transition:.3s}
+.ov-card:hover{border-color:var(--border2);transform:translateY(-2px)}
+.ov-card.active{border-color:var(--gold-border);background:var(--gold-dim)}
+.ov-icon{font-size:22px;margin-bottom:6px}
+.ov-name{font-size:11px;color:var(--text-dim);margin-bottom:8px}
+.ov-score{font-family:'Cinzel',serif;font-size:20px;font-weight:700}
+.ov-bar{height:3px;border-radius:2px;background:rgba(255,255,255,.06);margin-top:6px}
+.ov-fill{height:100%;border-radius:2px;transition:width 1.2s ease}
+
+/* ── DOMAIN DETAIL PANEL ── */
+.domain-panel{display:none}
+.domain-panel.active{display:block;animation:fadeIn .3s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+.panel-layout{display:grid;grid-template-columns:1fr 340px;gap:20px;align-items:start}
+.panel-main{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:26px}
+.panel-sidebar{}
+
+/* Panel header */
+.panel-hdr{display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-bottom:18px;border-bottom:1px solid var(--border)}
+.panel-icon{font-size:40px;line-height:1}
+.panel-title{font-family:'Cinzel',serif;font-size:22px;font-weight:600;color:var(--gold)}
+.panel-sub{font-size:12.5px;color:var(--text-dim);margin-top:4px}
+.panel-score-badge{margin-left:auto;text-align:center;flex-shrink:0}
+.psb-num{font-family:'Cinzel',serif;font-size:32px;font-weight:700}
+.psb-lbl{font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.5px}
+
+/* Insight rows */
+.insight-section{margin-bottom:22px}
+.is-title{font-size:10.5px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--gold);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.is-title::after{content:'';flex:1;height:1px;background:rgba(245,193,108,.15)}
+.insight-row{display:flex;gap:12px;align-items:flex-start;padding:9px 12px;
+  background:rgba(255,255,255,.03);border:1px solid var(--border);
+  border-radius:9px;margin-bottom:7px}
+.ir-icon{font-size:16px;flex-shrink:0;margin-top:1px}
+.ir-lbl{font-size:11px;color:var(--text-dim);margin-bottom:2px}
+.ir-val{font-size:13.5px;font-weight:500;color:var(--text)}
+.ir-val.gold{color:var(--gold)}
+.ir-val.green{color:var(--green)}
+.ir-val.red{color:var(--red)}
+.ir-val.blue{color:var(--blue)}
+
+/* Analysis text */
+.analysis-text{font-family:'Crimson Pro',serif;font-size:17px;line-height:1.82;
+  color:var(--text-dim);padding:16px;background:rgba(255,255,255,.03);
+  border:1px solid var(--border);border-radius:10px;margin-bottom:20px}
+
+/* Timing box */
+.timing-box{background:rgba(74,222,128,.07);border:1px solid rgba(74,222,128,.2);
+  border-radius:12px;padding:16px;margin-bottom:16px}
+.timing-title{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;
+  color:var(--green);margin-bottom:10px}
+.timing-row{display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px}
+.timing-lbl{color:var(--text-dim)}
+.timing-val{font-weight:500;color:var(--text)}
+.timing-challenge{font-size:12px;color:rgba(248,113,113,.8);margin-top:8px;
+  padding:7px 10px;background:rgba(248,113,113,.07);border-radius:6px}
+
+/* Remedy box */
+.remedy-box{background:rgba(155,220,255,.06);border:1px solid rgba(155,220,255,.2);border-radius:12px;padding:16px;margin-bottom:16px}
+.remedy-title{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--blue);margin-bottom:12px}
+.remedy-planet{font-size:13.5px;font-weight:600;color:var(--gold);margin-bottom:8px}
+.remedy-item{display:flex;gap:8px;font-size:12.5px;color:var(--text-dim);margin-bottom:5px}
+.remedy-item .ri{color:var(--blue);flex-shrink:0}
+.ritual-box{margin-top:10px;padding:8px 10px;background:rgba(245,193,108,.06);
+  border-left:2px solid var(--gold-border);border-radius:0 6px 6px 0;
+  font-size:12px;color:var(--text-dim)}
+
+/* Dosha cards */
+.dosha-list{display:flex;flex-direction:column;gap:8px}
+.dosha-item{padding:12px 14px;border-radius:10px}
+.di-high{background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.2)}
+.di-mod{background:rgba(245,193,108,.08);border:1px solid rgba(245,193,108,.2)}
+.di-ok{background:rgba(74,222,128,.07);border:1px solid rgba(74,222,128,.2)}
+.di-name{font-size:13.5px;font-weight:600;margin-bottom:4px}
+.di-desc{font-size:12px;color:var(--text-dim);line-height:1.55}
+
+/* Tags */
+.tag{font-size:10.5px;padding:2px 8px;border-radius:4px;font-weight:600;display:inline-block;margin:2px 3px 2px 0}
+.tag-yes{background:rgba(74,222,128,.1);color:var(--green)}
+.tag-no{background:rgba(248,113,113,.1);color:var(--red)}
+.tag-neutral{background:rgba(155,220,255,.08);color:var(--blue)}
+
+/* Sidebar card */
+.sb-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:14px}
+.sb-title{font-family:'Cinzel',serif;font-size:10.5px;font-weight:700;color:var(--gold);
+  letter-spacing:1px;text-transform:uppercase;margin-bottom:12px;
+  display:flex;align-items:center;gap:8px}
+.sb-title::after{content:'';flex:1;height:1px;background:var(--border)}
+.kv-row{display:flex;justify-content:space-between;align-items:baseline;
+  padding:7px 0;border-bottom:1px solid var(--border);font-size:13px}
+.kv-row:last-child{border-bottom:none}
+.kv-lbl{color:var(--text-dim);font-size:12px}
+.kv-val{font-weight:500;text-align:right;max-width:58%}
+
+/* Empty/loading */
+.empty-state{text-align:center;padding:60px 24px}
+.empty-icon{font-size:48px;margin-bottom:16px}
+.empty-title{font-family:'Cinzel',serif;font-size:20px;color:var(--gold);margin-bottom:8px}
+.empty-sub{font-size:13.5px;color:var(--text-dim)}
+
+.skel{background:rgba(255,255,255,.06);border-radius:8px;animation:pulse 1.3s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:.3}50%{opacity:.7}}
+
+footer{position:relative;z-index:1;text-align:center;padding:24px;
+  font-size:12px;color:var(--text-dim);border-top:1px solid var(--border);margin-top:24px}
+
+@media(max-width:1024px){.form-grid{grid-template-columns:1fr 1fr 1fr}}
+@media(max-width:900px){
+  .form-grid{grid-template-columns:1fr 1fr}
+  .overview-grid{grid-template-columns:repeat(5,1fr)}
+  .panel-layout{grid-template-columns:1fr}}
+@media(max-width:768px){nav ul,.hdr-btns{display:none}.ham{display:flex}}
+@media(max-width:600px){
+  .overview-grid{grid-template-columns:repeat(2,1fr)}
+  .form-grid{grid-template-columns:1fr}
+  .domain-tabs{gap:4px}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hdr">
+    <a class="brand" href="/">Astro<sup>✦</sup>Logic</a>
+    <nav><ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/panchang">Panchang</a></li>
+      <li><a href="/kundali">Kundali</a></li>
+      <li><a href="/horoscope">Horoscope</a></li>
+      <li><a href="/prediction" class="active">Predictions</a></li>
+      <li><a href="/blogs">Blogs</a></li>
+      <li><a href="/about">About</a></li>
+    </ul></nav>
+    <div class="hdr-btns"><a href="/kundali" class="btn-g">Generate Kundali</a></div>
+    <div class="ham" onclick="document.getElementById('mn').classList.toggle('open')">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</header>
+
+<div class="mob-nav" id="mn">
+  <a href="/">Home</a><a href="/panchang">Panchang</a>
+  <a href="/kundali">Kundali</a><a href="/horoscope">Horoscope</a>
+  <a href="/prediction" class="active">Predictions</a><a href="/blogs">Blogs</a><a href="/about">About</a>
+  <div class="mob-btns"><a href="/kundali" class="btn-g">Generate Kundali</a></div>
+</div>
+
+<div class="page-wrap">
+<div class="container">
+
+  <div class="page-hero">
+    <span class="eyebrow">Vedic Life Analysis</span>
+    <h1 class="page-title">Life Domain Predictions</h1>
+    <div class="divider"></div>
+    <p class="page-sub">10 life domains · House lords · Dasha timing · Transit overlay · Yogas · Remedies</p>
+  </div>
+
+  <!-- INPUT FORM -->
+  <div class="form-card">
+    <div class="form-title">Enter Birth Details</div>
+    <div class="form-grid">
+      <div class="inp-grp">
+        <label>Date of Birth</label>
+        <input type="date" id="dob">
+      </div>
+      <div class="inp-grp">
+        <label>Time of Birth</label>
+        <input type="time" id="tob">
+      </div>
+      <div class="inp-grp ac-wrap">
+        <label>Birth City</label>
+        <input type="text" id="city" placeholder="Type city…" autocomplete="off">
+        <ul id="acList" class="ac-list"></ul>
+      </div>
+      <div class="inp-grp">
+        <label>&nbsp;</label>
+        <button class="btn-g" onclick="analyse()" id="analyseBtn"
+          style="width:100%;padding:10px;font-size:14px;border-radius:8px;justify-content:center;display:flex">
+          Analyse All 10 Domains ✦
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- INITIAL STATE -->
+  <div id="initialState">
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:24px">
+      <div class="ov-card" style="cursor:default;opacity:.4"><div class="ov-icon">♥</div><div class="ov-name">Marriage</div><div class="ov-score" style="color:var(--text-dim)">—</div></div>
+      <div class="ov-card" style="cursor:default;opacity:.4"><div class="ov-icon">★</div><div class="ov-name">Career</div><div class="ov-score" style="color:var(--text-dim)">—</div></div>
+      <div class="ov-card" style="cursor:default;opacity:.4"><div class="ov-icon">₹</div><div class="ov-name">Wealth</div><div class="ov-score" style="color:var(--text-dim)">—</div></div>
+      <div class="ov-card" style="cursor:default;opacity:.4"><div class="ov-icon">✚</div><div class="ov-name">Health</div><div class="ov-score" style="color:var(--text-dim)">—</div></div>
+      <div class="ov-card" style="cursor:default;opacity:.4"><div class="ov-icon">❋</div><div class="ov-name">Children</div><div class="ov-score" style="color:var(--text-dim)">—</div></div>
+      <div class="ov-card" style="cursor:default;opacity:.4"><div class="ov-icon">✦</div><div class="ov-name">Education</div><div class="ov-score" style="color:var(--text-dim)">—</div></div>
+      <div class="ov-card" style="cursor:default;opacity:.4"><div class="ov-icon">⌂</div><div class="ov-name">Property</div><div class="ov-score" style="color:var(--text-dim)">—</div></div>
+      <div class="ov-card" style="cursor:default;opacity:.4"><div class="ov-icon">⚡</div><div class="ov-name">Challenges</div><div class="ov-score" style="color:var(--text-dim)">—</div></div>
+      <div class="ov-card" style="cursor:default;opacity:.4"><div class="ov-icon">✈</div><div class="ov-name">Travel</div><div class="ov-score" style="color:var(--text-dim)">—</div></div>
+      <div class="ov-card" style="cursor:default;opacity:.4"><div class="ov-icon">☯</div><div class="ov-name">Spirituality</div><div class="ov-score" style="color:var(--text-dim)">—</div></div>
+    </div>
+    <div class="empty-state">
+      <div class="empty-icon">🔮</div>
+      <div class="empty-title">Enter your birth details above</div>
+      <p class="empty-sub">All 10 life domains will be analysed using your natal chart —<br>house lords, dashas, transits, yogas and remedies included.</p>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="resultsSection" style="display:none">
+
+    <!-- BIRTH CONTEXT -->
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;
+      padding:14px 18px;margin-bottom:20px;display:flex;gap:24px;flex-wrap:wrap;font-size:13px">
+      <span>🌅 <strong style="color:var(--gold)" id="dispLagna">—</strong></span>
+      <span>⏱ <strong style="color:var(--blue)" id="dispDasha">—</strong></span>
+      <span>🌙 <strong style="color:var(--text)" id="dispMoon">—</strong></span>
+    </div>
+
+    <!-- OVERVIEW SCORES (clickable) -->
+    <div class="overview-grid" id="overviewGrid"></div>
+
+    <!-- DOMAIN TABS -->
+    <div class="domain-tabs" id="domainTabs"></div>
+
+    <!-- DOMAIN PANELS -->
+    <div id="domainPanels"></div>
+
+  </div><!-- /resultsSection -->
+
+</div>
+</div>
+
+<footer>© 2026 AstroLogic · Vedic Life Domain Analysis · Swiss Ephemeris · Lahiri Ayanamsa</footer>
+
+<script>
+const DOMAIN_META = {
+  marriage:    {icon:'♥', name:'Marriage & Relationships', color:'#f87171'},
+  career:      {icon:'★', name:'Career & Profession',      color:'#f5c16c'},
+  wealth:      {icon:'₹', name:'Wealth & Finance',         color:'#4ade80'},
+  health:      {icon:'✚', name:'Health & Longevity',       color:'#60a5fa'},
+  children:    {icon:'❋', name:'Children & Next Gen',      color:'#c084fc'},
+  education:   {icon:'✦', name:'Education & Skills',       color:'#9bdcff'},
+  property:    {icon:'⌂', name:'Property & Home',          color:'#fb923c'},
+  challenges:  {icon:'⚡', name:'Challenges & Doshas',      color:'#f59e0b'},
+  travel:      {icon:'✈', name:'Travel & Foreign',         color:'#34d399'},
+  spirituality:{icon:'☯', name:'Spirituality & Karma',     color:'#a78bfa'},
+};
+
+let _cities = [], _data = null, _activeDomain = 'marriage';
+
+// Autocomplete
+fetch('/api/cities').then(r=>r.ok?r.json():[]).then(c=>{_cities=c}).catch(()=>{});
+const cityInput = document.getElementById('city');
+const acList    = document.getElementById('acList');
+cityInput.addEventListener('input',()=>{
+  const q=cityInput.value.trim().toLowerCase();
+  acList.innerHTML='';
+  if(q.length<2){acList.style.display='none';return}
+  const matches=_cities.filter(c=>c.toLowerCase().startsWith(q)).slice(0,10);
+  if(!matches.length){acList.style.display='none';return}
+  matches.forEach(city=>{
+    const li=document.createElement('li');li.textContent=city;
+    li.addEventListener('click',()=>{cityInput.value=city;acList.style.display='none'});
+    acList.appendChild(li);
+  });
+  acList.style.display='block';
+});
+document.addEventListener('click',e=>{if(!cityInput.contains(e.target))acList.style.display='none'});
+
+// Score colour
+function scoreColor(s){
+  if(s>=75) return '#4ade80';
+  if(s>=55) return '#f5c16c';
+  if(s>=35) return '#fb923c';
+  return '#f87171';
+}
+
+// ── Main analyse ──────────────────────────────────
+async function analyse(){
+  const dob=document.getElementById('dob').value;
+  const tob=document.getElementById('tob').value;
+  const city=document.getElementById('city').value.trim();
+  if(!dob||!tob||!city){toast('Please fill all fields','error');return}
+  const [year,month,day]=dob.split('-').map(Number);
+  const [hour,minute]=tob.split(':').map(Number);
+  const btn=document.getElementById('analyseBtn');
+  btn.disabled=true;btn.textContent='Analysing…';
+
+  try{
+    const res=await fetch('/api/domains',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({year,month,day,hour,minute,city})
+    });
+    if(!res.ok){const e=await res.json();toast(e.detail||'Server error','error');return}
+    _data=await res.json();
+    document.getElementById('initialState').style.display='none';
+    document.getElementById('resultsSection').style.display='block';
+    renderResults(_data);
+    document.getElementById('resultsSection').scrollIntoView({behavior:'smooth'});
+    toast('Analysis complete','success');
+  }catch(e){
+    toast('Error: '+e.message,'error');
+  }finally{
+    btn.disabled=false;btn.textContent='Analyse All 10 Domains ✦';
+  }
+}
+
+function renderResults(data){
+  // Birth context
+  document.getElementById('dispLagna').textContent=`Lagna: ${data.lagna||'—'}`;
+  document.getElementById('dispDasha').textContent=`Dasha: ${data.mahadasha||'—'} / ${data.antardasha||'—'}`;
+  const moon=data.domains?.marriage;
+  document.getElementById('dispMoon').textContent=`Analysis complete — 10 domains`;
+
+  // Overview grid
+  const og=document.getElementById('overviewGrid'); og.innerHTML='';
+  Object.entries(data.domains).forEach(([key,d])=>{
+    const m=DOMAIN_META[key]||{};
+    const sc=d.score||0;
+    const div=document.createElement('div');
+    div.className='ov-card'+(key===_activeDomain?' active':'');
+    div.onclick=()=>showDomain(key);
+    div.innerHTML=`<div class="ov-icon">${m.icon}</div>
+      <div class="ov-name">${m.name.split(' ')[0]}</div>
+      <div class="ov-score" style="color:${scoreColor(sc)}">${sc}%</div>
+      <div class="ov-bar"><div class="ov-fill" style="width:${sc}%;background:${scoreColor(sc)}"></div></div>`;
+    og.appendChild(div);
+  });
+
+  // Domain tabs
+  const tabs=document.getElementById('domainTabs'); tabs.innerHTML='';
+  Object.entries(data.domains).forEach(([key,d])=>{
+    const m=DOMAIN_META[key]||{};
+    const btn=document.createElement('div');
+    btn.className='d-tab'+(key===_activeDomain?' active':'');
+    btn.onclick=()=>showDomain(key);
+    btn.innerHTML=`<span class="tab-icon">${m.icon}</span>${m.name.replace(' & ',' &amp; ')}
+      <span class="tab-score">${d.score}%</span>`;
+    tabs.appendChild(btn);
+  });
+
+  // Domain panels
+  const panels=document.getElementById('domainPanels'); panels.innerHTML='';
+  Object.entries(data.domains).forEach(([key,d])=>{
+    const div=document.createElement('div');
+    div.className='domain-panel'+(key===_activeDomain?' active':'');
+    div.id='panel-'+key;
+    div.innerHTML=buildPanel(key,d);
+    panels.appendChild(div);
+  });
+}
+
+function showDomain(key){
+  _activeDomain=key;
+  document.querySelectorAll('.d-tab').forEach((t,i)=>{
+    const k=Object.keys(DOMAIN_META)[i];
+    t.classList.toggle('active',k===key);
+  });
+  document.querySelectorAll('.ov-card').forEach((c,i)=>{
+    const k=Object.keys(DOMAIN_META)[i];
+    c.classList.toggle('active',k===key);
+  });
+  document.querySelectorAll('.domain-panel').forEach(p=>{
+    p.classList.toggle('active',p.id==='panel-'+key);
+  });
+}
+
+function safe(v){return v==null||v===''?'—':v}
+function yn(v){return v?'<span class="tag tag-yes">✓ Yes</span>':'<span class="tag tag-no">✗ No</span>'}
+
+function buildPanel(key, d){
+  const m=DOMAIN_META[key]||{};
+  const sc=d.score||0;
+  const color=scoreColor(sc);
+  const timing=d.timing||{};
+  const remedies=d.remedies||{};
+  const pr=remedies.planet_remedies||[];
+
+  let insights='';
+  let doshasHtml='';
+
+  if(key==='marriage'){
+    insights=`
+      <div class="insight-row"><span class="ir-icon">💑</span><div><div class="ir-lbl">Type of Marriage</div><div class="ir-val gold">${safe(d.marriage_type)}</div></div></div>
+      <div class="insight-row"><span class="ir-icon">👤</span><div><div class="ir-lbl">Partner Traits (from 7th house)</div><div class="ir-val">${safe(d.partner_traits)}</div></div></div>
+      <div class="insight-row"><span class="ir-icon">♥</span><div><div class="ir-lbl">Partner Sign</div><div class="ir-val gold">${safe(d.partner_sign)}</div></div></div>
+      <div class="insight-row"><span class="ir-icon">⚡</span><div><div class="ir-lbl">Mangal Dosh</div><div class="ir-val ${d.mangal_dosh?'red':'green'}">${d.mangal_dosh?'⚠ Present':'✓ Absent'} — ${safe(d.mangal_dosh_txt)}</div></div></div>
+      <div class="insight-row"><span class="ir-icon">💞</span><div><div class="ir-lbl">Physical Intimacy</div><div class="ir-val">${safe(d.intimacy)}</div></div></div>
+      <div class="insight-row"><span class="ir-icon">♻</span><div><div class="ir-lbl">Second Marriage</div><div class="ir-val">${safe(d.second_marriage)}</div></div></div>
+      <div class="insight-row"><span class="ir-icon">🪐</span><div><div class="ir-lbl">Venus Position</div><div class="ir-val blue">${safe(d.venus_position)}</div></div></div>
+      <div class="insight-row"><span class="ir-icon">🏠</span><div><div class="ir-lbl">7th House Lord</div><div class="ir-val">${safe(d.seventh_lord)}</div></div></div>`;
+  } else if(key==='career'){
+    insights=`
+      <div class="insight-row"><span class="ir-icon">🏛</span><div><div class="ir-lbl">Career Sector</div><div class="ir-val gold">${safe(d.sector)}</div></div></div>
+      <div class="insight-row"><span class="ir-icon">📋</span><div><div class="ir-lbl">Best Career Fields</div><div class="ir-val">${safe(d.best_fields)}</div></div></div>
+      <div class="insight-row"><span class="ir-icon">⚖</span><div><div class="ir-lbl">Business vs Job</div><div class="ir-val blue">${safe(d.business_vs_job)}</div></div></div>
+      <div class="insight-row"><span class="ir-icon">✈</span><div><div class="ir-lbl">Foreign Work</div><div class="ir-val">${safe(d.foreign_work)}</div></div></div>
+      <div class="insight-row"><span class="ir-icon">✦</span><div><div class="ir-lbl">Raj Yogas</div><div class="ir-val gold">${d.raj_yogas?.length?d.raj_yogas.join(', '):'None detected'}</div></div></div>
+      <div class="insight-row"><span class="ir-icon">🏠</span><div><div class="ir-lbl">10th House Lord</div><div class="ir-val">${safe(d.tenth_lord)}</div></div></div>`;
+  } else if(key==='wealth'){
+    insights=`
+      <div class="insight-row"><span class="ir-icon">💰</span><div><div class="ir-lbl">Income Sources</div><div class="ir-val gold">${safe(d.income_sources)}</div></div></div>
+      <div class="insight-row"><span class="ir-icon">✦</span><div><div class="ir-lbl">Dhana Yogas</div><div class="ir-val gold">${d.dhana_yogas?.length?d.dhana_yogas.join(', '):'None detected'}</div></div></div>
+      <div class="insight-row"><span class="ir-icon">⚡</span><div><div class="ir-lbl">Sudden Gains</div><div class="ir-val">${safe(d.sudden_gain)}</div></div></div>
+      <div class="insight-row"><span class="ir-icon">⚠</span><div><div class="ir-lbl">Debt Risk</div><div class="ir-val">${safe(d.debt_risk)}</div></div></div>
+      <div class="insight-row"><span class="ir-icon">🏠</span><div><div class="ir-lbl">2nd House Lord</div><div class="ir-val">${safe(d.second_lord)}</div></div></div>
+      <div class="insight-row"><span class="ir-icon">🏠</span><div><div class="ir-lbl">11th House Lord</div><div class="ir-val">${safe(d.eleventh_lord)}</div></div></div>`;
+  } else if(key==='health'){
+    insights=`
+      <div class="insight-row"><span class="ir-icon">🫀</span><div><div class="ir-lbl">Vulnerable Organs (6th house)</div><div class="ir-val ${d.surgery_risk?'red':''}">${safe(d.weak_organs)}</div></div></div>
+      <div class="insight-row"><span class="ir-icon">🌿</span><div><div class="ir-lbl">Ayurvedic Dosha (Prakriti)</div><div class="ir-val gold">${safe(d.ayurvedic_dosha)}</div></div></div>
+      <div class="insight-row"><span class="ir-icon">🧠</span><div><div class="ir-lbl">Mental Health</div><div class="ir-val ${d.mental_health_ok?'green':'red'}">${d.mental_health_ok?'✓ Stable indicators':'⚠ Sensitive — Moon afflicted'}</div></div></div>
+      <div class="insight-row"><span class="ir-icon">🔪</span><div><div class="ir-lbl">Surgery Risk</div><div class="ir-val ${d.surgery_risk?'red':'green'}">${safe(d.surgery_txt)}</div></div></div>
+      <div class="insight-row"><span class="ir-icon">📅</span><div><div class="ir-lbl">Vulnerable Periods</div><div class="ir-val">${safe(d.disease_periods)}</div></div></div>
+      <div class="insight-row"><span class="ir-icon">🏠</span><div><div class="ir-lbl">Lagna Lord</div><div class="ir-val">${safe(d.first_lord)}</div></div></div>`;
+  } else if(key==='children'){
+    insights=`
+      <div class="insight-row"><span class="ir-icon">👶</span><div><div class="ir-lbl">Children Count</div><div class="ir-val gold">${safe(d.count_indicator)}</div></div></div>
+      <div class="insight-row"><span class="ir-icon">⚥</span><div><div class="ir-lbl">Gender Indicator (traditional)</div><div class="ir-val">${safe(d.gender_indicator)}</div></div></div>
+      <div class="insight-row"><span class="ir-icon">🌱</span><div><div class="ir-lbl">Child's Nature</div><div class="ir-val">${safe(d.child_nature)}</div></div></div>
+      <div class="insight-row"><span class="ir-icon">⚠</span><div><div class="ir-lbl">Putra Dosh</div><div class="ir-val ${d.putra_dosh?.length?'red':'green'}">${d.putra_dosh?.length?d.putra_dosh.join(', '):'✓ Not detected'}</div></div></div>
+      <div class="insight-row"><span class="ir-icon">♃</span><div><div class="ir-lbl">Jupiter (Putra Karaka)</div><div class="ir-val blue">${safe(d.jupiter_position)}</div></div></div>
+      <div class="insight-row"><span class="ir-icon">🏠</span><div><div class="ir-lbl">5th House Lord</div><div class="ir-val">${safe(d.fifth_lord)}</div></div></div>`;
+  } else if(key==='education'){
+    insights=`
+      <div class="insight-row"><span class="ir-icon">📚</span><div><div class="ir-lbl">Best Study Fields</div><div class="ir-val gold">${safe(d.study_fields)}</div></div></div>
+      <div class="insight-row"><span class="ir-icon">✦</span><div><div class="ir-lbl">Vidya / Saraswati Yoga</div><div class="ir-val ${d.vidya_yoga?.length?'green':''}">${d.vidya_yoga?.length?d.vidya_yoga.join(', '):'None detected'}</div></div></div>
+      <div class="insight-row"><span class="ir-icon">✈</span><div><div class="ir-lbl">Foreign Education</div><div class="ir-val">${yn(d.foreign_education)} ${d.foreign_education?'Rahu influences education houses':''}</div></div></div>
+      <div class="insight-row"><span class="ir-icon">🏆</span><div><div class="ir-lbl">Competitive Exams</div><div class="ir-val">${safe(d.competitive_success)}</div></div></div>
+      <div class="insight-row"><span class="ir-icon">☿</span><div><div class="ir-lbl">Mercury Position</div><div class="ir-val blue">${safe(d.mercury_position)}</div></div></div>`;
+  } else if(key==='property'){
+    insights=`
+      <div class="insight-row"><span class="ir-icon">🏠</span><div><div class="ir-lbl">Property Type</div><div class="ir-val gold">${safe(d.property_type)}</div></div></div>
+      <div class="insight-row"><span class="ir-icon">🏘</span><div><div class="ir-lbl">Multiple Properties</div><div class="ir-val">${yn(d.multiple_properties)}</div></div></div>
+      <div class="insight-row"><span class="ir-icon">😊</span><div><div class="ir-lbl">Domestic Happiness</div><div class="ir-val ${d.domestic_happiness?'green':'red'}">${d.domestic_happiness?'✓ Positive indicators':'⚠ Moon or 4th afflicted'}</div></div></div>
+      <div class="insight-row"><span class="ir-icon">🧿</span><div><div class="ir-lbl">Vastu</div><div class="ir-val">${safe(d.vastu)}</div></div></div>
+      <div class="insight-row"><span class="ir-icon">♂</span><div><div class="ir-lbl">Mars Position</div><div class="ir-val blue">${safe(d.mars_position)}</div></div></div>
+      <div class="insight-row"><span class="ir-icon">🏠</span><div><div class="ir-lbl">4th House Lord</div><div class="ir-val">${safe(d.fourth_lord)}</div></div></div>`;
+  } else if(key==='challenges'){
+    const df=d.doshas_found||[];
+    doshasHtml=`<div class="insight-section"><div class="is-title">Dosha Analysis</div>
+      <div class="dosha-list">
+        ${df.length?df.map(ds=>`<div class="dosha-item ${ds.severity==='High'?'di-high':'di-mod'}">
+          <div class="di-name" style="color:${ds.severity==='High'?'var(--red)':'var(--gold)'}">${ds.name} <span style="float:right;font-size:11px">${ds.severity}</span></div>
+          <div class="di-desc">${ds.desc}</div>
+        </div>`).join('')
+        :'<div class="dosha-item di-ok"><div class="di-name" style="color:var(--green)">✓ No major doshas detected</div><div class="di-desc">Chart is relatively free from major afflictions.</div></div>'}
+      </div></div>`;
+    insights=`
+      <div class="insight-row"><span class="ir-icon">🐍</span><div><div class="ir-lbl">Kaal Sarp Dosh</div><div class="ir-val ${d.kaal_sarp?'red':'green'}">${d.kaal_sarp?'⚠ Present — all planets between Rahu-Ketu':'✓ Absent'}</div></div></div>
+      <div class="insight-row"><span class="ir-icon">♂</span><div><div class="ir-lbl">Mangal Dosh</div><div class="ir-val ${d.mangal_dosh?'red':'green'}">${d.mangal_dosh?'⚠ Present':'✓ Absent'}</div></div></div>
+      <div class="insight-row"><span class="ir-icon">♄</span><div><div class="ir-lbl">Sade Sati</div><div class="ir-val ${d.sade_sati?'red':'green'}">${d.sade_sati?'⚠ Active — Saturn near Moon sign':'✓ Not currently active'}</div></div></div>
+      <div class="insight-row"><span class="ir-icon">🌑</span><div><div class="ir-lbl">Pitru Dosh</div><div class="ir-val ${d.pitru_dosh?'red':'green'}">${d.pitru_dosh?'⚠ Present — offer ancestor tarpan':'✓ Absent'}</div></div></div>
+      <div class="insight-row"><span class="ir-icon">🌓</span><div><div class="ir-lbl">Grahan Dosh</div><div class="ir-val ${d.grahan_dosh?'red':'green'}">${d.grahan_dosh?'⚠ Rahu/Ketu eclipsing luminary':'✓ Absent'}</div></div></div>
+      <div class="insight-row"><span class="ir-icon">⚖</span><div><div class="ir-lbl">Legal / Enemy Risk</div><div class="ir-val ${d.legal_risk?'red':''}">${safe(d.legal_txt)}</div></div></div>`;
+  } else if(key==='travel'){
+    insights=`
+      <div class="insight-row"><span class="ir-icon">🌍</span><div><div class="ir-lbl">Foreign Settlement</div><div class="ir-val ${d.foreign_settlement?'green':''}">${yn(d.foreign_settlement)} ${d.foreign_settlement?'Strong indicators present':'Less prominent'}</div></div></div>
+      <div class="insight-row"><span class="ir-icon">📄</span><div><div class="ir-lbl">Visa / Immigration Success</div><div class="ir-val ${d.visa_success?'green':''}">${yn(d.visa_success)}</div></div></div>
+      <div class="insight-row"><span class="ir-icon">🧭</span><div><div class="ir-lbl">Direction of Settlement</div><div class="ir-val gold">${safe(d.direction)}</div></div></div>
+      <div class="insight-row"><span class="ir-icon">💼</span><div><div class="ir-lbl">Overseas Career</div><div class="ir-val">${safe(d.overseas_career)}</div></div></div>
+      <div class="insight-row"><span class="ir-icon">☊</span><div><div class="ir-lbl">Rahu Position</div><div class="ir-val blue">${safe(d.rahu_position)}</div></div></div>
+      <div class="insight-row"><span class="ir-icon">🏠</span><div><div class="ir-lbl">12th House Lord</div><div class="ir-val">${safe(d.twelfth_lord)}</div></div></div>`;
+  } else if(key==='spirituality'){
+    insights=`
+      <div class="insight-row"><span class="ir-icon">🕉️</span><div><div class="ir-lbl">Spiritual Inclination</div><div class="ir-val ${d.spiritual_inclination?'green':''}">${yn(d.spiritual_inclination)}</div></div></div>
+      <div class="insight-row"><span class="ir-icon">🪷</span><div><div class="ir-lbl">Moksha Yoga</div><div class="ir-val ${d.moksha_yoga?.length?'gold':''}">${d.moksha_yoga?.length?d.moksha_yoga.join(', '):'None detected'}</div></div></div>
+      <div class="insight-row"><span class="ir-icon">🙏</span><div><div class="ir-lbl">Deity (from Moon Nakshatra)</div><div class="ir-val gold">${safe(d.deity)}</div></div></div>
+      <div class="insight-row"><span class="ir-icon">☯</span><div><div class="ir-lbl">Past Life Karma</div><div class="ir-val">${safe(d.past_karma)}</div></div></div>
+      <div class="insight-row"><span class="ir-icon">📿</span><div><div class="ir-lbl">Dharma Path</div><div class="ir-val">${safe(d.dharma_path)}</div></div></div>
+      <div class="insight-row"><span class="ir-icon">☋</span><div><div class="ir-lbl">Ketu Position</div><div class="ir-val blue">${safe(d.ketu_position)}</div></div></div>`;
+  }
+
+  const remedyHtml = pr.length ? pr.map(r=>`
+    <div class="remedy-planet">🪐 ${r.planet}</div>
+    <div class="remedy-item"><span class="ri">💎</span><span><strong>Gemstone:</strong> ${r.gem}</span></div>
+    <div class="remedy-item"><span class="ri">📿</span><span><strong>Mantra:</strong> ${r.mantra}</span></div>
+    <div class="remedy-item"><span class="ri">🍽</span><span><strong>Fast:</strong> ${r.fast}</span></div>
+    <div class="remedy-item"><span class="ri">🤲</span><span><strong>Donate:</strong> ${r.donate}</span></div>
+  `).join('<hr style="border:none;border-top:1px solid var(--border);margin:10px 0">') : '<div style="font-size:13px;color:var(--text-dim)">No specific planet weaknesses detected</div>';
+
+  return `<div class="panel-layout">
+    <div class="panel-main">
+      <div class="panel-hdr">
+        <div class="panel-icon">${m.icon}</div>
+        <div>
+          <div class="panel-title">${m.name}</div>
+          <div class="panel-sub">Dasha-activated: ${d.dasha_active?'<span style="color:var(--green)">✓ Yes</span>':'<span style="color:var(--text-dim)">Not directly</span>'}</div>
+        </div>
+        <div class="panel-score-badge">
+          <div class="psb-num" style="color:${color}">${sc}%</div>
+          <div class="psb-lbl">Domain Score</div>
+        </div>
+      </div>
+
+      <div class="analysis-text">${safe(d.analysis)}</div>
+
+      <div class="insight-section">
+        <div class="is-title">Key Indicators</div>
+        ${insights}
+      </div>
+      ${doshasHtml}
+    </div>
+
+    <div class="panel-sidebar">
+      <div class="timing-box">
+        <div class="timing-title">⏱ Timing Windows</div>
+        <div class="timing-row"><span class="timing-lbl">Best Window</span><span class="timing-val">${safe(timing.best_window)}</span></div>
+        <div class="timing-row"><span class="timing-lbl">Confidence</span><span class="timing-val">${safe(timing.confidence)}</span></div>
+        <div class="timing-row"><span class="timing-lbl">Dasha Active</span><span class="timing-val" style="color:${d.dasha_active?'var(--green)':'var(--text-dim)'}">${d.dasha_active?'✓ Yes':'No'}</span></div>
+        ${timing.challenge?`<div class="timing-challenge">⚠ ${timing.challenge}</div>`:''}
+      </div>
+
+      <div class="remedy-box">
+        <div class="remedy-title">🙏 Remedies</div>
+        ${remedyHtml}
+        ${remedies.ritual?`<div class="ritual-box">🪔 ${remedies.ritual}</div>`:''}
+      </div>
+
+      <div class="sb-card">
+        <div class="sb-title">Domain Summary</div>
+        <div class="kv-row"><span class="kv-lbl">Score</span><span class="kv-val" style="color:${color}">${sc}%</span></div>
+        <div class="kv-row"><span class="kv-lbl">Dasha Trigger</span><span class="kv-val">${d.dasha_active?'Active':'Inactive'}</span></div>
+        <div class="kv-row"><span class="kv-lbl">Best Period</span><span class="kv-val">${safe(timing.best_window)}</span></div>
+      </div>
+    </div>
+  </div>`;
+}
+
+// Toast
+function toast(msg, type='info'){
+  const t=document.createElement('div');
+  const c=type==='success'?'#4ade80':type==='error'?'#f87171':'#9bdcff';
+  t.style.cssText=`position:fixed;bottom:24px;right:24px;background:rgba(1,8,18,.97);
+    border:1px solid ${c};color:${c};padding:12px 20px;border-radius:10px;
+    font-size:13px;z-index:9999;animation:fadeIn .3s ease;box-shadow:0 8px 24px rgba(0,0,0,.4)`;
+  t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),3000);
+}
+</script>
+</body>
+</html>

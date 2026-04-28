@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AstroLogic | Blog</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --gold:#f5c16c;--gold2:#d89b3c;--gold-dim:rgba(245,193,108,0.12);
+  --gold-border:rgba(245,193,108,0.28);--blue:#9bdcff;
+  --surface:rgba(255,255,255,0.04);--border:rgba(255,255,255,0.08);
+  --text:#e8e8e8;--text-dim:rgba(232,232,232,0.52);--hh:72px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:radial-gradient(ellipse 140% 70% at 50% -5%,#0c2a4a,#010812);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(1px 1px at 12% 18%,rgba(155,220,255,.38),transparent),radial-gradient(1px 1px at 78% 8%,rgba(245,193,108,.32),transparent);pointer-events:none;z-index:0;}
+header{position:fixed;top:0;left:0;right:0;height:var(--hh);background:rgba(1,8,18,.88);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);z-index:1000;display:flex;align-items:center;}
+.hdr{width:100%;max-width:1200px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:24px;}
+.brand{font-family:'Cinzel',serif;font-size:20px;font-weight:600;color:var(--gold)!important;text-decoration:none;letter-spacing:1.5px;flex-shrink:0;}
+.brand sup{font-size:10px;opacity:.6;font-weight:400;vertical-align:super;}
+nav ul{display:flex;gap:2px;list-style:none;margin:0 auto;}
+nav ul a{font-size:13px;font-weight:500;color:var(--text-dim)!important;text-decoration:none;padding:6px 11px;border-radius:7px;transition:all .2s;}
+nav ul a:hover,nav ul a.active{color:var(--gold)!important;background:var(--gold-dim);}
+.hdr-btns{display:flex;gap:8px;flex-shrink:0;}
+.btn-g{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#000;font-weight:600;font-size:12.5px;padding:7px 16px;border-radius:7px;border:none;cursor:pointer;text-decoration:none;transition:all .2s;white-space:nowrap;}
+.ham{display:none;flex-direction:column;gap:5px;cursor:pointer;margin-left:auto;padding:6px;}
+.ham span{width:22px;height:2px;background:var(--text);border-radius:2px;}
+.mob-nav{display:none;position:fixed;top:var(--hh);left:0;right:0;background:rgba(1,8,18,.97);border-bottom:1px solid var(--border);padding:16px 24px 24px;z-index:999;flex-direction:column;gap:4px;}
+.mob-nav.open{display:flex;}
+.mob-nav a{font-size:15px;color:var(--text-dim);text-decoration:none;padding:10px 14px;border-radius:8px;transition:.2s;}
+.mob-nav a:hover,.mob-nav a.active{color:var(--gold);background:var(--gold-dim);}
+.mob-btns{display:flex;gap:8px;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);}
+
+.page-wrap{position:relative;z-index:1;padding-top:calc(var(--hh)+60px);padding-bottom:80px;}
+.article{max-width:740px;margin:0 auto;padding:0 24px;}
+
+.back-link{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:13px;color:var(--text-dim);text-decoration:none;
+  margin-bottom:32px;transition:.2s;
+}
+.back-link:hover{color:var(--gold);}
+
+.article-title{
+  font-family:'Cinzel',serif;font-size:clamp(24px,4vw,38px);font-weight:600;
+  color:var(--gold);line-height:1.25;margin-bottom:14px;
+}
+.article-meta{
+  display:flex;align-items:center;gap:12px;
+  font-size:12.5px;color:var(--text-dim);margin-bottom:36px;
+  padding-bottom:28px;border-bottom:1px solid var(--border);
+}
+.meta-dot{width:3px;height:3px;border-radius:50%;background:var(--text-dim);}
+.article-body{
+  font-family:'Crimson Pro',serif;font-size:19px;line-height:1.85;
+  color:rgba(232,232,232,.9);white-space:pre-line;
+}
+
+footer{position:relative;z-index:1;text-align:center;padding:24px;font-size:12px;color:var(--text-dim);border-top:1px solid var(--border);margin-top:60px;}
+
+@media(max-width:768px){
+  nav ul,.hdr-btns{display:none;}.ham{display:flex;}
+  .page-wrap{padding-top:calc(var(--hh)+32px);}
+  .article-body{font-size:17px;}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="hdr">
+    <a class="brand" href="/">Astro<sup>✦</sup>Logic</a>
+    <nav><ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/panchang">Panchang</a></li>
+      <li><a href="/horoscope">Horoscope</a></li>
+      <li><a href="/prediction">Predictions</a></li>
+      <li><a href="/blogs" class="active">Blogs</a></li>
+      <li><a href="/about">About</a></li>
+    </ul></nav>
+    <div class="hdr-btns"><a href="/panchang" class="btn-g">Today's Panchang</a></div>
+    <div class="ham" onclick="document.getElementById('mn').classList.toggle('open')"><span></span><span></span><span></span></div>
+  </div>
+</header>
+<div class="mob-nav" id="mn">
+  <a href="/">Home</a><a href="/panchang">Panchang</a><a href="/horoscope">Horoscope</a>
+  <a href="/prediction">Predictions</a><a href="/blogs" class="active">Blogs</a><a href="/about">About</a>
+  <div class="mob-btns"><a href="/panchang" class="btn-g">Today's Panchang</a></div>
+</div>
+
+<div class="page-wrap">
+<div class="article">
+
+  <a href="/blogs" class="back-link">← Back to Articles</a>
+
+  <h1 class="article-title" id="blogTitle">Loading…</h1>
+  <div class="article-meta">
+    <span id="blogDate"></span>
+    <span class="meta-dot"></span>
+    <span>AstroLogic</span>
+  </div>
+  <div class="article-body" id="blogContent"></div>
+
+</div>
+</div>
+
+<footer>© 2026 AstroLogic. All rights reserved.</footer>
+
+<script>
+const blogId = "{{ blog_id }}";
+async function loadBlog() {
+  try {
+    const res = await fetch(`/api/blogs/${blogId}`);
+    const blog = await res.json();
+    if (!blog || blog.error) {
+      document.getElementById('blogTitle').textContent = 'Article not found';
+      return;
+    }
+    document.getElementById('blogTitle').textContent = blog.title || 'Untitled';
+    document.getElementById('blogDate').textContent = blog.created_at
+      ? new Date(blog.created_at).toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'})
+      : '';
+    document.getElementById('blogContent').textContent = blog.content || '';
+  } catch(e) {
+    document.getElementById('blogTitle').textContent = 'Error loading article';
+  }
+}
+loadBlog();
+</script>
+</body>
+</html>

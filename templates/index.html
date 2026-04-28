@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AstroLogic | Vedic Astrology Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --gold:#f5c16c;--gold2:#d89b3c;--gold-dim:rgba(245,193,108,.12);
+  --gold-border:rgba(245,193,108,.28);--blue:#9bdcff;--green:#4ade80;
+  --surface:rgba(255,255,255,.04);--border:rgba(255,255,255,.08);
+  --border2:rgba(255,255,255,.14);--text:#e8e8e8;--text-dim:rgba(232,232,232,.52);--hh:68px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:radial-gradient(ellipse 160% 80% at 50% -10%,#0a2540,#010812);
+  color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:
+    radial-gradient(1.5px 1.5px at 8% 15%,rgba(155,220,255,.5),transparent),
+    radial-gradient(1px 1px at 75% 6%,rgba(245,193,108,.45),transparent),
+    radial-gradient(1px 1px at 32% 52%,rgba(155,220,255,.32),transparent),
+    radial-gradient(1.5px 1.5px at 90% 70%,rgba(245,193,108,.38),transparent),
+    radial-gradient(1px 1px at 55% 35%,rgba(255,255,255,.28),transparent),
+    radial-gradient(1px 1px at 18% 80%,rgba(155,220,255,.3),transparent),
+    radial-gradient(1px 1px at 62% 58%,rgba(255,255,255,.2),transparent),
+    radial-gradient(1px 1px at 42% 10%,rgba(245,193,108,.35),transparent),
+    radial-gradient(1px 1px at 95% 25%,rgba(155,220,255,.25),transparent),
+    radial-gradient(1px 1px at 6% 45%,rgba(255,255,255,.2),transparent),
+    radial-gradient(1px 1px at 38% 88%,rgba(245,193,108,.25),transparent),
+    radial-gradient(1px 1px at 82% 40%,rgba(155,220,255,.2),transparent),
+    radial-gradient(1px 1px at 22% 30%,rgba(255,255,255,.15),transparent),
+    radial-gradient(1px 1px at 70% 85%,rgba(245,193,108,.2),transparent),
+    radial-gradient(1px 1px at 50% 68%,rgba(155,220,255,.18),transparent)}
+
+/* ── HEADER ── */
+header{position:sticky;top:0;height:var(--hh);background:rgba(1,8,18,.94);
+  backdrop-filter:blur(24px);border-bottom:1px solid var(--border);z-index:1000;display:flex;align-items:center}
+.hdr{width:100%;max-width:1200px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:20px}
+.brand{font-family:'Cinzel',serif;font-size:20px;font-weight:600;
+  color:var(--gold)!important;text-decoration:none;letter-spacing:1.5px;flex-shrink:0}
+.brand sup{font-size:9px;opacity:.6;font-weight:400;vertical-align:super}
+nav{flex:1}
+nav ul{display:flex;gap:2px;list-style:none;justify-content:center}
+nav ul li a{font-size:13px;font-weight:500;color:var(--text-dim)!important;
+  text-decoration:none;padding:6px 11px;border-radius:7px;transition:.2s;display:block}
+nav ul li a:hover,nav ul li a.active{color:var(--gold)!important;background:var(--gold-dim)}
+.hdr-btns{display:flex;gap:8px;flex-shrink:0}
+.btn-g{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#000;
+  font-weight:600;font-size:12.5px;padding:7px 16px;border-radius:7px;border:none;
+  cursor:pointer;text-decoration:none;transition:.2s;white-space:nowrap;font-family:'Inter',sans-serif}
+.btn-g:hover{filter:brightness(1.1);transform:translateY(-1px);color:#000}
+.btn-o{border:1px solid var(--gold-border);color:var(--gold);font-size:12.5px;
+  padding:7px 16px;border-radius:7px;background:transparent;cursor:pointer;
+  text-decoration:none;transition:.2s;white-space:nowrap;font-family:'Inter',sans-serif}
+.btn-o:hover{background:var(--gold-dim)}
+.ham{display:none;flex-direction:column;gap:5px;cursor:pointer;margin-left:auto;padding:6px}
+.ham span{width:22px;height:2px;background:var(--text);border-radius:2px}
+.mob-nav{display:none;position:fixed;top:var(--hh);left:0;right:0;
+  background:rgba(1,8,18,.97);border-bottom:1px solid var(--border);
+  padding:16px 24px 24px;z-index:999;flex-direction:column;gap:4px}
+.mob-nav.open{display:flex}
+.mob-nav a{font-size:15px;color:var(--text-dim);text-decoration:none;padding:10px 14px;border-radius:8px;transition:.2s}
+.mob-nav a:hover,.mob-nav a.active{color:var(--gold);background:var(--gold-dim)}
+.mob-btns{display:flex;gap:8px;margin-top:12px;padding-top:12px;border-top:1px solid var(--border)}
+
+/* ── HERO ── */
+.hero{position:relative;z-index:1;min-height:calc(100vh - var(--hh));
+  display:flex;align-items:center;padding:60px 24px}
+.hero-inner{max-width:1200px;margin:0 auto;width:100%;
+  display:grid;grid-template-columns:1fr 1fr;gap:70px;align-items:center}
+.hero-eyebrow{font-size:10.5px;font-weight:600;letter-spacing:3px;text-transform:uppercase;
+  color:var(--blue);margin-bottom:14px}
+.hero-title{font-family:'Cinzel',serif;font-size:clamp(30px,5vw,56px);
+  font-weight:600;line-height:1.18;color:#fff;margin-bottom:18px}
+.hero-title em{font-style:italic;font-family:'Crimson Pro',serif;
+  background:linear-gradient(135deg,var(--gold),#ffd98a);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-size:1.06em}
+.hero-sub{font-family:'Crimson Pro',serif;font-size:18.5px;font-weight:300;
+  line-height:1.72;color:rgba(232,232,232,.76);max-width:460px;margin-bottom:28px}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap}
+.btn-hero-p{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#000;
+  font-weight:700;font-size:14px;padding:13px 28px;border-radius:10px;border:none;
+  cursor:pointer;text-decoration:none;transition:.25s;font-family:'Inter',sans-serif}
+.btn-hero-p:hover{filter:brightness(1.1);transform:translateY(-2px);
+  box-shadow:0 8px 24px rgba(245,193,108,.28);color:#000}
+.btn-hero-s{border:1px solid var(--gold-border);color:var(--gold);font-size:14px;
+  font-weight:600;padding:13px 28px;border-radius:10px;background:transparent;
+  cursor:pointer;text-decoration:none;transition:.25s;font-family:'Inter',sans-serif}
+.btn-hero-s:hover{background:var(--gold-dim);border-color:var(--gold)}
+.hero-stats{display:flex;gap:32px;margin-top:36px;padding-top:28px;border-top:1px solid var(--border)}
+.stat-num{font-family:'Cinzel',serif;font-size:26px;font-weight:600;color:var(--gold);display:block}
+.stat-lbl{font-size:11px;color:var(--text-dim);margin-top:3px}
+
+/* ── CONSTELLATION ── */
+.hero-visual{display:flex;flex-direction:column;align-items:center;gap:14px}
+.vis-hint{font-size:11px;color:var(--text-dim);letter-spacing:1.5px;text-transform:uppercase}
+.constellation-wrap{position:relative;width:400px;height:400px;
+  animation:float 10s ease-in-out infinite}
+.c-ring{position:absolute;inset:30px;border-radius:50%;
+  border:1px solid rgba(155,220,255,.07);animation:spin 60s linear infinite}
+.c-ring2{position:absolute;inset:70px;border-radius:50%;
+  border:1px dashed rgba(245,193,108,.06);animation:spin 40s linear infinite reverse}
+.c-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:80px;height:80px;border-radius:50%;
+  background:radial-gradient(circle,rgba(245,193,108,.14),transparent 70%);pointer-events:none}
+.c-lines{position:absolute;inset:0;width:100%;height:100%}
+.node{position:absolute;cursor:pointer;width:12px;height:12px;border-radius:50%;
+  background:radial-gradient(circle,#9ce8ff,#5bc8f0);
+  box-shadow:0 0 14px rgba(155,220,255,.7),0 0 4px rgba(155,220,255,1);
+  transform:translate(-50%,-50%);transition:.25s;animation:npulse 5s ease-in-out infinite}
+.node:nth-child(odd){animation-delay:-2s}
+.node:hover{transform:translate(-50%,-50%) scale(2);
+  box-shadow:0 0 22px rgba(155,220,255,.9),0 0 8px rgba(245,193,108,.7)}
+.node-label{position:absolute;top:-30px;left:50%;transform:translateX(-50%);
+  font-family:'Cinzel',serif;font-size:10.5px;color:var(--blue);white-space:nowrap;
+  opacity:0;transition:.2s;pointer-events:none;background:rgba(1,8,18,.88);
+  padding:3px 8px;border-radius:4px;border:1px solid var(--border2)}
+.node:hover .node-label{opacity:1}
+@keyframes npulse{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-50%) scale(1.5)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-16px)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── LIVE PANCHANG STRIP ── */
+.live-strip{position:relative;z-index:1;
+  background:rgba(245,193,108,.06);border-top:1px solid var(--gold-border);
+  border-bottom:1px solid var(--gold-border);padding:14px 24px}
+.ls-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.ls-title{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--gold);flex-shrink:0}
+.ls-items{display:flex;gap:20px;flex-wrap:wrap;flex:1}
+.ls-item{font-size:13px}
+.ls-lbl{color:var(--text-dim);margin-right:5px}
+.ls-val{color:var(--gold);font-weight:500}
+.ls-link{color:var(--blue);font-size:12px;text-decoration:none;margin-left:auto;flex-shrink:0;
+  border:1px solid rgba(155,220,255,.2);padding:5px 12px;border-radius:6px;transition:.2s}
+.ls-link:hover{background:rgba(155,220,255,.08);color:var(--blue)}
+
+/* ── SECTION ── */
+section.s{position:relative;z-index:1;padding:80px 24px}
+section.s.alt{background:rgba(255,255,255,.015)}
+.s-inner{max-width:1200px;margin:0 auto}
+.s-eyebrow{font-size:10.5px;font-weight:600;letter-spacing:2.5px;
+  text-transform:uppercase;color:var(--blue);margin-bottom:8px}
+.s-title{font-family:'Cinzel',serif;font-size:clamp(22px,3.5vw,34px);
+  font-weight:600;color:var(--gold);margin-bottom:12px}
+.s-sub{font-family:'Crimson Pro',serif;font-size:17px;color:var(--text-dim);
+  max-width:560px;line-height:1.7;margin-bottom:40px}
+.divider{width:40px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  margin:14px 0}
+
+/* ── FEATURE CARDS ── */
+.feat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.feat-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;
+  padding:26px;text-align:center;transition:.3s;cursor:pointer;text-decoration:none;display:block}
+.feat-card:hover{border-color:var(--gold-border);background:rgba(245,193,108,.05);transform:translateY(-5px)}
+.feat-icon{font-size:30px;margin-bottom:14px;display:block}
+.feat-title{font-family:'Cinzel',serif;font-size:14px;font-weight:600;color:var(--gold);margin-bottom:8px}
+.feat-desc{font-size:12.5px;color:var(--text-dim);line-height:1.6}
+.feat-tag{display:inline-block;font-size:10px;padding:2px 8px;border-radius:4px;
+  margin-top:10px;background:var(--gold-dim);color:var(--gold);font-weight:600;letter-spacing:.5px}
+
+/* ── HOW IT WORKS ── */
+.steps-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;position:relative}
+.steps-grid::before{content:'';position:absolute;top:28px;left:14%;right:14%;
+  height:1px;background:linear-gradient(90deg,transparent,var(--gold-border),transparent);z-index:0}
+.step{text-align:center;position:relative;z-index:1}
+.step-num{width:54px;height:54px;border-radius:50%;background:var(--gold-dim);
+  border:1px solid var(--gold-border);display:flex;align-items:center;justify-content:center;
+  margin:0 auto 16px;font-family:'Cinzel',serif;font-size:18px;font-weight:700;color:var(--gold)}
+.step-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:8px}
+.step-desc{font-size:12.5px;color:var(--text-dim);line-height:1.6}
+
+/* ── ASTROLOGY DOMAINS ── */
+.domains-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.domain-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;
+  padding:18px 14px;text-align:center;transition:.3s;text-decoration:none;display:block}
+.domain-card:hover{border-color:var(--gold-border);background:var(--gold-dim);transform:translateY(-3px)}
+.domain-icon{font-size:24px;display:block;margin-bottom:8px}
+.domain-name{font-size:12.5px;font-weight:600;color:var(--text);margin-bottom:4px}
+.domain-sub{font-size:11px;color:var(--text-dim)}
+
+/* ── ACCURACY STATS ── */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;
+  padding:28px;text-align:center}
+.stat-card .big{font-family:'Cinzel',serif;font-size:36px;font-weight:700;color:var(--gold);
+  display:block;margin-bottom:6px}
+.stat-card .lbl{font-size:13px;color:var(--text-dim)}
+.stat-card .sub{font-size:11px;color:rgba(155,220,255,.6);margin-top:4px}
+
+/* ── ZODIAC QUICK ACCESS ── */
+.zodiac-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}
+.z-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;
+  padding:14px 10px;text-align:center;text-decoration:none;transition:.25s;display:block}
+.z-card:hover{border-color:var(--gold-border);background:var(--gold-dim);transform:translateY(-2px)}
+.z-card .glyph{font-size:22px;display:block;margin-bottom:5px}
+.z-card .name{font-size:12px;font-weight:500;color:var(--text-dim)}
+.z-card:hover .name{color:var(--gold)}
+
+/* ── WHY VEDIC ── */
+.why-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.why-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px}
+.why-head{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.why-icon{font-size:22px}
+.why-title{font-size:14px;font-weight:600;color:var(--gold)}
+.why-body{font-size:13px;color:var(--text-dim);line-height:1.7}
+
+/* ── TESTIMONIALS ── */
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.testi-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px}
+.testi-stars{color:var(--gold);font-size:14px;margin-bottom:10px}
+.testi-text{font-family:'Crimson Pro',serif;font-size:16px;color:var(--text-dim);
+  line-height:1.65;margin-bottom:14px;font-style:italic}
+.testi-author{font-size:12px;font-weight:600;color:var(--text)}
+.testi-meta{font-size:11px;color:var(--text-dim);margin-top:2px}
+
+/* ── CTA ── */
+.cta-section{text-align:center;padding:80px 24px}
+.cta-inner{max-width:600px;margin:0 auto}
+.cta-title{font-family:'Cinzel',serif;font-size:clamp(22px,3vw,32px);
+  font-weight:600;color:var(--gold);margin-bottom:14px}
+.cta-sub{font-family:'Crimson Pro',serif;font-size:18px;color:var(--text-dim);
+  line-height:1.65;margin-bottom:28px}
+.cta-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+
+footer{position:relative;z-index:1;background:rgba(0,0,0,.3);
+  border-top:1px solid var(--border);padding:40px 24px 24px}
+.footer-inner{max-width:1200px;margin:0 auto}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:32px}
+.footer-brand{font-family:'Cinzel',serif;font-size:18px;font-weight:600;
+  color:var(--gold);margin-bottom:10px}
+.footer-about{font-size:13px;color:var(--text-dim);line-height:1.7}
+.footer-col h4{font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;
+  color:var(--text);margin-bottom:12px}
+.footer-col a{display:block;font-size:13px;color:var(--text-dim);text-decoration:none;
+  margin-bottom:7px;transition:.2s}
+.footer-col a:hover{color:var(--gold)}
+.footer-bottom{border-top:1px solid var(--border);padding-top:18px;
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+.footer-copy{font-size:12px;color:var(--text-dim)}
+.footer-badges{display:flex;gap:10px}
+.f-badge{font-size:10.5px;padding:3px 10px;border-radius:4px;
+  background:var(--surface);border:1px solid var(--border);color:var(--text-dim)}
+
+@media(max-width:1024px){
+  .feat-grid{grid-template-columns:repeat(2,1fr)}
+  .domains-grid{grid-template-columns:repeat(3,1fr)}
+  .stats-grid{grid-template-columns:repeat(2,1fr)}
+  .footer-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:900px){
+  .hero-inner{grid-template-columns:1fr;gap:40px}
+  .constellation-wrap{width:300px;height:300px}
+  .steps-grid{grid-template-columns:repeat(2,1fr)}
+  .why-grid{grid-template-columns:1fr}
+  .testi-grid{grid-template-columns:1fr}
+  .zodiac-grid{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:768px){nav ul,.hdr-btns{display:none}.ham{display:flex}}
+@media(max-width:540px){
+  .feat-grid{grid-template-columns:1fr 1fr}
+  .domains-grid{grid-template-columns:repeat(2,1fr)}
+  .zodiac-grid{grid-template-columns:repeat(3,1fr)}
+  .stats-grid{grid-template-columns:1fr 1fr}
+  .cta-btns{flex-direction:column;align-items:center}
+  .footer-grid{grid-template-columns:1fr}
+  .hero-stats{gap:18px}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hdr">
+    <a class="brand" href="/">Astro<sup>✦</sup>Logic</a>
+    <nav><ul>
+      <li><a href="/" class="active">Home</a></li>
+      <li><a href="/panchang">Panchang</a></li>
+      <li><a href="/kundali">Kundali</a></li>
+      <li><a href="/horoscope">Horoscope</a></li>
+      <li><a href="/prediction">Predictions</a></li>
+      <li><a href="/blogs">Blogs</a></li>
+      <li><a href="/about">About</a></li>
+    </ul></nav>
+    <div class="hdr-btns">
+      <a href="/panchang" class="btn-o">Today's Panchang</a>
+      <a href="/kundali" class="btn-g">Generate Kundali</a>
+    </div>
+    <div class="ham" onclick="document.getElementById('mn').classList.toggle('open')">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</header>
+
+<div class="mob-nav" id="mn">
+  <a href="/" class="active">Home</a><a href="/panchang">Panchang</a>
+  <a href="/kundali">Kundali</a><a href="/horoscope">Horoscope</a>
+  <a href="/prediction">Predictions</a><a href="/blogs">Blogs</a><a href="/about">About</a>
+  <div class="mob-btns">
+    <a href="/panchang" class="btn-o">Panchang</a>
+    <a href="/kundali" class="btn-g">Kundali</a>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div>
+      <p class="hero-eyebrow">Vedic Astrology · AI-Powered · Swiss Ephemeris</p>
+      <h1 class="hero-title">Nothing Happens<br>Without a <em>Pattern.</em></h1>
+      <p class="hero-sub">
+        AstroLogic combines ancient Vedic wisdom with modern AI to reveal how
+        planetary cycles shape your destiny — from birth chart to daily guidance.
+      </p>
+      <div class="hero-btns">
+        <a href="/kundali" class="btn-hero-p">Generate Free Kundali</a>
+        <a href="/horoscope" class="btn-hero-s">Today's Horoscope</a>
+      </div>
+      <div class="hero-stats">
+        <div><span class="stat-num">9</span><div class="stat-lbl">Navagrahas</div></div>
+        <div><span class="stat-num">27</span><div class="stat-lbl">Nakshatras</div></div>
+        <div><span class="stat-num">50+</span><div class="stat-lbl">Yogas Detected</div></div>
+        <div><span class="stat-num">AI</span><div class="stat-lbl">Predictions</div></div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <p class="vis-hint">Click a planet to explore</p>
+      <div class="constellation-wrap">
+        <div class="c-ring"></div>
+        <div class="c-ring2"></div>
+        <div class="c-glow"></div>
+        <svg class="c-lines" viewBox="0 0 400 400" fill="none">
+          <polygon points="200,42 340,118 370,220 290,322 200,358 110,322 30,220 60,118"
+            stroke="rgba(155,220,255,.1)" stroke-width="1" fill="none"/>
+          <line x1="200" y1="42" x2="370" y2="220" stroke="rgba(245,193,108,.06)" stroke-width="1"/>
+          <line x1="340" y1="118" x2="110" y2="322" stroke="rgba(245,193,108,.06)" stroke-width="1"/>
+          <line x1="60" y1="118" x2="290" y2="322" stroke="rgba(155,220,255,.06)" stroke-width="1"/>
+          <circle cx="200" cy="200" r="50" stroke="rgba(245,193,108,.05)" stroke-width="1" fill="none"/>
+        </svg>
+        <div class="node" style="top:10.5%;left:50%" onclick="location.href='/horoscope'"><span class="node-label">♌ Leo · Sun</span></div>
+        <div class="node" style="top:29.5%;left:85%" onclick="location.href='/horoscope'"><span class="node-label">♉ Taurus · Venus</span></div>
+        <div class="node" style="top:55%;left:92.5%" onclick="location.href='/horoscope'"><span class="node-label">♊ Gemini · Mercury</span></div>
+        <div class="node" style="top:80.5%;left:72.5%" onclick="location.href='/horoscope'"><span class="node-label">♋ Cancer · Moon</span></div>
+        <div class="node" style="top:89.5%;left:50%" onclick="location.href='/horoscope'"><span class="node-label">♈ Aries · Mars</span></div>
+        <div class="node" style="top:80.5%;left:27.5%" onclick="location.href='/horoscope'"><span class="node-label">♑ Capricorn · Saturn</span></div>
+        <div class="node" style="top:55%;left:7.5%" onclick="location.href='/horoscope'"><span class="node-label">♐ Sagittarius · Jupiter</span></div>
+        <div class="node" style="top:29.5%;left:15%" onclick="location.href='/horoscope'"><span class="node-label">♏ Scorpio · Rahu</span></div>
+        <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+          font-family:'Cinzel',serif;font-size:22px;color:var(--gold);
+          text-shadow:0 0 20px rgba(245,193,108,.5);pointer-events:none">✦</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LIVE PANCHANG STRIP -->
+<div class="live-strip">
+  <div class="ls-inner">
+    <span class="ls-title">🌅 Today</span>
+    <div class="ls-items" id="lsItems">
+      <span class="ls-item"><span class="ls-lbl">Loading panchang…</span></span>
+    </div>
+    <a href="/panchang" class="ls-link">Full Panchang →</a>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section class="s">
+  <div class="s-inner">
+    <p class="s-eyebrow">Core Features</p>
+    <h2 class="s-title">Everything in One Platform</h2>
+    <div class="divider"></div>
+    <div class="feat-grid">
+      <a href="/kundali" class="feat-card">
+        <span class="feat-icon">🔯</span>
+        <div class="feat-title">Birth Kundali</div>
+        <div class="feat-desc">D1 Rashi + D9 Navamsa charts with Vimshottari Dasha, Yogas, Doshas, and house-wise analysis</div>
+        <span class="feat-tag">Free</span>
+      </a>
+      <a href="/panchang" class="feat-card">
+        <span class="feat-icon">🌅</span>
+        <div class="feat-title">Daily Panchang</div>
+        <div class="feat-desc">Tithi, Nakshatra, Yoga, Karana, Rahu Kaal, Muhurat timings computed from live ephemeris</div>
+        <span class="feat-tag">Live</span>
+      </a>
+      <a href="/horoscope" class="feat-card">
+        <span class="feat-icon">♈</span>
+        <div class="feat-title">Daily Horoscope</div>
+        <div class="feat-desc">Dynamic AI horoscope from real planetary transits — not static templates. Updates daily</div>
+        <span class="feat-tag">AI-Powered</span>
+      </a>
+      <a href="/prediction" class="feat-card">
+        <span class="feat-icon">🔮</span>
+        <div class="feat-title">Life Predictions</div>
+        <div class="feat-desc">Marriage, career, wealth, health timing windows using Dasha + transit analysis</div>
+        <span class="feat-tag">Detailed</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="s alt">
+  <div class="s-inner">
+    <p class="s-eyebrow">The Process</p>
+    <h2 class="s-title">How AstroLogic Works</h2>
+    <div class="divider"></div>
+    <div class="steps-grid">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-title">Enter Birth Details</div>
+        <div class="step-desc">Date, time and city of birth — we handle timezone and coordinate lookup automatically</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-title">Ephemeris Calculation</div>
+        <div class="step-desc">Swiss Ephemeris computes precise sidereal planetary positions using Lahiri Ayanamsa</div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-title">Vedic Analysis</div>
+        <div class="step-desc">Houses, nakshatras, yogas, dashas, divisional charts and strengths are mapped</div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-title">AI Narration</div>
+        <div class="step-desc">AI generates plain-language insights explaining what each configuration means for your life</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LIFE DOMAINS -->
+<section class="s">
+  <div class="s-inner">
+    <p class="s-eyebrow">Life Areas</p>
+    <h2 class="s-title">10 Life Domain Reports</h2>
+    <div class="divider"></div>
+    <p class="s-sub">Every major life area analysed through dedicated house lords, divisional charts, dasha timing and yogas</p>
+    <div class="domains-grid">
+      <a href="/prediction" class="domain-card"><span class="domain-icon">♥</span><div class="domain-name">Marriage</div><div class="domain-sub">Timing & partner traits</div></a>
+      <a href="/prediction" class="domain-card"><span class="domain-icon">★</span><div class="domain-name">Career</div><div class="domain-sub">Field & promotion timing</div></a>
+      <a href="/prediction" class="domain-card"><span class="domain-icon">₹</span><div class="domain-name">Wealth</div><div class="domain-sub">Income & Dhana Yoga</div></a>
+      <a href="/prediction" class="domain-card"><span class="domain-icon">✚</span><div class="domain-name">Health</div><div class="domain-sub">Weak organs & timing</div></a>
+      <a href="/prediction" class="domain-card"><span class="domain-icon">❋</span><div class="domain-name">Children</div><div class="domain-sub">Timing & Putra Dosh</div></a>
+      <a href="/prediction" class="domain-card"><span class="domain-icon">✦</span><div class="domain-name">Education</div><div class="domain-sub">Best fields & Vidya Yoga</div></a>
+      <a href="/prediction" class="domain-card"><span class="domain-icon">⌂</span><div class="domain-name">Property</div><div class="domain-sub">Purchase timing & Vastu</div></a>
+      <a href="/prediction" class="domain-card"><span class="domain-icon">⚡</span><div class="domain-name">Challenges</div><div class="domain-sub">Kaal Sarp & Doshas</div></a>
+      <a href="/prediction" class="domain-card"><span class="domain-icon">✈</span><div class="domain-name">Travel</div><div class="domain-sub">Foreign settlement</div></a>
+      <a href="/prediction" class="domain-card"><span class="domain-icon">☯</span><div class="domain-name">Spirituality</div><div class="domain-sub">Karma & Moksha Yoga</div></a>
+    </div>
+  </div>
+</section>
+
+<!-- ZODIAC QUICK ACCESS -->
+<section class="s alt">
+  <div class="s-inner">
+    <p class="s-eyebrow">Quick Access</p>
+    <h2 class="s-title">Today's Horoscope by Sign</h2>
+    <div class="divider"></div>
+    <div class="zodiac-grid">
+      <a href="/horoscope?sign=0" class="z-card"><span class="glyph">♈</span><span class="name">Aries</span></a>
+      <a href="/horoscope?sign=1" class="z-card"><span class="glyph">♉</span><span class="name">Taurus</span></a>
+      <a href="/horoscope?sign=2" class="z-card"><span class="glyph">♊</span><span class="name">Gemini</span></a>
+      <a href="/horoscope?sign=3" class="z-card"><span class="glyph">♋</span><span class="name">Cancer</span></a>
+      <a href="/horoscope?sign=4" class="z-card"><span class="glyph">♌</span><span class="name">Leo</span></a>
+      <a href="/horoscope?sign=5" class="z-card"><span class="glyph">♍</span><span class="name">Virgo</span></a>
+      <a href="/horoscope?sign=6" class="z-card"><span class="glyph">♎</span><span class="name">Libra</span></a>
+      <a href="/horoscope?sign=7" class="z-card"><span class="glyph">♏</span><span class="name">Scorpio</span></a>
+      <a href="/horoscope?sign=8" class="z-card"><span class="glyph">♐</span><span class="name">Sagittarius</span></a>
+      <a href="/horoscope?sign=9" class="z-card"><span class="glyph">♑</span><span class="name">Capricorn</span></a>
+      <a href="/horoscope?sign=10" class="z-card"><span class="glyph">♒</span><span class="name">Aquarius</span></a>
+      <a href="/horoscope?sign=11" class="z-card"><span class="glyph">♓</span><span class="name">Pisces</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- PLATFORM STATS -->
+<section class="s">
+  <div class="s-inner">
+    <p class="s-eyebrow">Platform</p>
+    <h2 class="s-title">Built for Accuracy</h2>
+    <div class="divider"></div>
+    <div class="stats-grid">
+      <div class="stat-card"><span class="big">Swiss</span><div class="lbl">Ephemeris Engine</div><div class="sub">Highest precision planetary data</div></div>
+      <div class="stat-card"><span class="big">Lahiri</span><div class="lbl">Ayanamsa System</div><div class="sub">Standard Vedic sidereal calculation</div></div>
+      <div class="stat-card"><span class="big">50+</span><div class="lbl">Yogas Detected</div><div class="sub">Raj, Dhana, Neech Bhanga & more</div></div>
+      <div class="stat-card"><span class="big">D1–D12</span><div class="lbl">Divisional Charts</div><div class="sub">Marriage, career, children & property</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY VEDIC -->
+<section class="s alt">
+  <div class="s-inner">
+    <p class="s-eyebrow">Why Vedic</p>
+    <h2 class="s-title">The Science of Jyotish</h2>
+    <div class="divider"></div>
+    <div class="why-grid">
+      <div class="why-card">
+        <div class="why-head"><span class="why-icon">🌌</span><span class="why-title">Sidereal Zodiac</span></div>
+        <p class="why-body">Vedic astrology uses the actual positions of constellations (sidereal), not the tropical zodiac that has drifted ~24° from the sky. Our calculations use the precise Lahiri Ayanamsa correction.</p>
+      </div>
+      <div class="why-card">
+        <div class="why-head"><span class="why-icon">⏱</span><span class="why-title">Vimshottari Dasha</span></div>
+        <p class="why-body">The 120-year planetary period system maps life chapters to exact planet cycles. Every major life event — marriage, job change, illness — correlates with a Mahadasha or Antardasha transition.</p>
+      </div>
+      <div class="why-card">
+        <div class="why-head"><span class="why-icon">🏠</span><span class="why-title">12 House System</span></div>
+        <p class="why-body">Each house governs a specific life domain. The lord of each house and planets occupying it determine your experiences in wealth, relationships, career, health and spiritual growth.</p>
+      </div>
+      <div class="why-card">
+        <div class="why-head"><span class="why-icon">⭐</span><span class="why-title">27 Nakshatras</span></div>
+        <p class="why-body">The Moon's 27 lunar mansions provide granular personality and timing detail not available in Western astrology. Your birth nakshatra determines your Dasha starting point and core nature.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="cta-inner">
+    <h2 class="cta-title">Know Your Cosmic Blueprint</h2>
+    <p class="cta-sub">Your birth chart is a precise map of the sky at the moment you arrived. Generate your free Kundali now and begin understanding your life's patterns.</p>
+    <div class="cta-btns">
+      <a href="/kundali" class="btn-hero-p">Generate Free Kundali</a>
+      <a href="/horoscope" class="btn-hero-s">Today's Horoscope</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">Astro✦Logic</div>
+        <p class="footer-about">A professional Vedic astrology platform combining Swiss Ephemeris precision with AI-powered interpretation. Built for seekers of genuine cosmic understanding.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Features</h4>
+        <a href="/kundali">Birth Kundali</a>
+        <a href="/panchang">Daily Panchang</a>
+        <a href="/horoscope">Horoscope</a>
+        <a href="/prediction">Predictions</a>
+      </div>
+      <div class="footer-col">
+        <h4>Learn</h4>
+        <a href="/blogs">Astrology Blog</a>
+        <a href="/about">About Vedic</a>
+        <a href="/about#nakshatras">27 Nakshatras</a>
+        <a href="/about#dashas">Dasha System</a>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a href="/about">About Us</a>
+        <a href="/blogs">Blog</a>
+        <a href="/admin/blogs">Admin</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2026 AstroLogic · Vedic Astrology Platform</div>
+      <div class="footer-badges">
+        <span class="f-badge">Swiss Ephemeris</span>
+        <span class="f-badge">Lahiri Ayanamsa</span>
+        <span class="f-badge">AI-Powered</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Load live panchang strip
+async function loadStrip() {
+  try {
+    const r = await fetch('/api/panchang', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({city:'Pune'})});
+    const d = await r.json();
+    const items = [
+      d.tithi   ? `<span class="ls-item"><span class="ls-lbl">Tithi:</span><span class="ls-val">${d.tithi||d.tithi_name}</span></span>` : '',
+      d.nakshatra ? `<span class="ls-item"><span class="ls-lbl">Nakshatra:</span><span class="ls-val">${d.nakshatra}</span></span>` : '',
+      d.yoga||d.yoga_name ? `<span class="ls-item"><span class="ls-lbl">Yoga:</span><span class="ls-val">${d.yoga||d.yoga_name}</span></span>` : '',
+      d.rahu ? `<span class="ls-item"><span class="ls-lbl">Rahu Kaal:</span><span class="ls-val">${d.rahu}</span></span>` : '',
+      d.sunrise ? `<span class="ls-item"><span class="ls-lbl">Sunrise:</span><span class="ls-val">${d.sunrise}</span></span>` : '',
+    ].filter(Boolean);
+    document.getElementById('lsItems').innerHTML = items.join('') || '<span class="ls-item"><span class="ls-lbl">Panchang loaded</span></span>';
+  } catch(e) {
+    document.getElementById('lsItems').innerHTML = '<span class="ls-item" style="color:var(--text-dim)"><a href="/panchang" style="color:var(--blue)">View full panchang →</a></span>';
+  }
+}
+
+// Handle horoscope sign query param
+const params = new URLSearchParams(location.search);
+if (params.get('sign')) location.href = `/horoscope?sign=${params.get('sign')}`;
+
+loadStrip();
+</script>
+</body>
+</html>

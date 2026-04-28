@@ -1,0 +1,388 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AstroLogic | About Vedic Astrology</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --gold:#f5c16c;--gold2:#d89b3c;--gold-dim:rgba(245,193,108,.12);
+  --gold-border:rgba(245,193,108,.28);--blue:#9bdcff;--green:#4ade80;
+  --surface:rgba(255,255,255,.04);--border:rgba(255,255,255,.08);
+  --border2:rgba(255,255,255,.13);--text:#e8e8e8;--text-dim:rgba(232,232,232,.52);--hh:68px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:radial-gradient(ellipse 140% 70% at 50% -5%,#0c2a4a,#010812);
+  color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:radial-gradient(1px 1px at 12% 18%,rgba(155,220,255,.3),transparent),
+    radial-gradient(1px 1px at 78% 8%,rgba(245,193,108,.25),transparent),
+    radial-gradient(1px 1px at 60% 70%,rgba(155,220,255,.18),transparent)}
+header{position:sticky;top:0;height:var(--hh);background:rgba(1,8,18,.95);
+  backdrop-filter:blur(24px);border-bottom:1px solid var(--border);z-index:1000;display:flex;align-items:center}
+.hdr{width:100%;max-width:1200px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:20px}
+.brand{font-family:'Cinzel',serif;font-size:19px;font-weight:600;color:var(--gold)!important;
+  text-decoration:none;letter-spacing:1.5px;flex-shrink:0}
+.brand sup{font-size:9px;opacity:.6;font-weight:400;vertical-align:super}
+nav{flex:1}
+nav ul{display:flex;gap:2px;list-style:none;justify-content:center}
+nav ul li a{font-size:13px;font-weight:500;color:var(--text-dim)!important;text-decoration:none;
+  padding:6px 10px;border-radius:7px;transition:.2s;display:block}
+nav ul li a:hover,nav ul li a.active{color:var(--gold)!important;background:var(--gold-dim)}
+.hdr-btns{display:flex;gap:8px;flex-shrink:0}
+.btn-g{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#000;font-weight:600;
+  font-size:12.5px;padding:7px 16px;border-radius:7px;border:none;cursor:pointer;
+  text-decoration:none;transition:.2s;white-space:nowrap;font-family:'Inter',sans-serif}
+.btn-g:hover{filter:brightness(1.1);transform:translateY(-1px);color:#000}
+.ham{display:none;flex-direction:column;gap:5px;cursor:pointer;margin-left:auto;padding:6px}
+.ham span{width:22px;height:2px;background:var(--text);border-radius:2px}
+.mob-nav{display:none;position:fixed;top:var(--hh);left:0;right:0;background:rgba(1,8,18,.97);
+  border-bottom:1px solid var(--border);padding:16px 24px 24px;z-index:999;flex-direction:column;gap:4px}
+.mob-nav.open{display:flex}
+.mob-nav a{font-size:15px;color:var(--text-dim);text-decoration:none;padding:10px 14px;border-radius:8px;transition:.2s}
+.mob-nav a:hover,.mob-nav a.active{color:var(--gold);background:var(--gold-dim)}
+.mob-btns{display:flex;gap:8px;margin-top:12px;padding-top:12px;border-top:1px solid var(--border)}
+
+.page-wrap{position:relative;z-index:1;padding-bottom:80px}
+.container{max-width:1000px;margin:0 auto;padding:0 24px}
+.wide{max-width:1200px;margin:0 auto;padding:0 24px}
+
+/* HERO */
+.about-hero{text-align:center;padding:56px 24px 48px}
+.eyebrow{font-size:11px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;
+  color:var(--blue);margin-bottom:8px;display:block}
+.page-title{font-family:'Cinzel',serif;font-size:clamp(24px,4vw,40px);
+  font-weight:600;color:var(--gold);margin-bottom:12px}
+.divider{width:50px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:12px auto}
+.hero-body{font-family:'Crimson Pro',serif;font-size:19px;color:var(--text-dim);
+  max-width:680px;margin:0 auto;line-height:1.8}
+
+/* SECTIONS */
+.s{padding:56px 0}
+.s-alt{background:rgba(255,255,255,.015)}
+.s-title{font-family:'Cinzel',serif;font-size:clamp(20px,3vw,30px);
+  font-weight:600;color:var(--gold);margin-bottom:10px}
+.s-eyebrow{font-size:10.5px;font-weight:600;letter-spacing:2px;text-transform:uppercase;
+  color:var(--blue);margin-bottom:6px;display:block}
+.s-divider{width:36px;height:1px;background:linear-gradient(90deg,var(--gold),transparent);margin:10px 0 20px}
+.prose{font-family:'Crimson Pro',serif;font-size:17.5px;color:var(--text-dim);
+  line-height:1.85;margin-bottom:16px}
+.prose strong{color:var(--text);font-weight:600}
+
+/* PILLARS */
+.pillars-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:24px}
+.pillar{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px}
+.pillar-icon{font-size:26px;margin-bottom:10px;display:block}
+.pillar-title{font-family:'Cinzel',serif;font-size:15px;font-weight:600;color:var(--gold);margin-bottom:8px}
+.pillar-body{font-size:13px;color:var(--text-dim);line-height:1.7}
+
+/* PLANETS TABLE */
+.planet-table-wrap{overflow-x:auto;margin-top:24px}
+.planet-table{width:100%;border-collapse:collapse;min-width:600px}
+.planet-table thead th{background:rgba(245,193,108,.1);color:var(--gold);font-size:11px;
+  font-weight:700;text-transform:uppercase;letter-spacing:1px;padding:11px 14px;text-align:left}
+.planet-table tbody tr{border-bottom:1px solid var(--border)}
+.planet-table tbody tr:hover{background:rgba(255,255,255,.03)}
+.planet-table tbody td{padding:10px 14px;font-size:13.5px;vertical-align:top}
+.planet-table tbody td:first-child{font-weight:600;color:var(--text)}
+.planet-table tbody td:last-child{color:var(--text-dim);font-size:12.5px}
+
+/* NAKSHATRA GRID */
+.nak-grid{display:grid;grid-template-columns:repeat(9,1fr);gap:6px;margin-top:20px}
+.nak-cell{background:var(--surface);border:1px solid var(--border);border-radius:8px;
+  padding:8px 6px;text-align:center;font-size:11px;color:var(--text-dim);transition:.2s}
+.nak-cell:hover{border-color:var(--gold-border);color:var(--gold)}
+.nak-num{font-size:9px;color:var(--text-dim);margin-bottom:3px;display:block}
+.nak-name{font-size:11px;font-weight:500;color:var(--text)}
+
+/* DASHA TABLE */
+.dasha-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:20px}
+.dasha-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px}
+.dc-planet{font-size:14px;font-weight:600;color:var(--gold);margin-bottom:4px}
+.dc-years{font-size:12px;color:var(--blue);margin-bottom:6px}
+.dc-desc{font-size:12px;color:var(--text-dim);line-height:1.6}
+
+/* TEAM / PHILOSOPHY */
+.philosophy-layout{display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:center}
+.phil-quote{font-family:'Crimson Pro',serif;font-size:24px;font-style:italic;
+  color:var(--gold);line-height:1.6;margin-bottom:14px}
+.phil-attr{font-size:13px;color:var(--text-dim)}
+
+/* TECH STACK */
+.tech-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:24px}
+.tech-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;
+  padding:18px;text-align:center}
+.tech-icon{font-size:28px;margin-bottom:8px}
+.tech-name{font-size:13px;font-weight:600;color:var(--gold);margin-bottom:4px}
+.tech-desc{font-size:11.5px;color:var(--text-dim)}
+
+/* CTA */
+.cta-band{background:linear-gradient(135deg,rgba(245,193,108,.1),rgba(245,193,108,.03));
+  border:1px solid var(--gold-border);border-radius:18px;padding:40px;text-align:center;margin-top:56px}
+.cta-title{font-family:'Cinzel',serif;font-size:24px;color:var(--gold);margin-bottom:10px}
+.cta-body{font-family:'Crimson Pro',serif;font-size:17px;color:var(--text-dim);margin-bottom:24px}
+.cta-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn-cta-p{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#000;
+  font-weight:700;font-size:14px;padding:12px 28px;border-radius:10px;border:none;
+  cursor:pointer;text-decoration:none;font-family:'Inter',sans-serif;transition:.2s}
+.btn-cta-p:hover{filter:brightness(1.1);transform:translateY(-2px);color:#000}
+.btn-cta-s{border:1px solid var(--gold-border);color:var(--gold);font-size:14px;
+  font-weight:600;padding:12px 28px;border-radius:10px;background:transparent;
+  cursor:pointer;text-decoration:none;font-family:'Inter',sans-serif;transition:.2s}
+.btn-cta-s:hover{background:var(--gold-dim)}
+
+footer{position:relative;z-index:1;text-align:center;padding:24px;
+  font-size:12px;color:var(--text-dim);border-top:1px solid var(--border);margin-top:24px}
+
+@media(max-width:900px){
+  .pillars-grid{grid-template-columns:1fr 1fr}
+  .philosophy-layout{grid-template-columns:1fr}
+  .tech-grid{grid-template-columns:repeat(2,1fr)}
+  .dasha-grid{grid-template-columns:1fr 1fr}
+  .nak-grid{grid-template-columns:repeat(5,1fr)}}
+@media(max-width:768px){nav ul,.hdr-btns{display:none}.ham{display:flex}}
+@media(max-width:540px){
+  .pillars-grid,.dasha-grid,.tech-grid{grid-template-columns:1fr}
+  .nak-grid{grid-template-columns:repeat(3,1fr)}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hdr">
+    <a class="brand" href="/">Astro<sup>✦</sup>Logic</a>
+    <nav><ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/panchang">Panchang</a></li>
+      <li><a href="/kundali">Kundali</a></li>
+      <li><a href="/horoscope">Horoscope</a></li>
+      <li><a href="/prediction">Predictions</a></li>
+      <li><a href="/blogs">Blogs</a></li>
+      <li><a href="/about" class="active">About</a></li>
+    </ul></nav>
+    <div class="hdr-btns"><a href="/kundali" class="btn-g">Generate Kundali</a></div>
+    <div class="ham" onclick="document.getElementById('mn').classList.toggle('open')">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</header>
+
+<div class="mob-nav" id="mn">
+  <a href="/">Home</a><a href="/panchang">Panchang</a>
+  <a href="/kundali">Kundali</a><a href="/horoscope">Horoscope</a>
+  <a href="/prediction">Predictions</a><a href="/blogs">Blogs</a><a href="/about" class="active">About</a>
+  <div class="mob-btns"><a href="/kundali" class="btn-g">Generate Kundali</a></div>
+</div>
+
+<div class="page-wrap">
+
+  <!-- HERO -->
+  <div class="about-hero">
+    <span class="eyebrow">The Ancient Science</span>
+    <h1 class="page-title">About Vedic Astrology</h1>
+    <div class="divider"></div>
+    <p class="hero-body">
+      Jyotish — the eye of the Vedas — is one of humanity's oldest sciences of consciousness.
+      Developed over 5,000 years in ancient India, it maps the relationship between celestial
+      rhythms and human experience with extraordinary precision.
+    </p>
+  </div>
+
+  <!-- WHAT IS JYOTISH -->
+  <section class="s">
+    <div class="container">
+      <span class="s-eyebrow">Foundation</span>
+      <h2 class="s-title">What is Jyotish?</h2>
+      <div class="s-divider"></div>
+      <p class="prose">Jyotish (Sanskrit: <strong>ज्योतिष</strong>, "science of light") is the Vedic system of astrology. Unlike Western astrology which uses the tropical zodiac aligned with the seasons, Jyotish uses the <strong>sidereal zodiac</strong> — actual star positions — corrected by the Ayanamsa (currently ~24°) to account for the precession of equinoxes.</p>
+      <p class="prose">The result is a system that is astronomically grounded, highly personalised through the Ascendant (Lagna), and capable of specific timing through the <strong>Dasha planetary period system</strong>. Major life events — marriage, career shifts, illness, spiritual awakening — reliably correlate with Dasha transitions.</p>
+      <div class="pillars-grid">
+        <div class="pillar">
+          <span class="pillar-icon">🪐</span>
+          <div class="pillar-title">Graha (Planets)</div>
+          <p class="pillar-body">Nine celestial bodies — Sun, Moon, Mars, Mercury, Jupiter, Venus, Saturn, Rahu and Ketu — each govern specific life domains and psychological functions.</p>
+        </div>
+        <div class="pillar">
+          <span class="pillar-icon">🏠</span>
+          <div class="pillar-title">Bhava (Houses)</div>
+          <p class="pillar-body">Twelve houses represent every area of human life from personality (1st) and wealth (2nd) through to marriage (7th), career (10th) and liberation (12th).</p>
+        </div>
+        <div class="pillar">
+          <span class="pillar-icon">♈</span>
+          <div class="pillar-title">Rashi (Signs)</div>
+          <p class="pillar-body">Twelve sidereal zodiac signs filter planetary energies. A planet's sign placement determines its mode of expression and how it interacts with the chart.</p>
+        </div>
+        <div class="pillar">
+          <span class="pillar-icon">⭐</span>
+          <div class="pillar-title">Nakshatra (Stars)</div>
+          <p class="pillar-body">27 lunar mansions of 13°20' each provide the most granular layer of chart analysis — governing emotional nature, instinctive responses and karmic patterns.</p>
+        </div>
+        <div class="pillar">
+          <span class="pillar-icon">⏱</span>
+          <div class="pillar-title">Dasha (Timing)</div>
+          <p class="pillar-body">The 120-year Vimshottari Dasha system maps life chapters to specific planetary periods. This is the primary timing mechanism — uniquely powerful in Jyotish.</p>
+        </div>
+        <div class="pillar">
+          <span class="pillar-icon">✦</span>
+          <div class="pillar-title">Yoga (Combinations)</div>
+          <p class="pillar-body">Over 300 named planetary combinations (Yogas) indicate specific talents, destinies and life patterns — from Raj Yoga (power) to Dharma-Karma Adhipati Yoga.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NINE PLANETS -->
+  <section class="s s-alt" id="planets">
+    <div class="container">
+      <span class="s-eyebrow">Navagraha</span>
+      <h2 class="s-title">The Nine Planets</h2>
+      <div class="s-divider"></div>
+      <p class="prose">In Vedic astrology, nine celestial bodies are tracked — seven visible planets plus Rahu and Ketu, the mathematically derived lunar nodes where eclipses occur.</p>
+      <div class="planet-table-wrap">
+        <table class="planet-table">
+          <thead><tr><th>Planet</th><th>Sanskrit</th><th>Owns Signs</th><th>Exalted In</th><th>Rules Over</th></tr></thead>
+          <tbody>
+            <tr><td>☀ Sun</td><td>Surya</td><td>Leo</td><td>Aries (0°)</td><td>Soul, father, authority, government, vitality, heart</td></tr>
+            <tr><td>☽ Moon</td><td>Chandra</td><td>Cancer</td><td>Taurus (3°)</td><td>Mind, emotions, mother, public, fluids, memory</td></tr>
+            <tr><td>♂ Mars</td><td>Mangala</td><td>Aries, Scorpio</td><td>Capricorn (28°)</td><td>Energy, courage, siblings, land, surgery, accidents</td></tr>
+            <tr><td>☿ Mercury</td><td>Budha</td><td>Gemini, Virgo</td><td>Virgo (15°)</td><td>Intellect, communication, trade, skin, mathematics</td></tr>
+            <tr><td>♃ Jupiter</td><td>Guru</td><td>Sagittarius, Pisces</td><td>Cancer (5°)</td><td>Wisdom, children, wealth, teachers, spirituality, liver</td></tr>
+            <tr><td>♀ Venus</td><td>Shukra</td><td>Taurus, Libra</td><td>Pisces (27°)</td><td>Love, beauty, arts, marriage, luxury, kidneys</td></tr>
+            <tr><td>♄ Saturn</td><td>Shani</td><td>Capricorn, Aquarius</td><td>Libra (20°)</td><td>Karma, discipline, delays, servants, longevity, legs</td></tr>
+            <tr><td>☊ Rahu</td><td>Rahu</td><td>— (co-rules Aquarius)</td><td>Gemini / Taurus</td><td>Obsessions, foreign, technology, illusion, ambition</td></tr>
+            <tr><td>☋ Ketu</td><td>Ketu</td><td>— (co-rules Scorpio)</td><td>Sagittarius / Scorpio</td><td>Spirituality, past karma, detachment, liberation</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- 27 NAKSHATRAS -->
+  <section class="s" id="nakshatras">
+    <div class="container">
+      <span class="s-eyebrow">Lunar Mansions</span>
+      <h2 class="s-title">27 Nakshatras</h2>
+      <div class="s-divider"></div>
+      <p class="prose">The 27 Nakshatras divide the zodiac into equal segments of 13°20'. Your birth Nakshatra (determined by the Moon's position) sets your starting Dasha and reveals your deepest emotional and instinctive nature.</p>
+      <div class="nak-grid">
+        <div class="nak-cell"><span class="nak-num">1</span><span class="nak-name">Ashwini</span></div>
+        <div class="nak-cell"><span class="nak-num">2</span><span class="nak-name">Bharani</span></div>
+        <div class="nak-cell"><span class="nak-num">3</span><span class="nak-name">Krittika</span></div>
+        <div class="nak-cell"><span class="nak-num">4</span><span class="nak-name">Rohini</span></div>
+        <div class="nak-cell"><span class="nak-num">5</span><span class="nak-name">Mrigashira</span></div>
+        <div class="nak-cell"><span class="nak-num">6</span><span class="nak-name">Ardra</span></div>
+        <div class="nak-cell"><span class="nak-num">7</span><span class="nak-name">Punarvasu</span></div>
+        <div class="nak-cell"><span class="nak-num">8</span><span class="nak-name">Pushya</span></div>
+        <div class="nak-cell"><span class="nak-num">9</span><span class="nak-name">Ashlesha</span></div>
+        <div class="nak-cell"><span class="nak-num">10</span><span class="nak-name">Magha</span></div>
+        <div class="nak-cell"><span class="nak-num">11</span><span class="nak-name">P. Phalguni</span></div>
+        <div class="nak-cell"><span class="nak-num">12</span><span class="nak-name">U. Phalguni</span></div>
+        <div class="nak-cell"><span class="nak-num">13</span><span class="nak-name">Hasta</span></div>
+        <div class="nak-cell"><span class="nak-num">14</span><span class="nak-name">Chitra</span></div>
+        <div class="nak-cell"><span class="nak-num">15</span><span class="nak-name">Swati</span></div>
+        <div class="nak-cell"><span class="nak-num">16</span><span class="nak-name">Vishakha</span></div>
+        <div class="nak-cell"><span class="nak-num">17</span><span class="nak-name">Anuradha</span></div>
+        <div class="nak-cell"><span class="nak-num">18</span><span class="nak-name">Jyeshtha</span></div>
+        <div class="nak-cell"><span class="nak-num">19</span><span class="nak-name">Mula</span></div>
+        <div class="nak-cell"><span class="nak-num">20</span><span class="nak-name">P. Ashadha</span></div>
+        <div class="nak-cell"><span class="nak-num">21</span><span class="nak-name">U. Ashadha</span></div>
+        <div class="nak-cell"><span class="nak-num">22</span><span class="nak-name">Shravana</span></div>
+        <div class="nak-cell"><span class="nak-num">23</span><span class="nak-name">Dhanishta</span></div>
+        <div class="nak-cell"><span class="nak-num">24</span><span class="nak-name">Shatabhisha</span></div>
+        <div class="nak-cell"><span class="nak-num">25</span><span class="nak-name">P. Bhadrapada</span></div>
+        <div class="nak-cell"><span class="nak-num">26</span><span class="nak-name">U. Bhadrapada</span></div>
+        <div class="nak-cell"><span class="nak-num">27</span><span class="nak-name">Revati</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DASHA SYSTEM -->
+  <section class="s s-alt" id="dashas">
+    <div class="container">
+      <span class="s-eyebrow">Timing System</span>
+      <h2 class="s-title">Vimshottari Dasha</h2>
+      <div class="s-divider"></div>
+      <p class="prose">The 120-year Vimshottari Dasha cycle begins from your birth Nakshatra's ruling planet. Each planet governs a period of years during which its themes and qualities dominate your life experience.</p>
+      <div class="dasha-grid">
+        <div class="dasha-card"><div class="dc-planet">☊ Ketu</div><div class="dc-years">7 Years</div><div class="dc-desc">Spiritual awakening, detachment, past karma resolution, isolation and moksha themes</div></div>
+        <div class="dasha-card"><div class="dc-planet">♀ Venus</div><div class="dc-years">20 Years</div><div class="dc-desc">Relationships, creativity, luxury, beauty, marriage and artistic fulfilment are highlighted</div></div>
+        <div class="dasha-card"><div class="dc-planet">☀ Sun</div><div class="dc-years">6 Years</div><div class="dc-desc">Authority, career recognition, father relations, health and personal identity come to the fore</div></div>
+        <div class="dasha-card"><div class="dc-planet">☽ Moon</div><div class="dc-years">10 Years</div><div class="dc-desc">Emotional life, home, mother, public recognition and mental wellbeing are deeply activated</div></div>
+        <div class="dasha-card"><div class="dc-planet">♂ Mars</div><div class="dc-years">7 Years</div><div class="dc-desc">Energy, ambition, property, siblings, courage and competitive activity define this period</div></div>
+        <div class="dasha-card"><div class="dc-planet">☊ Rahu</div><div class="dc-years">18 Years</div><div class="dc-desc">Foreign connections, technology, obsessive goals, illusion, and dramatic life changes</div></div>
+        <div class="dasha-card"><div class="dc-planet">♃ Jupiter</div><div class="dc-years">16 Years</div><div class="dc-desc">Expansion, wisdom, children, wealth, spiritual growth and teaching are the core themes</div></div>
+        <div class="dasha-card"><div class="dc-planet">♄ Saturn</div><div class="dc-years">19 Years</div><div class="dc-desc">Hard work, delays, discipline, karmic lessons and long-term foundations are built</div></div>
+        <div class="dasha-card"><div class="dc-planet">☿ Mercury</div><div class="dc-years">17 Years</div><div class="dc-desc">Intellect, communication, business, writing, education and skill development flourish</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PHILOSOPHY -->
+  <section class="s">
+    <div class="container">
+      <div class="philosophy-layout">
+        <div>
+          <span class="s-eyebrow">Our Philosophy</span>
+          <h2 class="s-title">About AstroLogic</h2>
+          <div class="s-divider"></div>
+          <p class="prose">AstroLogic was built on a single conviction: Vedic astrology is a legitimate system of pattern recognition, and it deserves the same computational rigour we apply to any science.</p>
+          <p class="prose">We use <strong>Swiss Ephemeris</strong> — the gold standard in astronomical computation — for all planetary positions. Every calculation is sidereal, corrected by Lahiri Ayanamsa. We never approximate or estimate.</p>
+          <p class="prose">Our AI layer adds <strong>plain-language interpretation</strong> of the mathematical patterns — explaining not just what is happening in your chart, but why it matters for your specific life context.</p>
+        </div>
+        <div>
+          <p class="phil-quote">"The stars do not compel — they incline. Jyotish illuminates the patterns so you can act with awareness rather than reaction."</p>
+          <p class="phil-attr">— Foundational principle of Jyotish</p>
+          <div style="margin-top:28px;padding:20px;background:var(--surface);border:1px solid var(--border);border-radius:14px">
+            <div style="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-dim);margin-bottom:14px">Our Approach</div>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <div style="display:flex;gap:10px;font-size:13px"><span style="color:var(--green)">✓</span><span>Sidereal calculations — not tropical approximations</span></div>
+              <div style="display:flex;gap:10px;font-size:13px"><span style="color:var(--green)">✓</span><span>Swiss Ephemeris for highest precision</span></div>
+              <div style="display:flex;gap:10px;font-size:13px"><span style="color:var(--green)">✓</span><span>Dynamic interpretations — no static templates</span></div>
+              <div style="display:flex;gap:10px;font-size:13px"><span style="color:var(--green)">✓</span><span>Full Dasha + transit confluence timing</span></div>
+              <div style="display:flex;gap:10px;font-size:13px"><span style="color:var(--green)">✓</span><span>Tithi-based festival engine — no Gregorian shortcuts</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TECH STACK -->
+  <section class="s s-alt">
+    <div class="container">
+      <span class="s-eyebrow">Built With</span>
+      <h2 class="s-title">Technology Stack</h2>
+      <div class="s-divider"></div>
+      <div class="tech-grid">
+        <div class="tech-card"><div class="tech-icon">🌌</div><div class="tech-name">Swiss Ephemeris</div><div class="tech-desc">Highest precision planetary positions — used by professional astronomers worldwide</div></div>
+        <div class="tech-card"><div class="tech-icon">⚡</div><div class="tech-name">FastAPI + Python</div><div class="tech-desc">High-performance async backend serving all calculation and AI endpoints</div></div>
+        <div class="tech-card"><div class="tech-icon">🤖</div><div class="tech-name">AI Engine</div><div class="tech-desc">Large language model generates natural language interpretations from chart data</div></div>
+        <div class="tech-card"><div class="tech-icon">📐</div><div class="tech-name">Lahiri Ayanamsa</div><div class="tech-desc">Official Indian Government standard for Vedic sidereal zodiac correction</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <div class="container">
+    <div class="cta-band">
+      <h2 class="cta-title">Explore Your Chart</h2>
+      <p class="cta-body">Your birth chart is the precise astronomical snapshot of the sky the moment you arrived. Every planet, house and nakshatra carries information about your unique dharmic path.</p>
+      <div class="cta-btns">
+        <a href="/kundali" class="btn-cta-p">Generate Free Kundali</a>
+        <a href="/horoscope" class="btn-cta-s">Today's Horoscope</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>© 2026 AstroLogic · Vedic Astrology Platform · Built with Swiss Ephemeris &amp; Lahiri Ayanamsa</footer>
+
+<script>
+document.querySelector('.ham')?.addEventListener('click',()=>document.getElementById('mn').classList.toggle('open'));
+</script>
+</body>
+</html>
