@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 # AstroLogic-Vedic
 Astrology Prediction System that generates Kundali and provides insights based on planetary positions, houses, and zodiac analysis.
 =======
@@ -209,4 +209,4 @@ MIT License
 ## 🌟 If you like this project
 
 Star ⭐ the repository and support development.
->>>>>>> b18387a (Initial full project upload)
+
