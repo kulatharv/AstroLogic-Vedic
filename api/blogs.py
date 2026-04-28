@@ -17,7 +17,7 @@ def get_db():
     finally:
         db.close()
 
-@router.get("/blogs")
+@router.get("/blogs.html")
 def get_all_blogs(request: Request, db: Session = Depends(get_db)):
 
     if not request.session.get("admin"):
@@ -27,7 +27,7 @@ def get_all_blogs(request: Request, db: Session = Depends(get_db)):
 # ---------------------------
 # Get All Blogs (Admin View)
 # ---------------------------
-@router.get("/blogs")
+@router.get("/blogs.html")
 def get_all_blogs(db: Session = Depends(get_db)):
     blogs = db.query(Blog).order_by(Blog.id.desc()).all()
     return blogs
@@ -36,7 +36,7 @@ def get_all_blogs(db: Session = Depends(get_db)):
 # ---------------------------
 # Create Blog
 # ---------------------------
-@router.post("/blogs")
+@router.post("/blogs.html")
 def create_blog(
     title: str = Form(...),
     content: str = Form(...),

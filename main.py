@@ -88,11 +88,11 @@ def home(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
 
-#@app.get("/prediction", response_class=HTMLResponse)
+#@app.get("/prediction.html", response_class=HTMLResponse)
 #def prediction_page(request: Request):
 #    return templates.TemplateResponse("prediction.html", {"request": request})
 
-@app.get("/prediction", response_class=HTMLResponse)
+@app.get("/prediction.html", response_class=HTMLResponse)
 def prediction_page(request: Request):
     # If prediction.html is in templates folder
     return templates.TemplateResponse("prediction.html", {"request": request})
@@ -105,27 +105,27 @@ def chat_page(request: Request):
     return templates.TemplateResponse("chat.html", {"request": request})
 
 
-@app.get("/panchang", response_class=HTMLResponse)
+@app.get("/panchang.html", response_class=HTMLResponse)
 def panchang_page(request: Request):
     return templates.TemplateResponse("panchang.html", {"request": request})
 
 
-@app.get("/blogs", response_class=HTMLResponse)
+@app.get("/blogs.html", response_class=HTMLResponse)
 def blogs_page(request: Request):
     return templates.TemplateResponse("blogs.html", {"request": request})
 
 
-@app.get("/about", response_class=HTMLResponse)
+@app.get("/about.html", response_class=HTMLResponse)
 def about_page(request: Request):
     return templates.TemplateResponse("about.html", {"request": request})
 
 
-@app.get("/horoscope", response_class=HTMLResponse)
+@app.get("/horoscope.html", response_class=HTMLResponse)
 def horoscope_page(request: Request):
     return templates.TemplateResponse("daily-horoscope.html", {"request": request})
 
 
-@app.get("/kundali", response_class=HTMLResponse)
+@app.get("/kundali.html", response_class=HTMLResponse)
 def kundali_page(request: Request):
     return templates.TemplateResponse("kundali.html", {"request": request})
 
@@ -302,7 +302,7 @@ ADMIN_PASSWORD = "astro123"
 def home(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
-@app.get("/prediction", response_class=HTMLResponse)
+@app.get("/prediction.html", response_class=HTMLResponse)
 def prediction_page(request: Request):
     return templates.TemplateResponse("prediction.html", {"request": request})
 
@@ -310,23 +310,23 @@ def prediction_page(request: Request):
 def chat_page(request: Request):
     return templates.TemplateResponse("chat.html", {"request": request})
 
-@app.get("/panchang", response_class=HTMLResponse)
+@app.get("/panchang.html", response_class=HTMLResponse)
 def panchang_page(request: Request):
     return templates.TemplateResponse("panchang.html", {"request": request})
 
-@app.get("/blogs", response_class=HTMLResponse)
+@app.get("/blogs.html", response_class=HTMLResponse)
 def blogs_page(request: Request):
     return templates.TemplateResponse("blogs.html", {"request": request})
 
-@app.get("/about", response_class=HTMLResponse)
+@app.get("/about.html", response_class=HTMLResponse)
 def about_page(request: Request):
     return templates.TemplateResponse("about.html", {"request": request})
 
-@app.get("/horoscope", response_class=HTMLResponse)
+@app.get("/horoscope.html", response_class=HTMLResponse)
 def horoscope_page(request: Request):
     return templates.TemplateResponse("daily-horoscope.html", {"request": request})
 
-@app.get("/kundali", response_class=HTMLResponse)
+@app.get("/kundali.html", response_class=HTMLResponse)
 def kundali_page(request: Request):
     return templates.TemplateResponse("kundali.html", {"request": request})
 
