@@ -1,0 +1,376 @@
+
+
+Complete Vedic astrology dataset generator - all tables, rules, combinations, training data
+text
+
+"""
+vedic_astrology_dataset_generator.py
+Generates a complete, structured Vedic astrology dataset for ML model training.
+Covers every rule, table, combination and interpretation used across the whole project.
+"""
+
+import json, csv, os, random, itertools
+from datetime import datetime
+
+OUT = "/home/claude/output/vedic_astrology_dataset"
+os.makedirs(OUT, exist_ok=True)
+
+# ═══════════════════════════════════════════════════════════════════
+# SECTION 1 — CORE REFERENCE TABLES
+# ═══════════════════════════════════════════════════════════════════
+
+PLANETS = ["Sun","Moon","Mars","Mercury","Jupiter","Venus","Saturn","Rahu","Ketu"]
+
+SIGNS_SK = ["Mesha","Vrishabha","Mithuna","Karka","Simha","Kanya",
+            "Tula","Vrischika","Dhanu","Makara","Kumbha","Meena"]
+
+SIGNS_EN = ["Aries","Taurus","Gemini","Cancer","Leo","Virgo",
+            "Libra","Scorpio","Sagittarius","Capricorn","Aquarius","Pisces"]
+
+ELEMENTS = ["Fire","Earth","Air","Water","Fire","Earth",
+            "Air","Water","Fire","Earth","Air","Water"]
+
+MODALITIES = ["Cardinal","Fixed","Mutable","Cardinal","Fixed","Mutable",
+              "Cardinal","Fixed","Mutable","Cardinal","Fixed","Mutable"]
+
+GENDER_SIGN = ["Male","Female","Male","Female","Male","Female",
+               "Male","Female","Male","Female","Male","Female"]
+
+SIGN_LORDS = {
+    "Mesha":"Mars","Vrishabha":"Venus","Mithuna":"Mercury","Karka":"Moon",
+    "Simha":"Sun","Kanya":"Mercury","Tula":"Venus","Vrischika":"Mars",
+    "Dhanu":"Jupiter","Makara":"Saturn","Kumbha":"Saturn","Meena":"Jupiter"
+}
+
+EXALTATION = {
+    "Sun":"Mesha","Moon":"Vrishabha","Mars":"Makara","Mercury":"Kanya",
+    "Jupiter":"Karka","Venus":"Meena","Saturn":"Tula","Rahu":"Vrishabha","Ketu":"Vrischika"
+}
+EXALTATION_DEGREE = {
+    "Sun":10,"Moon":3,"Mars":28,"Mercury":15,
+    "Jupiter":5,"Venus":27,"Saturn":20,"Rahu":20,"Ketu":20
+}
+
+DEBILITATION = {
+    "Sun":"Tula","Moon":"Vrischika","Mars":"Karka","Mercury":"Meena",
+    "Jupiter":"Makara","Venus":"Kanya","Saturn":"Mesha","Rahu":"Vrischika","Ketu":"Vrishabha"
+}
+
+OWN_SIGNS = {
+    "Sun":["Simha"],"Moon":["Karka"],"Mars":["Mesha","Vrischika"],
+    "Mercury":["Mithuna","Kanya"],"Jupiter":["Dhanu","Meena"],
+    "Venus":["Vrishabha","Tula"],"Saturn":["Makara","Kumbha"]
+}
+
+MOOLTRIKONA = {
+    "Sun":"Simha","Moon":"Vrishabha","Mars":"Mesha","Mercury":"Kanya",
+    "Jupiter":"Dhanu","Venus":"Tula","Saturn":"Kumbha"
+}
+
+NATURAL_NATURE = {
+    "Jupiter":2,"Venus":2,"Moon":1,"Mercury":0.5,
+    "Sun":0,"Mars":-1,"Saturn":-2,"Rahu":-1,"Ketu":-1
+}
+
+NATURAL_NATURE_LABEL = {
+    "Jupiter":"Natural Benefic","Venus":"Natural Benefic","Moon":"Natural Benefic",
+    "Mercury":"Conditional Benefic","Sun":"Neutral",
+    "Mars":"Natural Malefic","Saturn":"Natural Malefic",
+    "Rahu":"Natural Malefic","Ketu":"Natural Malefic"
+}
+
+KARAKAS = {
+    "Sun":  "atmakaraka — soul, father, authority, government, vitality, ego",
+    "Moon": "manaskaraka — mind, emotions, mother, public, fluids, memory",
+    "Mars": "bhratakaraka — siblings, energy, courage, land, surgery, blood",
+    "Mercury":"jnaanakaraka — intellect, communication, trade, skin, nervous system",
+    "Jupiter":"putrikaraka — children, wisdom, wealth, teachers, dharma, liver",
+    "Venus":"kalatrakaraka — spouse, love, beauty, arts, luxury, kidneys",
+    "Saturn":"ayushkaraka — longevity, karma, discipline, servants, bones",
+    "Rahu": "foreign, obsession, technology, illusion, sudden events",
+    "Ketu": "moksha, past karma, detachment, spirituality, psychic ability"
+}
+
+PLANET_BODY_PARTS = {
+    "Sun":  "heart, right eye, bones, spine, stomach",
+    "Moon": "left eye, mind, lungs, breast, blood, menstrual cycle",
+    "Mars": "blood, muscles, marrow, nose, bile, forehead",
+    "Mercury":"skin, nerves, tongue, lungs, hands, nervous system",
+    "Jupiter":"liver, thighs, ears, spleen, fat, arteries",
+    "Venus":"kidneys, reproductive organs, throat, cheeks, chin",
+    "Saturn":"legs, teeth, knees, nails, joints, hair",
+    "Rahu": "skin, breathing, phobias, viral diseases",
+    "Ketu": "wounds, psychic disorders, low blood pressure, intestines"
+}
+
+PLANET_COLOURS = {
+    "Sun":"Deep red / copper / orange","Moon":"White / silver / pale",
+    "Mars":"Blood red / scarlet","Mercury":"Green / light green",
+    "Jupiter":"Yellow / golden","Venus":"White / cream / pink",
+    "Saturn":"Black / dark blue / purple","Rahu":"Smoky grey / navy",
+    "Ketu":"Multi-colour / maroon"
+}
+
+PLANET_GEMS = {
+    "Sun":"Ruby (Manik)","Moon":"Pearl (Moti)","Mars":"Red Coral (Moonga)",
+    "Mercury":"Emerald (Panna)","Jupiter":"Yellow Sapphire (Pukhraj)",
+    "Venus":"Diamond / White Sapphire","Saturn":"Blue Sapphire (Neelam)",
+    "Rahu":"Hessonite (Gomed)","Ketu":"Cat's Eye (Lehsunia)"
+}
+
+PLANET_METALS = {
+    "Sun":"Gold","Moon":"Silver","Mars":"Copper","Mercury":"Bronze/Brass",
+    "Jupiter":"Gold","Venus":"Silver","Saturn":"Iron","Rahu":"Lead","Ketu":"Iron"
+}
+
+PLANET_DAYS = {
+    "Sun":"Sunday","Moon":"Monday","Mars":"Tuesday","Mercury":"Wednesday",
+    "Jupiter":"Thursday","Venus":"Friday","Saturn":"Saturday",
+    "Rahu":"Saturday","Ketu":"Tuesday"
+}
+
+PLANET_DIRECTION = {
+    "Sun":"East","Moon":"North-West","Mars":"South","Mercury":"North",
+    "Jupiter":"North-East","Venus":"South-East","Saturn":"West",
+    "Rahu":"South-West","Ketu":"North-West"
+}
+
+PLANET_NUMBERS = {
+    "Sun":1,"Moon":2,"Mars":9,"Mercury":5,
+    "Jupiter":3,"Venus":6,"Saturn":8,"Rahu":4,"Ketu":7
+}
+
+PLANET_TASTE = {
+    "Sun":"Pungent","Moon":"Salty","Mars":"Bitter","Mercury":"Mixed",
+    "Jupiter":"Sweet","Venus":"Sour","Saturn":"Astringent",
+    "Rahu":"Mixed/Tobacco","Ketu":"Mixed/Spicy"
+}
+
+PLANET_MANTRAS = {
+    "Sun":"Om Suryaya Namah / Aditya Hridayam",
+    "Moon":"Om Chandraya Namah / Chandra Kavacham",
+    "Mars":"Om Mangalaya Namah / Mangal Kavacham",
+    "Mercury":"Om Budhaya Namah / Budha Ashtakam",
+    "Jupiter":"Om Gurave Namah / Brihaspati Kavacham",
+    "Venus":"Om Shukraya Namah / Shukra Ashtakam",
+    "Saturn":"Om Shanicharaya Namah / Shani Chalisa",
+    "Rahu":"Om Rahave Namah / Rahu Kavacham",
+    "Ketu":"Om Ketave Namah / Ketu Kavacham"
+}
+
+DASHA_ORDER = ["Ketu","Venus","Sun","Moon","Mars","Rahu","Jupiter","Saturn","Mercury"]
+DASHA_YEARS = {"Ketu":7,"Venus":20,"Sun":6,"Moon":10,"Mars":7,"Rahu":18,"Jupiter":16,"Saturn":19,"Mercury":17}
+
+NAKSHATRAS = [
+    "Ashwini","Bharani","Krittika","Rohini","Mrigashira","Ardra",
+    "Punarvasu","Pushya","Ashlesha","Magha","Purva Phalguni","Uttara Phalguni",
+    "Hasta","Chitra","Swati","Vishakha","Anuradha","Jyeshtha",
+    "Mula","Purva Ashadha","Uttara Ashadha","Shravana","Dhanishta",
+    "Shatabhisha","Purva Bhadrapada","Uttara Bhadrapada","Revati"
+]
+
+NAK_LORDS = [
+    "Ketu","Venus","Sun","Moon","Mars","Rahu","Jupiter","Saturn","Mercury",
+    "Ketu","Venus","Sun","Moon","Mars","Rahu","Jupiter","Saturn","Mercury",
+    "Ketu","Venus","Sun","Moon","Mars","Rahu","Jupiter","Saturn","Mercury"
+]
+
+NAK_DEITIES = [
+    "Ashwini Kumaras","Yama","Agni","Brahma","Soma","Rudra",
+    "Aditi","Brihaspati","Naga","Pitrus","Bhaga","Aryaman",
+    "Savitri","Vishwakarma","Vayu","Indra+Agni","Mitra","Indra",
+    "Nirriti","Apas","Vishwadevas","Vishnu","Ashta Vasus","Varuna",
+    "Aja Ekapada","Ahir Budhanya","Pusha"
+]
+
+NAK_SYMBOLS = [
+    "Horse head","Yoni (womb)","Razor/flame","Cart/banyan",
+    "Deer head","Teardrop","Bow/quiver","Flower","Coiled serpent",
+    "Royal throne","Bed/fig tree","Bed/fig tree","Hand","Pearl/lamp",
+    "Coral/sword","Potter's wheel","Lotus/umbrella","Umbrella/earring",
+    "Roots/elephant goad","Fan/tusk","Elephant tusk","Ear/trident",
+    "Drum/flute","Empty circle","Sword/two faces","Serpent in water","Fish/drum"
+]
+
+NAK_GUNA = [
+    "Rajas","Rajas","Rajas","Tamas","Tamas","Tamas","Sattva","Sattva","Sattva",
+    "Rajas","Rajas","Rajas","Tamas","Tamas","Tamas","Sattva","Sattva","Sattva",
+    "Rajas","Rajas","Rajas","Tamas","Tamas","Tamas","Sattva","Sattva","Sattva"
+]
+
+NAK_NATURE = [
+    "Kshipra (Quick)","Ugra (Fierce)","Mixed","Sthira (Fixed)","Mridu (Soft)","Tikshna (Sharp)",
+    "Mridu","Kshipra","Tikshna","Ugra","Mridu","Sthira",
+    "Kshipra","Mridu/Tikshna","Kshipra","Mridu/Sthira","Mridu","Tikshna",
+    "Tikshna","Ugra","Sthira","Mridu","Kshipra","Kshipra",
+    "Ugra","Sthira","Mridu"
+]
+
+NAK_PADAS = ["Aries","Taurus","Gemini","Cancer"]  # pada 1-4 navamsa
+
+HOUSE_MEANINGS = {
+    1: {
+        "name":"Tanu Bhava","domain":"Self, Personality, Body",
+        "karaka":"Sun","element":"Fire","key_significations":
+        "physical appearance, vitality, health, personality, self-image, first impressions, early childhood, constitution",
+        "body_part":"head, brain","positive_planets":"Sun, Jupiter, Mars (for Aries/Scorpio)","negative_planets":"Saturn, Rahu"
+    },
+    2: {
+        "name":"Dhana Bhava","domain":"Wealth, Family, Speech",
+        "karaka":"Jupiter","element":"Earth","key_significations":
+        "accumulated wealth, family, food, right eye, speech, face, immediate family values, early education",
+        "body_part":"face, right eye, mouth, teeth","positive_planets":"Jupiter, Venus, Mercury","negative_planets":"Saturn, Mars"
+    },
+    3: {
+        "name":"Sahaja Bhava","domain":"Courage, Siblings, Communication",
+        "karaka":"Mars","element":"Air","key_significations":
+        "siblings, short travel, communication, writing, courage, skills, hobbies, neighbours, media",
+        "body_part":"arms, shoulders, hands, lungs","positive_planets":"Mars, Mercury, Sun","negative_planets":"Saturn, Moon"
+    },
+    4: {
+        "name":"Sukha Bhava","domain":"Home, Mother, Property",
+        "karaka":"Moon","element":"Water","key_significations":
+        "mother, home, domestic happiness, property, vehicles, education, inner peace, heart",
+        "body_part":"chest, heart, lungs, breast","positive_planets":"Moon, Jupiter, Venus","negative_planets":"Saturn, Mars"
+    },
+    5: {
+        "name":"Putra Bhava","domain":"Children, Intelligence, Creativity",
+        "karaka":"Jupiter","element":"Fire","key_significations":
+        "children, intellect, speculation, romance, past-life merit, creativity, mantras, stock market",
+        "body_part":"stomach, upper abdomen","positive_planets":"Jupiter, Sun, Moon","negative_planets":"Saturn, Rahu, Ketu"
+    },
+    6: {
+        "name":"Ripu Bhava","domain":"Enemies, Health, Service",
+        "karaka":"Saturn/Mars","element":"Earth","key_significations":
+        "enemies, debts, diseases, servants, litigation, competitors, daily work, maternal relatives",
+        "body_part":"lower abdomen, intestines","positive_planets":"Mars, Saturn (upachaya)","negative_planets":"Moon, Jupiter"
+    },
+    7: {
+        "name":"Kalatra Bhava","domain":"Marriage, Partnerships",
+        "karaka":"Venus","element":"Air","key_significations":
+        "spouse, marriage, business partners, open enemies, travel, legal contracts, death (maraka)",
+        "body_part":"kidneys, lower back, reproductive organs","positive_planets":"Venus, Jupiter, Mercury","negative_planets":"Saturn, Mars, Sun"
+    },
+    8: {
+        "name":"Ayur Bhava","domain":"Longevity, Transformation, Occult",
+        "karaka":"Saturn","element":"Water","key_significations":
+        "longevity, death, legacy, inheritance, hidden wealth, in-laws, occult, surgery, sudden changes",
+        "body_part":"reproductive organs, excretory","positive_planets":"Saturn (in own sign)","negative_planets":"Sun, Moon, Mars"
+    },
+    9: {
+        "name":"Dharma Bhava","domain":"Luck, Dharma, Father",
+        "karaka":"Jupiter/Sun","element":"Fire","key_significations":
+        "luck, dharma, father, higher education, religion, long travel, teachers, philosophical beliefs",
+        "body_part":"hips, thighs","positive_planets":"Jupiter, Sun, Venus, Moon","negative_planets":"Saturn, Rahu"
+    },
+    10: {
+        "name":"Karma Bhava","domain":"Career, Status, Authority",
+        "karaka":"Sun/Saturn/Mercury/Jupiter","element":"Earth","key_significations":
+        "career, profession, status, public image, authority, government, employers, karma, fame",
+        "body_part":"knees, back","positive_planets":"Sun, Saturn, Mercury, Jupiter","negative_planets":"Moon, Ketu"
+    },
+    11: {
+        "name":"Labha Bhava","domain":"Gains, Income, Desires",
+        "karaka":"Jupiter","element":"Air","key_significations":
+        "income, gains, elder siblings, social network, fulfilment of desires, friends, all planets do well here",
+        "body_part":"ankles, calves, left ear","positive_planets":"All (upachaya — even malefics improve)","negative_planets":"None (upachaya)"
+    },
+    12: {
+        "name":"Vyaya Bhava","domain":"Losses, Spirituality, Foreign",
+        "karaka":"Saturn/Ketu","element":"Water","key_significations":
+        "foreign travel, spirituality, expenses, losses, moksha, bed pleasures, hospitals, isolation, left eye",
+        "body_part":"feet, left eye","positive_planets":"Ketu, Saturn (for liberation), Venus","negative_planets":"Sun, Mars"
+    }
+}
+
+PLANET_IN_HOUSE = {
+    ("Sun",1): "Strong vitality, leadership personality, proud, authoritative; ego challenges; good for health",
+    ("Sun",2): "Wealthy family, good speech, father prominent; harsh speech possible; eye issues",
+    ("Sun",3): "Courageous, good at communication; siblings may be challenging; self-made",
+    ("Sun",4): "Property gains but domestic friction; mother may have health issues; career focus over home",
+    ("Sun",5): "Intelligent, government jobs, creative; speculation gains; progeny concerns",
+    ("Sun",6): "Defeats enemies, good in service; conflicts with colleagues; health challenges",
+    ("Sun",7): "Dominating spouse; late marriage; partner in authority; maraka placement",
+    ("Sun",8): "Longevity challenges; occult interest; inheritance possible; health sudden issues",
+    ("Sun",9): "Dharmic soul, father prominent, good luck; religion; philosophical inclinations",
+    ("Sun",10): "Excellent career, government favour, fame; authority positions; rajayoga potential",
+    ("Sun",11): "Excellent gains, income through government; social prominence; desires fulfilled",
+    ("Sun",12): "Foreign travel, spiritual inclination; eye troubles; expenses; father issues",
+
+    ("Moon",1): "Emotional personality, attractive, public-oriented; moody; good intuition",
+    ("Moon",2): "Wealthy, good family; fluctuating finances; sweet speech; strong family ties",
+    ("Moon",3): "Good communication, siblings support; travel; creative writing ability",
+    ("Moon",4): "Excellent — own sign for Cancer lagna; good mother, property, happiness",
+    ("Moon",5): "Creative, intelligent children; speculative nature; good intuition; emotional",
+    ("Moon",6): "Health fluctuations; digestive issues; enemies overcome; maternal conflicts",
+    ("Moon",7): "Attractive spouse; early marriage; public-oriented business; emotional partnerships",
+    ("Moon",8): "Psychological sensitivity; longevity variable; occult interest; joint family money",
+    ("Moon",9): "Very lucky, dharmic, religious mother; pilgrimage; good fortune throughout life",
+    ("Moon",10): "Public career, fame, good reputation; mother supports career; emotional profession",
+    ("Moon",11): "Excellent gains, social popularity; income from public; desires fulfilled easily",
+    ("Moon",12): "Foreign lands, spiritual nature; sleep issues; emotional expenses; isolation tendency",
+
+    ("Mars",1): "Energetic, athletic, aggressive personality; accidents possible; courageous leader",
+    ("Mars",2): "Financial aggression; harsh speech; family conflicts; impulsive spending",
+    ("Mars",3): "Excellent — courageous, strong siblings; sports, military aptitude; short travels",
+    ("Mars",4): "Property gains through effort; domestic conflicts; mother's health; vehicle accidents",
+    ("Mars",5): "Competitive intelligence; sports; difficult children; speculative losses possible",
+    ("Mars",6): "Excellent — destroys enemies and diseases; military/police; strong health",
+    ("Mars",7): "Mangal Dosh — relationship challenges; aggressive spouse; business through conflict",
+    ("Mars",8): "Mangal Dosh — longevity issues; surgery; inheritance; occult energy; accidents",
+    ("Mars",9): "Active dharmic life; travel; father conflicts; religious debates; sports achievements",
+    ("Mars",10): "Excellent career energy; technical or military profession; leadership authority",
+    ("Mars",11): "Excellent gains; aggressive income; siblings bring wealth; desires fulfilled forcefully",
+    ("Mars",12): "Mangal Dosh — foreign land; hidden enemies; bed-related issues; spiritual warrior",
+
+    ("Mercury",1): "Intelligent, communicative personality; youthful appearance; adaptable; analytical",
+    ("Mercury",2): "Eloquent speech; business acumen; financial intelligence; multi-language ability",
+    ("Mercury",3): "Excellent — natural writer/communicator; sibling bonds; short travel; media skills",
+    ("Mercury",4): "Good education; communication-based home; property through business",
+    ("Mercury",5): "High intelligence; children interested in studies; speculative acumen; creativity",
+    ("Mercury",6): "Good at defeating enemies through wit; healthcare; analytical service work",
+    ("Mercury",7): "Intelligent spouse; business partnerships; communication-based relationships",
+    ("Mercury",8): "Research ability; occult knowledge; hidden information; longevity through science",
+    ("Mercury",9): "Scholarly dharma; higher education; religious writing; father intellectually inclined",
+    ("Mercury",10): "Business career; communication profession; writing; media; IT; accountancy",
+    ("Mercury",11): "Excellent gains through communication; social network; intellectual friends",
+    ("Mercury",12): "Foreign education; spiritual writing; hidden knowledge; expenses through communication",
+
+    ("Jupiter",1): "Excellent vitality; wisdom; philosophical nature; well-respected; prosperity",
+    ("Jupiter",2): "Dhana yoga potential; excellent speech; family wealth; charitable nature",
+    ("Jupiter",3): "Moderate — reduces courage slightly but gives wisdom; spiritual siblings",
+    ("Jupiter",4): "Gajakesari if with Moon; excellent home life; good mother; property; education",
+    ("Jupiter",5): "Excellent children; high intelligence; speculation gains; creative brilliance; Raj Yoga",
+    ("Jupiter",6): "Challenges — Jupiter in dusthana; may give health issues; overcomes through wisdom",
+    ("Jupiter",7): "Excellent marriage; wise spouse; business success; late but happy marriage",
+    ("Jupiter",8): "Longevity; inheritance; occult wisdom; insurance; research into deep subjects",
+    ("Jupiter",9): "Excellent — Raj Yoga potential; dharmic life; excellent father; higher education; luck",
+    ("Jupiter",10): "Excellent career; teaching/law/consulting; authority; Raj Yoga; professional recognition",
+    ("Jupiter",11): "Excellent gains; income from teaching/consulting; social respect; desires fulfilled",
+    ("Jupiter",12): "Spiritual liberation; foreign spiritual connections; expenses for good causes",
+
+    ("Venus",1): "Attractive, artistic personality; love of beauty; early relationships; charm",
+    ("Venus",2): "Wealthy family; melodious voice; luxury goods; artistic family background",
+    ("Venus",3): "Artistic communication; sensual nature; short pleasure trips; creative siblings",
+    ("Venus",4): "Excellent home comfort; luxury vehicles; beautiful home; happy mother",
+    ("Venus",5): "Romance; creative children; artistic brilliance; speculation gains; love affairs",
+    ("Venus",6): "Health through beauty; service in arts; challenges in relationships through work",
+    ("Venus",7): "Excellent marriage; beautiful/artistic spouse; happy relationships; business success",
+    ("Venus",8): "Inherited wealth; partner's money; occult arts; sensuality; hidden relationships",
+    ("Venus",9): "Lucky in love; spiritual arts; dharmic marriage; father artistic; foreign romance",
+    ("Venus",10): "Career in arts/design/beauty; public recognition; luxury profession; Malavya Yoga",
+    ("Venus",11): "Excellent gains; income from arts; social charm; desires in relationships fulfilled",
+    ("Venus",12): "Foreign partner; bed pleasures; spiritual arts; hidden love; expenses on luxury",
+
+    ("Saturn",1): "Delayed development; disciplined personality; serious; longevity; Sasa Yoga if strong",
+    ("Saturn",2): "Delayed wealth; difficult family; practical speech; iron industry; earned wealth slowly",
+    ("Saturn",3): "Excellent — persistence; sibling challenges but overcome; technical skills; sports",
+    ("Saturn",4): "Delayed property; mother's health issues; austere home; discipline in education",
+    ("Saturn",5): "Delayed children; disciplined intellect; research mind; serious about learning",
+    ("Saturn",6): "Excellent — destroys enemies; victory in litigation; service work; Vipreet Raj Yoga",
+    ("Saturn",7): "Late marriage; older or serious spouse; business-oriented relationship; discipline",
+    ("Saturn",8): "Longevity (in own sign); delays transformation; inheritance delayed; occult discipline",
+    ("Saturn",9): "Discipline in dharma; father serious/elderly; delayed luck but lasting; karma Yoga",
+    ("Saturn",10): "Excellent career through hard work; government/corporate; Sasa Yoga potential",
+    ("Saturn",11): "Excellent gains (upachaya); delayed but large income; social discipline; serious friends",
+    ("Saturn",12): "Spiritual discipline; foreign monasteries; service abroad

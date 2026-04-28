@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AstroLogic | Vedic Birth Kundali</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --gold:#f5c16c;--gold2:#d89b3c;--gold-dim:rgba(245,193,108,0.1);
+  --gold-border:rgba(245,193,108,0.28);--blue:#9bdcff;--green:#4ade80;--red:#f87171;
+  --surface:rgba(255,255,255,0.04);--surface2:rgba(255,255,255,0.07);
+  --border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.13);
+  --text:#e8e8e8;--text-dim:rgba(232,232,232,0.52);--hh:68px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth}
+body{background:radial-gradient(ellipse 140% 70% at 50% -5%,#0c2a4a,#010812);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(1px 1px at 12% 18%,rgba(155,220,255,.3),transparent),radial-gradient(1px 1px at 78% 8%,rgba(245,193,108,.25),transparent),radial-gradient(1px 1px at 33% 55%,rgba(155,220,255,.2),transparent),radial-gradient(1px 1px at 91% 72%,rgba(245,193,108,.18),transparent);pointer-events:none;z-index:0;}
+ 
+/* ── HEADER (fixed overlap) ── */
+header{
+  position:sticky;top:0;left:0;right:0;height:var(--hh);
+  background:rgba(1,8,18,.95);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  border-bottom:1px solid var(--border);z-index:1000;display:flex;align-items:center;
+}
+.hdr{width:100%;max-width:1200px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:20px;}
+.brand{font-family:'Cinzel',serif;font-size:19px;font-weight:600;color:var(--gold)!important;text-decoration:none;letter-spacing:1.5px;flex-shrink:0;}
+.brand sup{font-size:9px;opacity:.6;font-weight:400;vertical-align:super;}
+nav{flex:1;}
+nav ul{display:flex;gap:2px;list-style:none;justify-content:center;}
+nav ul li a{font-size:13px;font-weight:500;color:var(--text-dim)!important;text-decoration:none;padding:6px 10px;border-radius:7px;transition:all .2s;display:block;}
+nav ul li a:hover,nav ul li a.active{color:var(--gold)!important;background:var(--gold-dim);}
+.hdr-btns{display:flex;gap:8px;flex-shrink:0;}
+.btn-g{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#000;font-weight:600;font-size:12.5px;padding:7px 16px;border-radius:7px;border:none;cursor:pointer;text-decoration:none;transition:all .2s;white-space:nowrap;font-family:'Inter',sans-serif;display:inline-flex;align-items:center;gap:6px;}
+.btn-g:hover{filter:brightness(1.1);transform:translateY(-1px);color:#000;}
+.btn-outline{border:1px solid var(--gold-border);color:var(--gold);font-size:12.5px;font-weight:500;padding:7px 16px;border-radius:7px;background:transparent;cursor:pointer;text-decoration:none;transition:all .2s;white-space:nowrap;font-family:'Inter',sans-serif;display:inline-flex;align-items:center;gap:6px;}
+.btn-outline:hover{background:var(--gold-dim);}
+.ham{display:none;flex-direction:column;gap:5px;cursor:pointer;margin-left:auto;padding:6px;}
+.ham span{width:22px;height:2px;background:var(--text);border-radius:2px;}
+.mob-nav{display:none;position:fixed;top:var(--hh);left:0;right:0;background:rgba(1,8,18,.97);border-bottom:1px solid var(--border);padding:16px 24px 24px;z-index:999;flex-direction:column;gap:4px;}
+.mob-nav.open{display:flex;}
+.mob-nav a{font-size:15px;color:var(--text-dim);text-decoration:none;padding:10px 14px;border-radius:8px;transition:.2s;}
+.mob-nav a:hover,.mob-nav a.active{color:var(--gold);background:var(--gold-dim);}
+.mob-btns{display:flex;gap:8px;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);}
+ 
+/* ── PAGE ── */
+.page-wrap{position:relative;z-index:1;padding-top:36px;padding-bottom:80px;}
+.container{max-width:1100px;margin:0 auto;padding:0 24px;}
+ 
+/* ── HERO ── */
+.page-hero{text-align:center;margin-bottom:32px;}
+.eyebrow{font-size:11px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--blue);margin-bottom:10px;display:block;}
+.page-title{font-family:'Cinzel',serif;font-size:clamp(24px,4vw,38px);font-weight:600;color:var(--gold);margin-bottom:6px;}
+.page-sub{font-size:12.5px;color:var(--text-dim);}
+.divider{width:50px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:12px auto;}
+ 
+/* ── SECTION CARDS ── */
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:20px;}
+.section-title{font-family:'Cinzel',serif;font-size:12px;font-weight:700;color:var(--gold);letter-spacing:1px;text-transform:uppercase;margin-bottom:18px;display:flex;align-items:center;gap:8px;}
+.section-title::after{content:'';flex:1;height:1px;background:var(--border);}
+ 
+/* ── INPUT ── */
+.input-grid{display:grid;grid-template-columns:1fr 1fr 1fr 1.4fr auto;gap:12px;align-items:end;}
+.inp-group{position:relative;}
+.inp-group label{display:block;font-size:11px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:var(--text-dim);margin-bottom:6px;}
+.inp-group input{width:100%;background:rgba(255,255,255,.06)!important;border:1px solid var(--border2)!important;color:#fff!important;border-radius:8px;padding:10px 12px;font-size:13.5px;font-family:'Inter',sans-serif;}
+.inp-group input:focus{outline:none;border-color:var(--gold)!important;background:rgba(255,255,255,.08)!important;}
+.inp-group input::placeholder{color:rgba(255,255,255,.3)!important;}
+.input-btns{display:flex;gap:8px;}
+ 
+/* ── AUTOCOMPLETE ── */
+.autocomplete-list{position:absolute;top:calc(100% + 2px);left:0;right:0;background:#0d1f35;border:1px solid var(--gold-border);border-radius:8px;max-height:200px;overflow-y:auto;z-index:999;display:none;}
+.autocomplete-list li{padding:8px 12px;cursor:pointer;font-size:13px;color:#ddd;list-style:none;}
+.autocomplete-list li:hover{background:var(--gold-dim);color:var(--gold);}
+ 
+/* ── BIRTH DETAILS GRID ── */
+.details-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;}
+.detail-item{padding:10px 0;border-bottom:1px solid var(--border);}
+.detail-item:nth-last-child(-n+4){border-bottom:none;}
+.detail-item .lbl{font-size:10.5px;color:var(--text-dim);margin-bottom:3px;text-transform:uppercase;letter-spacing:.5px;}
+.detail-item .val{font-size:14px;font-weight:600;color:var(--text);}
+.detail-item .val.gold{color:var(--gold);}
+ 
+/* ── CHARTS ── */
+.charts-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.chart-box{background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:12px;padding:20px;text-align:center;}
+.chart-label{font-family:'Cinzel',serif;font-size:12px;color:var(--blue);letter-spacing:.5px;margin-bottom:14px;display:block;}
+ 
+/* ── TABLE ── */
+.glass-table{overflow-x:auto;}
+.glass-table table{width:100%;border-collapse:collapse;min-width:700px;}
+.glass-table thead th{background:rgba(245,193,108,.08);color:var(--gold);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;padding:11px 12px;text-align:center;white-space:nowrap;}
+.glass-table tbody tr{border-bottom:1px solid var(--border);}
+.glass-table tbody tr:hover{background:rgba(255,255,255,.02);}
+.glass-table tbody td{padding:10px 12px;font-size:13px;text-align:center;vertical-align:middle;}
+ 
+/* ── SCORES ── */
+.scores-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:12px;}
+.score-card{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:12px;padding:12px;text-align:center;}
+.score-card .lbl{font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;}
+.score-card .val{font-family:'Cinzel',serif;font-size:20px;font-weight:700;color:var(--gold);margin-bottom:8px;}
+.prog{height:4px;background:rgba(255,255,255,.08);border-radius:2px;}
+.prog-fill{height:100%;border-radius:2px;transition:width 1.2s cubic-bezier(.4,0,.2,1);}
+ 
+/* ── YOGA / DOSHA ── */
+.yoga-card{background:rgba(74,222,128,.07);border-left:3px solid var(--green);border-radius:8px;padding:12px 14px;margin-bottom:8px;}
+.yoga-card h6{color:var(--green);font-size:13px;margin-bottom:4px;}
+.dosha-card{border-radius:8px;padding:12px 14px;margin-bottom:8px;}
+.dosha-high{background:rgba(248,113,113,.08);border-left:3px solid var(--red);}
+.dosha-med{background:rgba(245,193,108,.08);border-left:3px solid var(--gold);}
+.dosha-ok{background:rgba(74,222,128,.06);border-left:3px solid rgba(74,222,128,.4);}
+ 
+/* ── HOUSE ROWS ── */
+.house-row{background:rgba(255,255,255,.025);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:flex-start;gap:12px;transition:.2s;}
+.house-row.house-occupied{background:rgba(245,193,108,.05);border-color:rgba(245,193,108,.15);}
+.house-row:hover{background:rgba(255,255,255,.04);}
+.house-num{background:var(--gold);color:#000;border-radius:50%;width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;flex-shrink:0;}
+ 
+/* ── BADGE ── */
+.badge-gold{background:var(--gold-dim);color:var(--gold);border:1px solid var(--gold-border);font-size:11px;padding:2px 8px;border-radius:4px;font-weight:500;display:inline-block;}
+.text-muted{color:rgba(220,210,195,.7)!important;}
+details summary{cursor:pointer;color:var(--text-dim);font-size:12px;padding:4px 0;}
+details summary:hover{color:var(--gold);}
+ 
+/* ── RESULTS hidden by default ── */
+#resultsSection{display:none;}
+ 
+footer{position:relative;z-index:1;text-align:center;padding:24px;font-size:12px;color:var(--text-dim);border-top:1px solid var(--border);margin-top:16px;}
+ 
+/* SVG */
+.num{font-size:11px;fill:#888;font-weight:500;font-family:'Inter',sans-serif;}
+.planet-text{font-size:11.5px;fill:#8b2a2a;font-weight:700;font-family:'Inter',sans-serif;}
+ 
+/* Toast animation */
+@keyframes fadeInUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+ 
+@media(max-width:1024px){
+  .input-grid{grid-template-columns:1fr 1fr 1fr;}
+  .scores-grid{grid-template-columns:repeat(4,1fr);}
+}
+@media(max-width:900px){
+  .input-grid{grid-template-columns:1fr 1fr;}
+  .details-grid{grid-template-columns:1fr 1fr;}
+  .charts-grid{grid-template-columns:1fr;}
+  .scores-grid{grid-template-columns:repeat(4,1fr);}
+}
+@media(max-width:768px){
+  nav ul,.hdr-btns{display:none;}.ham{display:flex;}
+  .page-wrap{padding-top:24px;}
+  .scores-grid{grid-template-columns:repeat(2,1fr);}
+}
+@media(max-width:480px){
+  .input-grid{grid-template-columns:1fr;}
+  .details-grid{grid-template-columns:1fr 1fr;}
+  .scores-grid{grid-template-columns:repeat(2,1fr);}
+}
+</style>
+</head>
+<body>
+ 
+<header>
+  <div class="hdr">
+    <a class="brand" href="/">Astro<sup>✦</sup>Logic</a>
+    <nav><ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/panchang">Panchang</a></li>
+      <li><a href="/kundali" class="active">Kundali</a></li>
+      <li><a href="/horoscope">Horoscope</a></li>
+      <li><a href="/prediction">Predictions</a></li>
+      <li><a href="/blogs">Blogs</a></li>
+      <li><a href="/about">About</a></li>
+    </ul></nav>
+    <div class="hdr-btns">
+      <a href="/panchang" class="btn-outline">Today's Panchang</a>
+    </div>
+    <div class="ham" onclick="document.getElementById('mn').classList.toggle('open')">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</header>
+ 
+<div class="mob-nav" id="mn">
+  <a href="/">Home</a><a href="/panchang">Panchang</a>
+  <a href="/kundali" class="active">Kundali</a><a href="/horoscope">Horoscope</a>
+  <a href="/prediction">Predictions</a><a href="/blogs">Blogs</a><a href="/about">About</a>
+  <div class="mob-btns"><a href="/panchang" class="btn-g">Today's Panchang</a></div>
+</div>
+ 
+<div class="page-wrap">
+<div class="container">
+ 
+  <div class="page-hero">
+    <span class="eyebrow">Vedic Astrology</span>
+    <h1 class="page-title">Birth Kundali</h1>
+    <div class="divider"></div>
+    <p class="page-sub">Lahiri Ayanamsa · Swiss Ephemeris · Vimshottari Dasha · D1 &amp; D9 Charts</p>
+  </div>
+ 
+  <!-- INPUT -->
+  <div class="section-card">
+    <div class="section-title">Generate Birth Kundali</div>
+    <div class="input-grid">
+      <div class="inp-group">
+        <label>Full Name</label>
+        <input type="text" id="fullName" placeholder="Your full name">
+      </div>
+      <div class="inp-group">
+        <label>Date of Birth</label>
+        <input type="date" id="dob">
+      </div>
+      <div class="inp-group">
+        <label>Time of Birth (IST)</label>
+        <input type="time" id="tob">
+      </div>
+      <div class="inp-group" style="position:relative">
+        <label>Birth City</label>
+        <input type="text" id="city" placeholder="Type city name…" autocomplete="off">
+        <ul id="cityDropdown" class="autocomplete-list"></ul>
+      </div>
+      <div class="inp-group">
+        <label>&nbsp;</label>
+        <div class="input-btns">
+          <button id="generateBtn" class="btn-g" style="flex:1;padding:10px 14px;justify-content:center">Generate Kundali</button>
+          <button id="downloadBtn" class="btn-outline" style="display:none;padding:10px 14px" title="Download PDF Report">⬇ PDF</button>
+        </div>
+      </div>
+    </div>
+  </div>
+ 
+  <!-- RESULTS -->
+  <div id="resultsSection">
+ 
+    <!-- BIRTH DETAILS -->
+    <div class="section-card">
+      <div class="section-title">Birth Details &amp; Panchang</div>
+      <div class="details-grid">
+        <div class="detail-item"><div class="lbl">Name</div><div class="val" id="displayName">—</div></div>
+        <div class="detail-item"><div class="lbl">Date of Birth</div><div class="val" id="displayDob">—</div></div>
+        <div class="detail-item"><div class="lbl">Time of Birth</div><div class="val" id="displayTob">—</div></div>
+        <div class="detail-item"><div class="lbl">Birth Place</div><div class="val" id="displayCity">—</div></div>
+        <div class="detail-item"><div class="lbl">Lagna (Ascendant)</div><div class="val gold" id="displayLagna">—</div></div>
+        <div class="detail-item"><div class="lbl">Moon Sign (Chandra Rashi)</div><div class="val" id="moonSign">—</div></div>
+        <div class="detail-item"><div class="lbl">Birth Nakshatra</div><div class="val" id="nakshatra">—</div></div>
+        <div class="detail-item"><div class="lbl">Ayanamsa (Lahiri)</div><div class="val" id="ayanamsa">—</div></div>
+        <div class="detail-item"><div class="lbl">Tithi</div><div class="val" id="tithi">—</div></div>
+        <div class="detail-item"><div class="lbl">Birth Yoga</div><div class="val" id="birthYoga">—</div></div>
+        <div class="detail-item"><div class="lbl">Karana</div><div class="val" id="karana">—</div></div>
+        <div class="detail-item"><div class="lbl">Dasha Balance</div><div class="val gold" id="dashaBalance">—</div></div>
+      </div>
+    </div>
+ 
+    <!-- CHARTS -->
+    <div class="section-card">
+      <div class="section-title">Birth Charts</div>
+      <div class="charts-grid">
+        <div class="chart-box">
+          <span class="chart-label">D1 — Rashi Chart (Natal)</span>
+          <div id="d1Chart"></div>
+        </div>
+        <div class="chart-box">
+          <span class="chart-label">D9 — Navamsa Chart (Spouse &amp; Dharma)</span>
+          <div id="d9Chart"></div>
+        </div>
+      </div>
+    </div>
+ 
+    <!-- PLANETARY POSITIONS -->
+    <div class="section-card">
+      <div class="section-title">Planetary Positions (Navagraha)</div>
+      <div class="glass-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Planet</th><th>Sign (Rashi)</th><th>Degree</th><th>House</th>
+              <th>Nakshatra</th><th>Pada</th><th>Navamsa</th><th>Strength</th><th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="planetTable">
+            <tr><td colspan="9" style="text-align:center;color:var(--text-dim);padding:24px;">Generate kundali to see planets</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+ 
+    <!-- CHART STRENGTH -->
+    <div class="section-card">
+      <div class="section-title">Chart Strength Analysis</div>
+      <div class="scores-grid" id="scoresGrid">
+        <div class="score-card"><div class="lbl">Overall</div><div class="val" id="overallScore">—</div><div class="prog"><div id="overallBar" class="prog-fill" style="width:0%"></div></div></div>
+        <div class="score-card"><div class="lbl">Career</div><div class="val" id="careerScore">—</div><div class="prog"><div id="careerBar" class="prog-fill" style="width:0%"></div></div></div>
+        <div class="score-card"><div class="lbl">Finance</div><div class="val" id="financeScore">—</div><div class="prog"><div id="financeBar" class="prog-fill" style="width:0%"></div></div></div>
+        <div class="score-card"><div class="lbl">Relationship</div><div class="val" id="relationshipScore">—</div><div class="prog"><div id="relationshipBar" class="prog-fill" style="width:0%"></div></div></div>
+        <div class="score-card"><div class="lbl">Health</div><div class="val" id="healthScore">—</div><div class="prog"><div id="healthBar" class="prog-fill" style="width:0%"></div></div></div>
+        <div class="score-card"><div class="lbl">Mental</div><div class="val" id="mentalScore">—</div><div class="prog"><div id="mentalBar" class="prog-fill" style="width:0%"></div></div></div>
+        <div class="score-card"><div class="lbl">Spirituality</div><div class="val" id="spiritualScore">—</div><div class="prog"><div id="spiritualBar" class="prog-fill" style="width:0%"></div></div></div>
+      </div>
+    </div>
+ 
+    <!-- YOGAS & DOSHAS -->
+    <div class="section-card">
+      <div class="section-title">Yogas &amp; Doshas</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+        <div>
+          <div style="font-size:11px;font-weight:700;color:var(--green);letter-spacing:1px;text-transform:uppercase;margin-bottom:12px;">✦ Yoga Analysis</div>
+          <div id="yogaContainer"><p class="text-muted" style="font-size:13px;">Generate kundali to see yogas</p></div>
+        </div>
+        <div>
+          <div style="font-size:11px;font-weight:700;color:var(--red);letter-spacing:1px;text-transform:uppercase;margin-bottom:12px;">⚠ Dosha Analysis</div>
+          <div id="doshaContainer"><p class="text-muted" style="font-size:13px;">Generate kundali to see doshas</p></div>
+        </div>
+      </div>
+    </div>
+ 
+    <!-- HOUSE ANALYSIS (all 12) -->
+    <div class="section-card">
+      <div class="section-title">House-wise Analysis <span style="font-size:11px;font-weight:400;color:var(--text-dim)">(All 12 Bhavas)</span></div>
+      <div id="houseAnalysis"><p class="text-muted" style="font-size:13px;">Generate kundali to see house analysis</p></div>
+    </div>
+ 
+    <!-- VIMSHOTTARI DASHA -->
+    <div class="section-card">
+      <div class="section-title">Vimshottari Dasha</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px;">
+        <div>
+          <div style="font-size:11px;color:var(--text-dim);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px;">Current Mahadasha</div>
+          <div style="font-family:'Cinzel',serif;font-size:22px;color:var(--gold);" id="mahadasha">—</div>
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--text-dim);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px;">Current Antardasha</div>
+          <div style="font-family:'Cinzel',serif;font-size:22px;color:var(--blue);" id="antardasha">—</div>
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--text-dim);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px;">Balance Remaining</div>
+          <div style="font-family:'Cinzel',serif;font-size:22px;color:var(--text);" id="dashaBalanceDisplay">—</div>
+        </div>
+      </div>
+      <div id="dashaTimeline"></div>
+    </div>
+ 
+    <!-- ASTRO CHAT -->
+    <div class="section-card">
+      <div class="section-title">Ask Your Chart</div>
+      <div id="chatBox" style="min-height:120px;max-height:280px;overflow-y:auto;padding:8px 0;margin-bottom:14px;"></div>
+      <div style="display:flex;gap:8px;">
+        <input type="text" id="chatInput" placeholder="Ask about your kundali…"
+          style="flex:1;background:rgba(255,255,255,.06);border:1px solid var(--border2);color:#fff;border-radius:8px;padding:10px 14px;font-size:13px;font-family:'Inter',sans-serif;"
+          onkeydown="if(event.key==='Enter')sendMessage()">
+        <button onclick="sendMessage()" class="btn-g" style="padding:10px 18px">Send</button>
+      </div>
+    </div>
+ 
+  </div><!-- /resultsSection -->
+ 
+</div>
+</div>
+ 
+<footer>
+  <p>© 2026 AstroLogic · Vedic Astrology Platform · Calculations via Lahiri Ayanamsa &amp; Swiss Ephemeris</p>
+</footer>
+ 
+<script src="/static/js/kundali.js"></script>
+</body>
+</html>
