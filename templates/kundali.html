@@ -453,7 +453,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 async function loadCities() {
   try {
-    const r = await fetch("/api/cities");
+    const r = await fetch('https://astrologic-vedic-1.onrender.com/api/cities');
     if (r.ok) _cities = await r.json();
   } catch {}
 }
@@ -752,7 +752,7 @@ async function generateKundali() {
   btn.disabled = true; btn.innerText = "Calculating…";
 
   try {
-    const res = await fetch("/api/kundali", {
+    const res = await fetch('https://astrologic-vedic-1.onrender.com/api/kundali', {
       method:"POST", headers:{"Content-Type":"application/json"},
       body: JSON.stringify({year, month, day, hour, minute, city})
     });
