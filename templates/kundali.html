@@ -1421,7 +1421,7 @@ async function sendMessage() {
   cb.scrollTop = cb.scrollHeight;
 
   try {
-    const r = await fetch("/api/kundali-chat", {
+    const r = await fetch('https://astrologic-vedic-1.onrender.com//api/kundali-chat' , {
       method:"POST", headers:{"Content-Type":"application/json"},
       body: JSON.stringify({ message: msg, chart: _data })
     });
