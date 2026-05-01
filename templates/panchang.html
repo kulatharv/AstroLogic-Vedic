@@ -211,13 +211,13 @@ footer{position:relative;z-index:1;text-align:center;padding:24px;
     <nav><ul>
       <li><a href="/">Home</a></li>
       <li><a href="/panchang.html" class="active">Panchang</a></li>
-      <li><a href="/kundali">Kundali</a></li>
-      <li><a href="/horoscope">Horoscope</a></li>
-      <li><a href="/prediction">Predictions</a></li>
-      <li><a href="/blogs">Blogs</a></li>
-      <li><a href="/about">About</a></li>
+      <li><a href="/kundali.html">Kundali</a></li>
+      <li><a href="/horoscope.html">Horoscope</a></li>
+      <li><a href="/prediction.html">Predictions</a></li>
+      <li><a href="/blogs.html">Blogs</a></li>
+      <li><a href="/about.html">About</a></li>
     </ul></nav>
-    <div class="hdr-btns"><a href="/kundali" class="btn-g">Generate Kundali</a></div>
+    <div class="hdr-btns"><a href="/kundali.html" class="btn-g">Generate Kundali</a></div>
     <div class="ham" onclick="document.getElementById('mn').classList.toggle('open')">
       <span></span><span></span><span></span>
     </div>
@@ -226,9 +226,9 @@ footer{position:relative;z-index:1;text-align:center;padding:24px;
 
 <div class="mob-nav" id="mn">
   <a href="/">Home</a><a href="/panchang.html" class="active">Panchang</a>
-  <a href="/kundali">Kundali</a><a href="/horoscope">Horoscope</a>
-  <a href="/prediction">Predictions</a><a href="/blogs">Blogs</a><a href="/about">About</a>
-  <div class="mob-btns"><a href="/kundali" class="btn-g">Generate Kundali</a></div>
+  <a href="/kundali.html">Kundali</a><a href="/horoscope.html">Horoscope</a>
+  <a href="/prediction.html">Predictions</a><a href="/blogs.html">Blogs</a><a href="/about.html">About</a>
+  <div class="mob-btns"><a href="/kundali.html" class="btn-g">Generate Kundali</a></div>
 </div>
 
 <div class="page-wrap">
@@ -331,30 +331,11 @@ footer{position:relative;z-index:1;text-align:center;padding:24px;
 <footer>© 2026 AstroLogic · Vedic Astrology Platform · All festivals computed from live tithi positions via Swiss Ephemeris</footer>
 
 <script>
+
+  const API_URL = "https://astrologic-vedic-1.onrender.com";
 // ============================================================
 // COMPLETE PANCHANG WITH FIXED TIME CALCULATIONS & MOCK DATA
 // ============================================================
-const API_URL = "https://astrologic-vedic-1.onrender.com";
-
-// const MOCK_PANCHANG = {
-//   tithi: "Pratipada",
-//   paksha: "Shukla",
-//   nakshatra: "Ashwini",
-//   yoga: "Shubha",
-//   karana: "Bava",
-//   sunrise: "06:15 AM",
-//   sunset: "06:45 PM",
-//   rahu: "10:30 AM - 12:00 PM",
-//   yamaganda: "03:00 PM - 04:30 PM",
-//   gulika: "07:30 AM - 09:00 AM",
-//   abhijit: "12:00 PM - 12:48 PM",
-//   brahma: "04:30 AM - 05:15 AM",
-//   planets: []
-// };
-
-// const MOCK_FESTIVALS = {
-//   festivals: []
-// };
 
 // ── Live clock ────────────────────────────────────────────────
 (function tick(){
@@ -683,7 +664,7 @@ async function loadPanchang() {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 5000);
     
-    const res = await fetch(`${API_URL}/api/panchang`, {
+    const res = await fetch('/api/panchang', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ city }),
@@ -707,7 +688,7 @@ async function loadFestivals() {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 5000);
     
-    const res = await fetch(`${API_URL}/api/festivals/upcoming?limit=14`, {
+    const res = await fetch('/api/festivals/upcoming?limit=14', {
       signal: controller.signal
     });
     

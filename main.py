@@ -53,6 +53,7 @@ print(marriage_output)
 chat_with_chart(chart)
 
 '''
+'''
 #01/05/2026
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -103,7 +104,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-'''
+
 Blog.metadata.create_all(bind=engine)
 
 # Include API routes
