@@ -53,7 +53,33 @@ print(marriage_output)
 chat_with_chart(chart)
 
 '''
+#01/05/2026
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
+app = FastAPI()
+
+# ✅ ADD IMMEDIATELY AFTER app creation
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# THEN import rest
+from fastapi import Request
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
+from fastapi.responses import HTMLResponse
+
+from database import engine
+from models.blog_model import Blog
+from api.api import router
+
+app.include_router(router, prefix="/api")
+'''
 #26/04/2026
 
 from fastapi import FastAPI, Request
@@ -77,7 +103,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
+'''
 Blog.metadata.create_all(bind=engine)
 
 # Include API routes
