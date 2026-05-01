@@ -210,3 +210,6 @@ __marimo__/
 last_chart.json
 kundali_report.pdf
 Backup/
+
+
+*.db
