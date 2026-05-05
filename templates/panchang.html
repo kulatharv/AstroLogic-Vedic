@@ -689,7 +689,7 @@ async function loadPanchang() {
     
     // const res = await fetch('/api/panchang', {
     // const res = await fetch('https://astrologic-vedic-1.onrender.com/api/panchang', {
-    const res = await fetch('/api/panchang', {
+  const res = await fetch(`${API_URL}/api/panchang`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ city }),
@@ -714,10 +714,12 @@ async function loadFestivals() {
     const timeoutId = setTimeout(() => controller.abort(), 5000);
     
     // const res = await fetch('https://astrologic-vedic-1.onrender.com/api/festivals/upcoming?limit=14', {
-  const res = await fetch('api/festivals/upcoming?limit=14', {  
-    signal: controller.signal
-    });
-    
+  // const res = await fetch('/api/festivals/upcoming?limit=14', {  
+  //   signal: controller.signal
+  //   });
+  const res = await fetch(`${API_URL}/api/festivals/upcoming?limit=14`)  
+
+
     clearTimeout(timeoutId);
     
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
