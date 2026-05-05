@@ -681,13 +681,21 @@ from models.blog_model import Blog
 from models.user_model import User, UserProfile, UserActivity
 from api.api import router
 from api.blogs import router as admin_blog_router
-
+from api.api import router as api_router
+from api.blogs import router as admin_blog_router
 
 # ============================================================
 # APP SETUP
 # ============================================================
 
 app = FastAPI(title="AstroLogic Backend")
+# Include the API router
+Base.metadata.create_all(bind=engine)
+
+# Include routers (ADD THESE LINES)
+app.include_router(api_router, prefix="/api")
+app.include_router(admin_blog_router)
+
 
 app.add_middleware(
     CORSMiddleware,
