@@ -684,6 +684,8 @@ from api.blogs import router as admin_blog_router
 from api.api import router as api_router
 from api.blogs import router as admin_blog_router
 
+
+from fastapi.templating import Jinja2Templates
 # ============================================================
 # APP SETUP
 # ============================================================
