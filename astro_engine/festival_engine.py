@@ -748,6 +748,11 @@ Horoscope text generated from real planet transits, house positions, strengths.
 
 import swisseph as swe
 from datetime import datetime, timedelta, timezone
+
+def get_ist_now():
+    return datetime.utcnow() + timedelta(hours=5, minutes=30)
+
+
 from math import floor
 
 swe.set_ephe_path('.')
@@ -984,10 +989,19 @@ FESTIVAL_RULES = [
 # EPHEMERIS HELPERS
 # ═══════════════════════════════════════════════════════════════
 
+# def _jd_now():
+#     now = datetime.now(timezone.utc)
+#     return swe.julday(now.year, now.month, now.day,
+#                       now.hour + now.minute/60 + now.second/3600)
+
 def _jd_now():
-    now = datetime.now(timezone.utc)
-    return swe.julday(now.year, now.month, now.day,
-                      now.hour + now.minute/60 + now.second/3600)
+    now = get_ist_now()
+    return swe.julday(
+        now.year,
+        now.month,
+        now.day,
+        now.hour + now.minute/60 + now.second/3600
+    )
 
 def _panchang_at(jd):
     FLAGS = swe.FLG_SWIEPH | swe.FLG_SIDEREAL
@@ -1273,8 +1287,9 @@ def generate_horoscope(sign_idx: int) -> dict:
     moon_nak    = NAKSHATRA_NAMES[int(pan["moon"] / NAK_DIV) % 27]
     tithi_q     = TITHI_QUALITY.get(pan["tithi_idx"], 0)
     nak_q       = NAKSHATRA_QUALITY.get(moon_nak, 0)
-    weekday_lord= WEEKDAY_RULERS[datetime.now().weekday()]
-
+    #weekday_lord= WEEKDAY_RULERS[datetime.now().weekday()]
+    weekday_lord = WEEKDAY_RULERS[get_ist_now().weekday()]
+    
     # ── Analyse every planet's house + net influence ──────────────
     analysis = {}
     for pname, pdata in pos.items():

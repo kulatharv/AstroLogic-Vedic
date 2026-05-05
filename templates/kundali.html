@@ -43,6 +43,12 @@ nav ul li a:hover,nav ul li a.active{color:var(--gold)!important;background:var(
 .mob-nav a{font-size:15px;color:var(--text-dim);text-decoration:none;padding:10px 14px;border-radius:8px;transition:.2s;}
 .mob-nav a:hover,.mob-nav a.active{color:var(--gold);background:var(--gold-dim);}
 .mob-btns{display:flex;gap:8px;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);}
+@media(max-width:768px){
+  .mob-nav{max-height:calc(100vh - var(--hh));overflow-y:auto}
+  .mob-nav a{font-size:14px;padding:11px 14px;border:1px solid transparent}
+  .mob-nav a.active{border-color:var(--gold-border)}
+  .mob-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+}
  
 /* ── PAGE ── */
 .page-wrap{position:relative;z-index:1;padding-top:36px;padding-bottom:80px;}
@@ -164,15 +170,17 @@ footer{position:relative;z-index:1;text-align:center;padding:24px;font-size:12px
     <a class="brand" href="/">Astro<sup>✦</sup>Logic</a>
     <nav><ul>
       <li><a href="/">Home</a></li>
-      <li><a href="/panchang">Panchang</a></li>
+      <li><a href="/panchang.html">Panchang</a></li>
       <li><a href="/kundali" class="active">Kundali</a></li>
       <li><a href="/horoscope">Horoscope</a></li>
       <li><a href="/prediction">Predictions</a></li>
       <li><a href="/blogs">Blogs</a></li>
       <li><a href="/about">About</a></li>
+      <li><a href="/profile">Profile</a></li>
     </ul></nav>
     <div class="hdr-btns">
-      <a href="/panchang" class="btn-outline">Today's Panchang</a>
+      <a href="/profile" class="btn-outline">Profile</a>
+      <a href="/logout" class="btn-outline">Logout</a>
     </div>
     <div class="ham" onclick="document.getElementById('mn').classList.toggle('open')">
       <span></span><span></span><span></span>
@@ -181,10 +189,10 @@ footer{position:relative;z-index:1;text-align:center;padding:24px;font-size:12px
 </header>
  
 <div class="mob-nav" id="mn">
-  <a href="/">Home</a><a href="/panchang">Panchang</a>
+  <a href="/">Home</a><a href="/panchang.html">Panchang</a>
   <a href="/kundali" class="active">Kundali</a><a href="/horoscope">Horoscope</a>
-  <a href="/prediction">Predictions</a><a href="/blogs">Blogs</a><a href="/about">About</a>
-  <div class="mob-btns"><a href="/panchang" class="btn-g">Today's Panchang</a></div>
+  <a href="/prediction">Predictions</a><a href="/blogs">Blogs</a><a href="/about">About</a><a href="/profile">Profile</a>
+  <div class="mob-btns"><a href="/profile" class="btn-outline">Profile</a><a href="/logout" class="btn-outline">Logout</a></div>
 </div>
  
 <div class="page-wrap">
@@ -365,7 +373,10 @@ footer{position:relative;z-index:1;text-align:center;padding:24px;font-size:12px
 // kundali.js — AstroLogic Complete Frontend v2
 // Fixes: getRashi, house analysis, dasha timeline, download
 // ================================================================
-
+const API_URL = window.location.hostname === "localhost" 
+  || window.location.hostname === "127.0.0.1"
+  ? "http://127.0.0.1:8000"
+  : "https://astrologic-vedic-1.onrender.com";
 const safe = v => (v == null || v === "") ? "—" : v;
 const safeNum = (v, fb = 0) => { const n = parseFloat(v); return isNaN(n) ? fb : n; };
 
@@ -453,7 +464,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 async function loadCities() {
   try {
-    const r = await fetch('https://astrologic-vedic-1.onrender.com/api/cities');
+    // const r = await fetch('https://astrologic-vedic-1.onrender.com/api/cities');
+    const r = await fetch('api/cities');
     if (r.ok) _cities = await r.json();
   } catch {}
 }
@@ -752,13 +764,14 @@ async function generateKundali() {
   btn.disabled = true; btn.innerText = "Calculating…";
 
   try {
-    const res = await fetch('https://astrologic-vedic-1.onrender.com/api/kundali', {
+    const res = await fetch('api/kundali', {
       method:"POST", headers:{"Content-Type":"application/json"},
       body: JSON.stringify({year, month, day, hour, minute, city})
     });
     if (!res.ok) { showToast("Server error: " + res.status, "error"); return; }
     const data = await res.json();
     _data = data; _person = {name, dob, tob, city};
+    recordTestingActivity("kundali", "search", _person);
 
     // Birth Details
     document.getElementById("displayName").innerText  = name;
@@ -824,9 +837,75 @@ function showToast(msg, type = "info") {
   setTimeout(() => t.remove(), 3000);
 }
 
+function recordTestingActivity(module, action, person){
+  fetch("/api/user-activity", {
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({
+      module, action,
+      person_name: person?.name || "",
+      birth_date: person?.dob || "",
+      birth_time: person?.tob || "",
+      birth_city: person?.city || ""
+    })
+  }).catch(()=>{});
+}
+
+function openFeedbackModal(module, person, onDone){
+  const old = document.getElementById("testingFeedbackModal");
+  if(old) old.remove();
+  const modal = document.createElement("div");
+  modal.id = "testingFeedbackModal";
+  modal.style.cssText = "position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:10000;display:flex;align-items:center;justify-content:center;padding:18px";
+  modal.innerHTML = `
+    <form id="testingFeedbackForm" style="width:100%;max-width:460px;background:#071426;border:1px solid rgba(245,193,108,.28);border-radius:16px;padding:22px;color:#e8e8e8;font-family:Inter,sans-serif">
+      <h3 style="font-family:Cinzel,serif;color:#f5c16c;margin-bottom:8px">Quick Testing Feedback</h3>
+      <p style="color:rgba(232,232,232,.62);font-size:13px;line-height:1.5;margin-bottom:14px">Please submit this before leaving or downloading. It helps us improve the early product.</p>
+      <div style="font-size:12px;color:#9bdcff;margin-bottom:12px">${person?.name || "-"} | ${person?.dob || "-"} ${person?.tob || ""} | ${person?.city || "-"}</div>
+      <label style="font-size:11px;color:rgba(232,232,232,.62);font-weight:700">Accuracy</label>
+      <select name="accuracy" required style="width:100%;margin:6px 0 12px;padding:10px;border-radius:8px;background:#111f30;color:#fff;border:1px solid rgba(255,255,255,.16)"><option value="">Select</option><option>Very accurate</option><option>Mostly accurate</option><option>Average</option><option>Not accurate</option></select>
+      <label style="font-size:11px;color:rgba(232,232,232,.62);font-weight:700">Experience</label>
+      <select name="experience" required style="width:100%;margin:6px 0 12px;padding:10px;border-radius:8px;background:#111f30;color:#fff;border:1px solid rgba(255,255,255,.16)"><option value="">Select</option><option>Excellent</option><option>Good</option><option>Confusing</option><option>Poor</option></select>
+      <label style="font-size:11px;color:rgba(232,232,232,.62);font-weight:700">Usefulness</label>
+      <select name="usefulness" required style="width:100%;margin:6px 0 12px;padding:10px;border-radius:8px;background:#111f30;color:#fff;border:1px solid rgba(255,255,255,.16)"><option value="">Select</option><option>Very useful</option><option>Useful</option><option>Somewhat useful</option><option>Not useful</option></select>
+      <textarea name="comments" placeholder="Anything we should improve?" style="width:100%;min-height:80px;margin-bottom:14px;padding:10px;border-radius:8px;background:#111f30;color:#fff;border:1px solid rgba(255,255,255,.16)"></textarea>
+      <button style="width:100%;background:linear-gradient(135deg,#f5c16c,#d89b3c);border:0;border-radius:9px;padding:11px;font-weight:800;color:#000">Submit Feedback</button>
+    </form>`;
+  document.body.appendChild(modal);
+  document.getElementById("testingFeedbackForm").addEventListener("submit", async e => {
+    e.preventDefault();
+    const fd = new FormData(e.currentTarget);
+    await fetch("/api/testing-feedback", {
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        module,
+        person_name: person?.name || "",
+        birth_date: person?.dob || "",
+        birth_time: person?.tob || "",
+        birth_city: person?.city || "",
+        accuracy: fd.get("accuracy"),
+        experience: fd.get("experience"),
+        usefulness: fd.get("usefulness"),
+        comments: fd.get("comments")
+      })
+    });
+    modal.remove();
+    onDone?.();
+  });
+}
+
 //── PDF Download ──────────────────────────────────────────────────
 function downloadPDF() {
   if (!_data || !_person) { showToast("Please generate kundali first", "error"); return; }
+  if (!window.kundaliFeedbackSubmitted) {
+    openFeedbackModal("kundali", _person, () => {
+      window.kundaliFeedbackSubmitted = true;
+      recordTestingActivity("kundali", "download", _person);
+      downloadPDF();
+    });
+    return;
+  }
   const d = _data, p = _person;
   const d1SVG = document.getElementById("d1Chart")?.innerHTML || "";
   const d9SVG = document.getElementById("d9Chart")?.innerHTML || "";
@@ -1421,7 +1500,7 @@ async function sendMessage() {
   cb.scrollTop = cb.scrollHeight;
 
   try {
-    const r = await fetch('https://astrologic-vedic-1.onrender.com//api/kundali-chat' , {
+    const r = await fetch('api/kundali-chat' , {
       method:"POST", headers:{"Content-Type":"application/json"},
       body: JSON.stringify({ message: msg, chart: _data })
     });
@@ -1456,6 +1535,39 @@ async function sendMessage() {
 const style = document.createElement("style");
 style.textContent = `@keyframes tdot{0%,100%{opacity:.3;transform:translateY(0)}50%{opacity:1;transform:translateY(-3px)}}`;
 document.head.appendChild(style);
+
+// You can also check via API if needed
+async function checkLoginStatus() {
+    try {
+        const response = await fetch('/api/check-session');
+        const data = await response.json();
+        return data.authenticated === true;
+    } catch (error) {
+        return false;
+    }
+}
+
+// Then use it
+checkLoginStatus().then(isLoggedIn => {
+    const requireLogin = document.body.dataset.requireLogin === "true";
+    const popup = document.getElementById("loginPopup");
+    
+    if (requireLogin && !isLoggedIn && popup) {
+        popup.style.display = "flex";
+        document.body.style.overflow = "hidden";
+    }
+});
+
  </script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+<body {% if require_login %}data-require-login="true"{% endif %} data-user-logged-in="{{ user is not none }}"></body>
+

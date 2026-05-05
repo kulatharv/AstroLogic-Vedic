@@ -160,7 +160,7 @@ CITIES = {
 
 def get_city(name: str):
     """Case-insensitive city lookup. Returns (lat, lon, timezone) or None."""
-    name = name.strip()
+    name = name.strip().title()
     # Exact match first
     if name in CITIES:
         c = CITIES[name]
@@ -175,3 +175,125 @@ def get_city(name: str):
 def get_city_names():
     """Return sorted list of all city names."""
     return sorted(CITIES.keys())
+
+
+# # ===============================
+# # CACHE (VERY IMPORTANT)
+# # ===============================
+# CITY_CACHE = {}
+
+
+# # ===============================
+# # FREE API FUNCTION (NO KEY)
+# # ===============================
+# def _get_coordinates_osm(city):
+#     try:
+#         url = "https://nominatim.openstreetmap.org/search"
+
+#         params = {
+#             "q": city,
+#             "format": "json",
+#             "limit": 1
+#         }
+
+#         res = requests.get(
+#             url,
+#             params=params,
+#             headers={"User-Agent": "astro-app"}  # required!
+#         )
+
+#         data = res.json()
+
+#         if not data:
+#             return None
+
+#         return {
+#             "lat": float(data[0]["lat"]),
+#             "lon": float(data[0]["lon"]),
+#             "timezone": 5.5  # fallback (since we didn't change other files)
+#         }
+
+#     except:
+#         return None
+
+
+# # ===============================
+# # MAIN FUNCTION (NO CHANGE OUTSIDE)
+# # ===============================
+# def get_city(name: str):
+#     """
+#     Returns (lat, lon, timezone)
+#     Supports ANY city dynamically
+#     """
+
+#     if not name:
+#         return None
+
+#     name = name.strip().title()
+
+#     # 1️⃣ Exact match
+#     if name in CITIES:
+#         c = CITIES[name]
+#         return c["lat"], c["lon"], c["timezone"]
+
+#     # 2️⃣ Case-insensitive match
+#     for key in CITIES:
+#         if key.lower() == name.lower():
+#             c = CITIES[key]
+#             return c["lat"], c["lon"], c["timezone"]
+
+#     # 3️⃣ Cache
+#     if name in CITY_CACHE:
+#         c = CITY_CACHE[name]
+#         return c["lat"], c["lon"], c["timezone"]
+
+#     # 4️⃣ API fallback
+#     data = _get_coordinates_osm(name)
+
+#     if data:
+#         CITY_CACHE[name] = data
+#         return data["lat"], data["lon"], data["timezone"]
+
+#     return None
+
+
+# def get_city_names():
+#     return sorted(CITIES.keys())
+
+# def _get_coordinates_osm(city):
+#     try:
+#         url = "https://nominatim.openstreetmap.org/search"
+
+#         # Try multiple query formats
+#         queries = [
+#             city,
+#             f"{city}, India",
+#             f"{city}, Maharashtra, India"
+#         ]
+
+#         for q in queries:
+#             params = {
+#                 "q": q,
+#                 "format": "json",
+#                 "limit": 1
+#             }
+
+#             res = requests.get(
+#                 url,
+#                 params=params,
+#                 headers={"User-Agent": "astro-app"}
+#             )
+
+#             data = res.json()
+
+#             if data:
+#                 return {
+#                     "lat": float(data[0]["lat"]),
+#                     "lon": float(data[0]["lon"]),
+#                     "timezone": 5.5
+#                 }
+
+#         return None
+
+#     except:
+#         return None

@@ -1,0 +1,55 @@
+<script>
+  (function () {
+    // Get login status from body dataset
+    const isLoggedIn = document.body.dataset.userLoggedIn === "True";
+    const requireLogin = document.body.dataset.requireLogin === "true";
+    const popup = document.getElementById("loginPopup");
+    
+    console.log("Login Status - isLoggedIn:", isLoggedIn, "requireLogin:", requireLogin);
+    
+    // ONLY show popup if user is NOT logged in AND require_login is true
+    if (!isLoggedIn && requireLogin && popup) {
+      console.log("Showing login popup - user not logged in");
+      popup.style.display = "flex";
+      document.body.style.overflow = "hidden";
+      
+      // Get current page URL for redirect
+      const currentUrl = encodeURIComponent(window.location.href);
+      
+      // Update login and signup buttons with redirect parameter
+      const loginBtn = document.getElementById("popupLoginBtn");
+      const signupBtn = document.getElementById("popupSignupBtn");
+      
+      if (loginBtn) {
+        loginBtn.href = `/login?redirect=${currentUrl}`;
+      }
+      
+      if (signupBtn) {
+        signupBtn.href = `/signup?redirect=${currentUrl}`;
+      }
+    } else if (isLoggedIn && popup) {
+      // User is logged in, ensure popup is hidden
+      console.log("User is logged in, hiding popup");
+      popup.style.display = "none";
+      document.body.style.overflow = "";
+    }
+    
+    // Check for redirect after login/signup
+    const urlParams = new URLSearchParams(window.location.search);
+    const redirectUrl = urlParams.get('redirect');
+    
+    if (redirectUrl && (window.location.pathname === '/login' || window.location.pathname === '/signup')) {
+      sessionStorage.setItem('redirectAfterAuth', redirectUrl);
+    }
+    
+    if (sessionStorage.getItem('redirectAfterAuth') && 
+        window.location.pathname !== '/login' && 
+        window.location.pathname !== '/signup') {
+      const storedRedirect = sessionStorage.getItem('redirectAfterAuth');
+      sessionStorage.removeItem('redirectAfterAuth');
+      if (storedRedirect && storedRedirect !== window.location.href) {
+        window.location.href = storedRedirect;
+      }
+    }
+  })();
+</script>

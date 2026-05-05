@@ -44,6 +44,8 @@ nav ul li a:hover,nav ul li a.active{color:var(--gold)!important;background:var(
   border:none;cursor:pointer;text-decoration:none;transition:.2s;
   white-space:nowrap;font-family:'Inter',sans-serif}
 .btn-g:hover{filter:brightness(1.1);transform:translateY(-1px);color:#000}
+.btn-o{border:1px solid var(--gold-border);color:var(--gold);font-size:12.5px;font-weight:600;padding:7px 16px;border-radius:7px;background:transparent;cursor:pointer;text-decoration:none;transition:.2s;white-space:nowrap;font-family:'Inter',sans-serif}
+.btn-o:hover{background:var(--gold-dim);color:var(--gold)}
 .ham{display:none;flex-direction:column;gap:5px;cursor:pointer;margin-left:auto;padding:6px}
 .ham span{width:22px;height:2px;background:var(--text);border-radius:2px}
 .mob-nav{display:none;position:fixed;top:var(--hh);left:0;right:0;
@@ -54,6 +56,13 @@ nav ul li a:hover,nav ul li a.active{color:var(--gold)!important;background:var(
   padding:10px 14px;border-radius:8px;transition:.2s}
 .mob-nav a:hover,.mob-nav a.active{color:var(--gold);background:var(--gold-dim)}
 .mob-btns{display:flex;gap:8px;margin-top:12px;padding-top:12px;border-top:1px solid var(--border)}
+@media(max-width:768px){
+  .mob-nav{max-height:calc(100vh - var(--hh));overflow-y:auto}
+  .mob-nav a{font-size:14px;padding:11px 14px;border:1px solid transparent}
+  .mob-nav a.active{border-color:var(--gold-border)}
+  .mob-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .mob-btns .btn-g{grid-column:1/-1;text-align:center;justify-content:center}
+}
 
 /* ── LAYOUT ── */
 .page-wrap{position:relative;z-index:1;padding-top:28px;padding-bottom:80px}
@@ -180,14 +189,15 @@ footer{position:relative;z-index:1;text-align:center;padding:24px;
     <a class="brand" href="/">Astro<sup>✦</sup>Logic</a>
     <nav><ul>
       <li><a href="/">Home</a></li>
-      <li><a href="/panchang">Panchang</a></li>
+      <li><a href="/panchang.html">Panchang</a></li>
       <li><a href="/kundali">Kundali</a></li>
       <li><a href="/horoscope" class="active">Horoscope</a></li>
       <li><a href="/prediction">Predictions</a></li>
       <li><a href="/blogs">Blogs</a></li>
       <li><a href="/about">About</a></li>
+      <li><a href="/profile">Profile</a></li>
     </ul></nav>
-    <div class="hdr-btns"><a href="/kundali" class="btn-g">Generate Kundali</a></div>
+    <div class="hdr-btns"><a href="/profile" class="btn-o">Profile</a><a href="/logout" class="btn-o">Logout</a><a href="/kundali" class="btn-g">Generate Kundali</a></div>
     <div class="ham" onclick="document.getElementById('mn').classList.toggle('open')">
       <span></span><span></span><span></span>
     </div>
@@ -195,10 +205,10 @@ footer{position:relative;z-index:1;text-align:center;padding:24px;
 </header>
 
 <div class="mob-nav" id="mn">
-  <a href="/">Home</a><a href="/panchang">Panchang</a>
+  <a href="/">Home</a><a href="/panchang.html">Panchang</a>
   <a href="/kundali">Kundali</a><a href="/horoscope" class="active">Horoscope</a>
-  <a href="/prediction">Predictions</a><a href="/blogs">Blogs</a><a href="/about">About</a>
-  <div class="mob-btns"><a href="/kundali" class="btn-g">Generate Kundali</a></div>
+  <a href="/prediction">Predictions</a><a href="/blogs">Blogs</a><a href="/about">About</a><a href="/profile">Profile</a>
+  <div class="mob-btns"><a href="/profile" class="btn-o">Profile</a><a href="/logout" class="btn-o">Logout</a><a href="/kundali" class="btn-g">Generate Kundali</a></div>
 </div>
 
 <div class="page-wrap">

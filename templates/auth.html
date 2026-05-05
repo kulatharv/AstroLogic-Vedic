@@ -1,0 +1,964 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AstroLogic | Authentication</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --gold:#f5c16c;
+  --gold2:#d89b3c;
+  --gold-dim:rgba(245,193,108,.12);
+  --gold-border:rgba(245,193,108,.28);
+  --blue:#9bdcff;
+  --red:#f87171;
+  --green:#4ade80;
+  --surface:rgba(255,255,255,.05);
+  --border:rgba(255,255,255,.1);
+  --border2:rgba(255,255,255,.16);
+  --text:#e8e8e8;
+  --text-dim:rgba(232,232,232,.58);
+}
+
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+body{
+  min-height:100vh;
+  background:radial-gradient(ellipse 150% 80% at 50% -10%,#0c2a4a,#010812);
+  color:var(--text);
+  font-family:'Inter',sans-serif;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+  overflow-x:hidden;
+}
+
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:0;
+  background-image:
+    radial-gradient(1.5px 1.5px at 8% 15%,rgba(155,220,255,.45),transparent),
+    radial-gradient(1px 1px at 75% 6%,rgba(245,193,108,.42),transparent),
+    radial-gradient(1px 1px at 32% 52%,rgba(155,220,255,.3),transparent),
+    radial-gradient(1.5px 1.5px at 90% 70%,rgba(245,193,108,.34),transparent),
+    radial-gradient(1px 1px at 55% 35%,rgba(255,255,255,.25),transparent),
+    radial-gradient(1px 1px at 18% 80%,rgba(155,220,255,.28),transparent),
+    radial-gradient(1px 1px at 42% 10%,rgba(245,193,108,.32),transparent);
+}
+
+.auth-shell{
+  position:relative;
+  z-index:1;
+  width:100%;
+  max-width:980px;
+  display:grid;
+  grid-template-columns:1fr 430px;
+  gap:34px;
+  align-items:center;
+}
+
+.auth-copy{
+  padding:20px 10px;
+}
+
+.brand{
+  display:inline-block;
+  font-family:'Cinzel',serif;
+  font-size:24px;
+  font-weight:600;
+  color:var(--gold);
+  text-decoration:none;
+  letter-spacing:1.5px;
+  margin-bottom:28px;
+}
+
+.brand sup{
+  font-size:10px;
+  opacity:.65;
+  vertical-align:super;
+}
+
+.eyebrow{
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:2.8px;
+  text-transform:uppercase;
+  color:var(--blue);
+  margin-bottom:14px;
+}
+
+.copy-title{
+  font-family:'Cinzel',serif;
+  font-size:clamp(32px,5vw,54px);
+  line-height:1.14;
+  font-weight:600;
+  color:#fff;
+  margin-bottom:18px;
+}
+
+.copy-title em{
+  font-family:'Crimson Pro',serif;
+  font-style:italic;
+  background:linear-gradient(135deg,var(--gold),#ffd98a);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+
+.copy-text{
+  max-width:480px;
+  font-family:'Crimson Pro',serif;
+  font-size:19px;
+  line-height:1.72;
+  color:rgba(232,232,232,.75);
+}
+
+.auth-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:38px 36px;
+  box-shadow:0 24px 70px rgba(0,0,0,.28);
+  backdrop-filter:blur(22px);
+}
+
+.card-title{
+  font-family:'Cinzel',serif;
+  text-align:center;
+  font-size:18px;
+  font-weight:700;
+  color:var(--gold);
+  letter-spacing:.6px;
+  margin-bottom:8px;
+}
+
+.card-sub{
+  text-align:center;
+  color:var(--text-dim);
+  font-size:13px;
+  line-height:1.6;
+  margin-bottom:24px;
+}
+
+.divider{
+  width:48px;
+  height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  margin:0 auto 26px;
+}
+
+.alert{
+  display:none;
+  border-radius:9px;
+  padding:11px 13px;
+  font-size:13px;
+  line-height:1.5;
+  margin-bottom:16px;
+}
+
+.alert.error{
+  color:var(--red);
+  background:rgba(248,113,113,.1);
+  border:1px solid rgba(248,113,113,.32);
+}
+
+.field{
+  margin-bottom:15px;
+}
+
+.field label{
+  display:block;
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:.6px;
+  text-transform:uppercase;
+  color:var(--text-dim);
+  margin-bottom:7px;
+}
+
+.field input{
+  width:100%;
+  background:rgba(255,255,255,.07);
+  border:1px solid var(--border2);
+  color:#fff;
+  border-radius:9px;
+  padding:12px 14px;
+  font-size:14px;
+  font-family:'Inter',sans-serif;
+  transition:.2s;
+}
+
+.field input:focus{
+  outline:none;
+  border-color:var(--gold);
+  background:rgba(255,255,255,.1);
+  box-shadow:0 0 0 3px rgba(245,193,108,.08);
+}
+
+.field input::placeholder{
+  color:rgba(255,255,255,.32);
+}
+
+.btn-auth{
+  width:100%;
+  margin-top:6px;
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:#000;
+  font-weight:800;
+  font-size:14.5px;
+  padding:12px;
+  border-radius:10px;
+  border:none;
+  cursor:pointer;
+  font-family:'Inter',sans-serif;
+  transition:.25s;
+}
+
+.btn-auth:hover{
+  filter:brightness(1.1);
+  transform:translateY(-1px);
+  box-shadow:0 10px 26px rgba(245,193,108,.22);
+}
+
+.switch-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  margin-top:20px;
+  padding-top:18px;
+  border-top:1px solid var(--border);
+  font-size:13px;
+  color:var(--text-dim);
+}
+
+.switch-row a{
+  color:var(--blue);
+  text-decoration:none;
+  font-weight:600;
+}
+
+.switch-row a:hover{
+  color:var(--gold);
+}
+
+.back-link{
+  display:block;
+  text-align:center;
+  margin-top:18px;
+  font-size:13px;
+  color:var(--text-dim);
+  text-decoration:none;
+  transition:.2s;
+}
+
+.back-link:hover{
+  color:var(--gold);
+}
+
+@media(max-width:880px){
+  .auth-shell{
+    max-width:460px;
+    grid-template-columns:1fr;
+    gap:20px;
+  }
+
+  .auth-copy{
+    text-align:center;
+    padding:0;
+  }
+
+  .copy-text{
+    margin:0 auto;
+  }
+}
+
+@media(max-width:480px){
+  body{
+    padding:18px;
+    align-items:flex-start;
+  }
+
+  .auth-card{
+    padding:30px 22px;
+    border-radius:16px;
+  }
+
+  .copy-title{
+    font-size:31px;
+  }
+
+  .copy-text{
+    font-size:17px;
+  }
+
+  .switch-row{
+    flex-direction:column;
+    text-align:center;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<main class="auth-shell">
+
+  <section class="auth-copy">
+    <a class="brand" href="/">Astro<sup>✦</sup>Logic</a>
+
+    <div class="eyebrow" id="eyebrowText">Welcome Back</div>
+
+    <h1 class="copy-title" id="heroTitle">
+      Return To Your <em>Astro Space.</em>
+    </h1>
+
+    <p class="copy-text" id="heroText">
+      Sign in to access your saved profile, Kundali data, horoscope tools, and personal activity history.
+    </p>
+  </section>
+
+  <section class="auth-card">
+    <h2 class="card-title" id="cardTitle">User Login</h2>
+
+    <p class="card-sub" id="cardSub">
+      Authentication is required to continue.
+    </p>
+
+    <div class="divider"></div>
+
+    <div class="alert error" id="errorBox"></div>
+
+    <form method="POST" id="authForm">
+      <div class="field" id="nameField" style="display:none;">
+        <label>Name</label>
+        <input
+          name="name"
+          type="text"
+          placeholder="Enter your name"
+          autocomplete="name"
+          id="nameInput"
+        >
+      </div>
+
+      <div class="field" id="phoneField" style="display:none;">
+        <label>Contact Number</label>
+        <input
+          name="phone"
+          type="tel"
+          placeholder="10 digit mobile number"
+          autocomplete="tel"
+          id="phoneInput"
+          pattern="[0-9+\-\s]{8,16}"
+        >
+      </div>
+
+      <div class="field">
+        <label>Email</label>
+        <input
+          name="email"
+          type="email"
+          placeholder="you@example.com"
+          autocomplete="email"
+          required
+        >
+      </div>
+
+      <div class="field">
+        <label>Password</label>
+        <input
+          name="password"
+          type="password"
+          placeholder="Minimum 6 characters"
+          autocomplete="current-password"
+          minlength="6"
+          required
+          id="passwordInput"
+        >
+      </div>
+
+      <button class="btn-auth" type="submit" id="submitBtn">Login</button>
+    </form>
+
+    <div class="switch-row">
+      <span id="switchText">New to AstroLogic?</span>
+      <a href="/signup" id="switchLink">Create account</a>
+    </div>
+
+    <a class="back-link" href="/login">Back to Login</a>
+  </section>
+
+</main>
+
+<script>
+const isSignup = window.location.pathname.includes("signup");
+
+const pageTitle = document.querySelector("title");
+const eyebrowText = document.getElementById("eyebrowText");
+const heroTitle = document.getElementById("heroTitle");
+const heroText = document.getElementById("heroText");
+const cardTitle = document.getElementById("cardTitle");
+const cardSub = document.getElementById("cardSub");
+const nameField = document.getElementById("nameField");
+const nameInput = document.getElementById("nameInput");
+const phoneField = document.getElementById("phoneField");
+const phoneInput = document.getElementById("phoneInput");
+const submitBtn = document.getElementById("submitBtn");
+const switchText = document.getElementById("switchText");
+const switchLink = document.getElementById("switchLink");
+const passwordInput = document.getElementById("passwordInput");
+const backLink = document.querySelector(".back-link");
+
+if (isSignup) {
+  pageTitle.textContent = "AstroLogic | Create Account";
+  eyebrowText.textContent = "Begin Your Journey";
+  heroTitle.innerHTML = 'Save Your <em>Cosmic Profile.</em>';
+  heroText.textContent = "Create your account to keep birth details, profile data, and personalized astrology activity securely connected.";
+  cardTitle.textContent = "Create Account";
+  cardSub.textContent = "Your profile helps AstroLogic personalize your readings.";
+  nameField.style.display = "block";
+  nameInput.required = true;
+  phoneField.style.display = "block";
+  phoneInput.required = true;
+  submitBtn.textContent = "Create Account";
+  switchText.textContent = "Already have an account?";
+  switchLink.textContent = "Login";
+  switchLink.href = "/login";
+  passwordInput.autocomplete = "new-password";
+  backLink.textContent = "Back to Login";
+  backLink.href = "/login";
+} else {
+  pageTitle.textContent = "AstroLogic | User Login";
+  eyebrowText.textContent = "Welcome Back";
+  heroTitle.innerHTML = 'Return To Your <em>Astro Space.</em>';
+  heroText.textContent = "Sign in to access your saved profile, Kundali data, horoscope tools, and personal activity history.";
+  cardTitle.textContent = "User Login";
+  cardSub.textContent = "Authentication is required to continue.";
+  nameField.style.display = "none";
+  nameInput.required = false;
+  phoneField.style.display = "none";
+  phoneInput.required = false;
+  submitBtn.textContent = "Login";
+  switchText.textContent = "New to AstroLogic?";
+  switchLink.textContent = "Create account";
+  switchLink.href = "/signup";
+  passwordInput.autocomplete = "current-password";
+  backLink.textContent = "Back to Login";
+  backLink.href = "/login";
+}
+</script>
+
+</body>
+</html> -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AstroLogic | Authentication</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --gold:#f5c16c;
+  --gold2:#d89b3c;
+  --gold-dim:rgba(245,193,108,.12);
+  --gold-border:rgba(245,193,108,.28);
+  --blue:#9bdcff;
+  --red:#f87171;
+  --green:#4ade80;
+  --surface:rgba(255,255,255,.05);
+  --border:rgba(255,255,255,.1);
+  --border2:rgba(255,255,255,.16);
+  --text:#e8e8e8;
+  --text-dim:rgba(232,232,232,.58);
+}
+
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+body{
+  min-height:100vh;
+  background:radial-gradient(ellipse 150% 80% at 50% -10%,#0c2a4a,#010812);
+  color:var(--text);
+  font-family:'Inter',sans-serif;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+  overflow-x:hidden;
+}
+
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:0;
+  background-image:
+    radial-gradient(1.5px 1.5px at 8% 15%,rgba(155,220,255,.45),transparent),
+    radial-gradient(1px 1px at 75% 6%,rgba(245,193,108,.42),transparent),
+    radial-gradient(1px 1px at 32% 52%,rgba(155,220,255,.3),transparent),
+    radial-gradient(1.5px 1.5px at 90% 70%,rgba(245,193,108,.34),transparent),
+    radial-gradient(1px 1px at 55% 35%,rgba(255,255,255,.25),transparent),
+    radial-gradient(1px 1px at 18% 80%,rgba(155,220,255,.28),transparent),
+    radial-gradient(1px 1px at 42% 10%,rgba(245,193,108,.32),transparent);
+}
+
+.auth-shell{
+  position:relative;
+  z-index:1;
+  width:100%;
+  max-width:980px;
+  display:grid;
+  grid-template-columns:1fr 430px;
+  gap:34px;
+  align-items:center;
+}
+
+.auth-copy{
+  padding:20px 10px;
+}
+
+.brand{
+  display:inline-block;
+  font-family:'Cinzel',serif;
+  font-size:24px;
+  font-weight:600;
+  color:var(--gold);
+  text-decoration:none;
+  letter-spacing:1.5px;
+  margin-bottom:28px;
+}
+
+.brand sup{
+  font-size:10px;
+  opacity:.65;
+  vertical-align:super;
+}
+
+.eyebrow{
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:2.8px;
+  text-transform:uppercase;
+  color:var(--blue);
+  margin-bottom:14px;
+}
+
+.copy-title{
+  font-family:'Cinzel',serif;
+  font-size:clamp(32px,5vw,54px);
+  line-height:1.14;
+  font-weight:600;
+  color:#fff;
+  margin-bottom:18px;
+}
+
+.copy-title em{
+  font-family:'Crimson Pro',serif;
+  font-style:italic;
+  background:linear-gradient(135deg,var(--gold),#ffd98a);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+
+.copy-text{
+  max-width:480px;
+  font-family:'Crimson Pro',serif;
+  font-size:19px;
+  line-height:1.72;
+  color:rgba(232,232,232,.75);
+}
+
+.auth-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:38px 36px;
+  box-shadow:0 24px 70px rgba(0,0,0,.28);
+  backdrop-filter:blur(22px);
+}
+
+.card-title{
+  font-family:'Cinzel',serif;
+  text-align:center;
+  font-size:18px;
+  font-weight:700;
+  color:var(--gold);
+  letter-spacing:.6px;
+  margin-bottom:8px;
+}
+
+.card-sub{
+  text-align:center;
+  color:var(--text-dim);
+  font-size:13px;
+  line-height:1.6;
+  margin-bottom:24px;
+}
+
+.divider{
+  width:48px;
+  height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  margin:0 auto 26px;
+}
+
+.alert{
+  display:none;
+  border-radius:9px;
+  padding:11px 13px;
+  font-size:13px;
+  line-height:1.5;
+  margin-bottom:16px;
+}
+
+.alert.error{
+  color:var(--red);
+  background:rgba(248,113,113,.1);
+  border:1px solid rgba(248,113,113,.32);
+}
+
+.field{
+  margin-bottom:15px;
+}
+
+.field label{
+  display:block;
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:.6px;
+  text-transform:uppercase;
+  color:var(--text-dim);
+  margin-bottom:7px;
+}
+
+.field input{
+  width:100%;
+  background:rgba(255,255,255,.07);
+  border:1px solid var(--border2);
+  color:#fff;
+  border-radius:9px;
+  padding:12px 14px;
+  font-size:14px;
+  font-family:'Inter',sans-serif;
+  transition:.2s;
+}
+
+.field input:focus{
+  outline:none;
+  border-color:var(--gold);
+  background:rgba(255,255,255,.1);
+  box-shadow:0 0 0 3px rgba(245,193,108,.08);
+}
+
+.field input::placeholder{
+  color:rgba(255,255,255,.32);
+}
+
+.btn-auth{
+  width:100%;
+  margin-top:6px;
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:#000;
+  font-weight:800;
+  font-size:14.5px;
+  padding:12px;
+  border-radius:10px;
+  border:none;
+  cursor:pointer;
+  font-family:'Inter',sans-serif;
+  transition:.25s;
+}
+
+.btn-auth:hover{
+  filter:brightness(1.1);
+  transform:translateY(-1px);
+  box-shadow:0 10px 26px rgba(245,193,108,.22);
+}
+
+.switch-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  margin-top:20px;
+  padding-top:18px;
+  border-top:1px solid var(--border);
+  font-size:13px;
+  color:var(--text-dim);
+}
+
+.switch-row a{
+  color:var(--blue);
+  text-decoration:none;
+  font-weight:600;
+}
+
+.switch-row a:hover{
+  color:var(--gold);
+}
+
+.back-link{
+  display:block;
+  text-align:center;
+  margin-top:18px;
+  font-size:13px;
+  color:var(--text-dim);
+  text-decoration:none;
+  transition:.2s;
+}
+
+.back-link:hover{
+  color:var(--gold);
+}
+
+@media(max-width:880px){
+  .auth-shell{
+    max-width:460px;
+    grid-template-columns:1fr;
+    gap:20px;
+  }
+
+  .auth-copy{
+    text-align:center;
+    padding:0;
+  }
+
+  .copy-text{
+    margin:0 auto;
+  }
+}
+
+@media(max-width:480px){
+  body{
+    padding:18px;
+    align-items:flex-start;
+  }
+
+  .auth-card{
+    padding:30px 22px;
+    border-radius:16px;
+  }
+
+  .copy-title{
+    font-size:31px;
+  }
+
+  .copy-text{
+    font-size:17px;
+  }
+
+  .switch-row{
+    flex-direction:column;
+    text-align:center;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<main class="auth-shell">
+
+  <section class="auth-copy">
+    <a class="brand" href="/">Astro<sup>✦</sup>Logic</a>
+
+    <div class="eyebrow" id="eyebrowText">Welcome Back</div>
+
+    <h1 class="copy-title" id="heroTitle">
+      Return To Your <em>Astro Space.</em>
+    </h1>
+
+    <p class="copy-text" id="heroText">
+      Sign in to access your saved profile, Kundali data, horoscope tools, and personal activity history.
+    </p>
+  </section>
+
+  <section class="auth-card">
+    <h2 class="card-title" id="cardTitle">User Login</h2>
+
+    <p class="card-sub" id="cardSub">
+      Authentication is required to continue.
+    </p>
+
+    <div class="divider"></div>
+
+    <div class="alert error" id="errorBox"></div>
+
+    <form method="POST" id="authForm">
+      <div class="field" id="nameField" style="display:none;">
+        <label>Name</label>
+        <input
+          name="name"
+          type="text"
+          placeholder="Enter your name"
+          autocomplete="name"
+          id="nameInput"
+        >
+      </div>
+
+      <div class="field" id="phoneField" style="display:none;">
+        <label>Contact Number</label>
+        <input
+          name="phone"
+          type="tel"
+          placeholder="10 digit mobile number"
+          autocomplete="tel"
+          id="phoneInput"
+          pattern="[0-9+\-\s]{8,16}"
+        >
+      </div>
+
+      <div class="field">
+        <label>Email</label>
+        <input
+          name="email"
+          type="email"
+          placeholder="you@example.com"
+          autocomplete="email"
+          required
+        >
+      </div>
+
+      <div class="field">
+        <label>Password</label>
+        <input
+          name="password"
+          type="password"
+          placeholder="Minimum 6 characters"
+          autocomplete="current-password"
+          minlength="6"
+          required
+          id="passwordInput"
+        >
+      </div>
+
+      <button class="btn-auth" type="submit" id="submitBtn">Login</button>
+      
+      <!-- Hidden redirect field -->
+      {% if redirect %}
+      <input type="hidden" name="redirect" value="{{ redirect }}">
+      {% endif %}
+    </form>
+
+    <div class="switch-row">
+      <span id="switchText">New to AstroLogic?</span>
+      {% if redirect %}
+      <a href="{{ '/signup?redirect=' + redirect }}" id="switchLink">Create account</a>
+      {% else %}
+      <a href="/signup" id="switchLink">Create account</a>
+      {% endif %}
+    </div>
+
+    {% if redirect %}
+    <a class="back-link" href="{{ redirect }}">← Back to Previous Page</a>
+    {% else %}
+    <a class="back-link" href="/">← Back to Home</a>
+    {% endif %}
+  </section>
+
+</main>
+
+<script>
+const urlParams = new URLSearchParams(window.location.search);
+const redirectUrl = urlParams.get('redirect');
+const isSignup = window.location.pathname.includes("signup");
+
+const pageTitle = document.querySelector("title");
+const eyebrowText = document.getElementById("eyebrowText");
+const heroTitle = document.getElementById("heroTitle");
+const heroText = document.getElementById("heroText");
+const cardTitle = document.getElementById("cardTitle");
+const cardSub = document.getElementById("cardSub");
+const nameField = document.getElementById("nameField");
+const nameInput = document.getElementById("nameInput");
+const phoneField = document.getElementById("phoneField");
+const phoneInput = document.getElementById("phoneInput");
+const submitBtn = document.getElementById("submitBtn");
+const switchText = document.getElementById("switchText");
+const switchLink = document.getElementById("switchLink");
+const passwordInput = document.getElementById("passwordInput");
+const authForm = document.getElementById("authForm");
+
+if (isSignup) {
+  pageTitle.textContent = "AstroLogic | Create Account";
+  eyebrowText.textContent = "Begin Your Journey";
+  heroTitle.innerHTML = 'Save Your <em>Cosmic Profile.</em>';
+  heroText.textContent = "Create your account to keep birth details, profile data, and personalized astrology activity securely connected.";
+  cardTitle.textContent = "Create Account";
+  cardSub.textContent = "Your profile helps AstroLogic personalize your readings.";
+  nameField.style.display = "block";
+  nameInput.required = true;
+  phoneField.style.display = "block";
+  phoneInput.required = true;
+  submitBtn.textContent = "Create Account";
+  switchText.textContent = "Already have an account?";
+  if (redirectUrl) {
+    switchLink.href = `/login?redirect=${encodeURIComponent(redirectUrl)}`;
+    switchLink.textContent = "Login";
+  } else {
+    switchLink.href = "/login";
+    switchLink.textContent = "Login";
+  }
+  passwordInput.autocomplete = "new-password";
+} else {
+  pageTitle.textContent = "AstroLogic | User Login";
+  eyebrowText.textContent = "Welcome Back";
+  heroTitle.innerHTML = 'Return To Your <em>Astro Space.</em>';
+  heroText.textContent = "Sign in to access your saved profile, Kundali data, horoscope tools, and personal activity history.";
+  cardTitle.textContent = "User Login";
+  cardSub.textContent = "Authentication is required to continue.";
+  nameField.style.display = "none";
+  nameInput.required = false;
+  phoneField.style.display = "none";
+  phoneInput.required = false;
+  submitBtn.textContent = "Login";
+  switchText.textContent = "New to AstroLogic?";
+  if (redirectUrl) {
+    switchLink.href = `/signup?redirect=${encodeURIComponent(redirectUrl)}`;
+    switchLink.textContent = "Create account";
+  } else {
+    switchLink.href = "/signup";
+    switchLink.textContent = "Create account";
+  }
+  passwordInput.autocomplete = "current-password";
+}
+
+// Optional: Show error message if passed from backend
+const errorMsg = "{{ error }}" if "{{ error }}" != "None" else "";
+if (errorMsg && errorMsg.trim() && errorMsg !== "None") {
+  const errorBox = document.getElementById("errorBox");
+  errorBox.textContent = errorMsg;
+  errorBox.style.display = "block";
+  setTimeout(() => {
+    errorBox.style.opacity = "0";
+    setTimeout(() => {
+      errorBox.style.display = "none";
+      errorBox.style.opacity = "1";
+    }, 500);
+  }, 5000);
+}
+</script>
+
+</body>
+</html>

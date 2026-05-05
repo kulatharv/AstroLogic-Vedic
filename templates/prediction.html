@@ -45,6 +45,8 @@ nav ul li a:hover,nav ul li a.active{color:var(--gold)!important;background:var(
   font-size:12.5px;padding:7px 16px;border-radius:7px;border:none;cursor:pointer;
   text-decoration:none;transition:.2s;white-space:nowrap;font-family:'Inter',sans-serif}
 .btn-g:hover{filter:brightness(1.1);transform:translateY(-1px);color:#000}
+.btn-o{border:1px solid var(--gold-border);color:var(--gold);font-size:12.5px;font-weight:600;padding:7px 16px;border-radius:7px;background:transparent;cursor:pointer;text-decoration:none;transition:.2s;white-space:nowrap;font-family:'Inter',sans-serif}
+.btn-o:hover{background:var(--gold-dim);color:var(--gold)}
 .ham{display:none;flex-direction:column;gap:5px;cursor:pointer;margin-left:auto;padding:6px}
 .ham span{width:22px;height:2px;background:var(--text);border-radius:2px}
 .mob-nav{display:none;position:fixed;top:var(--hh);left:0;right:0;background:rgba(1,8,18,.97);
@@ -53,6 +55,13 @@ nav ul li a:hover,nav ul li a.active{color:var(--gold)!important;background:var(
 .mob-nav a{font-size:15px;color:var(--text-dim);text-decoration:none;padding:10px 14px;border-radius:8px;transition:.2s}
 .mob-nav a:hover,.mob-nav a.active{color:var(--gold);background:var(--gold-dim)}
 .mob-btns{display:flex;gap:8px;margin-top:12px;padding-top:12px;border-top:1px solid var(--border)}
+@media(max-width:768px){
+  .mob-nav{max-height:calc(100vh - var(--hh));overflow-y:auto}
+  .mob-nav a{font-size:14px;padding:11px 14px;border:1px solid transparent}
+  .mob-nav a.active{border-color:var(--gold-border)}
+  .mob-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .mob-btns .btn-g{grid-column:1/-1;text-align:center;justify-content:center}
+}
 
 /* ── LAYOUT ── */
 .page-wrap{position:relative;z-index:1;padding-top:28px;padding-bottom:80px}
@@ -229,14 +238,15 @@ footer{position:relative;z-index:1;text-align:center;padding:24px;
     <a class="brand" href="/">Astro<sup>✦</sup>Logic</a>
     <nav><ul>
       <li><a href="/">Home</a></li>
-      <li><a href="/panchang">Panchang</a></li>
+      <li><a href="/panchang.html">Panchang</a></li>
       <li><a href="/kundali">Kundali</a></li>
       <li><a href="/horoscope">Horoscope</a></li>
       <li><a href="/prediction" class="active">Predictions</a></li>
       <li><a href="/blogs">Blogs</a></li>
       <li><a href="/about">About</a></li>
+      <li><a href="/profile">Profile</a></li>
     </ul></nav>
-    <div class="hdr-btns"><a href="/kundali" class="btn-g">Generate Kundali</a></div>
+    <div class="hdr-btns"><a href="/profile" class="btn-o">Profile</a><a href="/logout" class="btn-o">Logout</a><a href="/kundali" class="btn-g">Generate Kundali</a></div>
     <div class="ham" onclick="document.getElementById('mn').classList.toggle('open')">
       <span></span><span></span><span></span>
     </div>
@@ -244,10 +254,10 @@ footer{position:relative;z-index:1;text-align:center;padding:24px;
 </header>
 
 <div class="mob-nav" id="mn">
-  <a href="/">Home</a><a href="/panchang">Panchang</a>
+  <a href="/">Home</a><a href="/panchang.html">Panchang</a>
   <a href="/kundali">Kundali</a><a href="/horoscope">Horoscope</a>
-  <a href="/prediction" class="active">Predictions</a><a href="/blogs">Blogs</a><a href="/about">About</a>
-  <div class="mob-btns"><a href="/kundali" class="btn-g">Generate Kundali</a></div>
+  <a href="/prediction" class="active">Predictions</a><a href="/blogs">Blogs</a><a href="/about">About</a><a href="/profile">Profile</a>
+  <div class="mob-btns"><a href="/profile" class="btn-o">Profile</a><a href="/logout" class="btn-o">Logout</a><a href="/kundali" class="btn-g">Generate Kundali</a></div>
 </div>
 
 <div class="page-wrap">
@@ -264,6 +274,10 @@ footer{position:relative;z-index:1;text-align:center;padding:24px;
   <div class="form-card">
     <div class="form-title">Enter Birth Details</div>
     <div class="form-grid">
+      <div class="inp-grp">
+        <label>Full Name</label>
+        <input type="text" id="fullName" placeholder="Your full name">
+      </div>
       <div class="inp-grp">
         <label>Date of Birth</label>
         <input type="date" id="dob">
@@ -378,12 +392,71 @@ function scoreColor(s){
   return '#f87171';
 }
 
+function recordTestingActivity(module, action, person){
+  fetch("/api/user-activity", {
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({
+      module, action,
+      person_name: person?.name || "",
+      birth_date: person?.dob || "",
+      birth_time: person?.tob || "",
+      birth_city: person?.city || ""
+    })
+  }).catch(()=>{});
+}
+
+function openFeedbackModal(module, person, onDone){
+  const old = document.getElementById("testingFeedbackModal");
+  if(old) old.remove();
+  const modal = document.createElement("div");
+  modal.id = "testingFeedbackModal";
+  modal.style.cssText = "position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:10000;display:flex;align-items:center;justify-content:center;padding:18px";
+  modal.innerHTML = `
+    <form id="testingFeedbackForm" style="width:100%;max-width:460px;background:#071426;border:1px solid rgba(245,193,108,.28);border-radius:16px;padding:22px;color:#e8e8e8;font-family:Inter,sans-serif">
+      <h3 style="font-family:Cinzel,serif;color:#f5c16c;margin-bottom:8px">Quick Testing Feedback</h3>
+      <p style="color:rgba(232,232,232,.62);font-size:13px;line-height:1.5;margin-bottom:14px">Please submit this short feedback for early product testing.</p>
+      <div style="font-size:12px;color:#9bdcff;margin-bottom:12px">${person?.name || "-"} | ${person?.dob || "-"} ${person?.tob || ""} | ${person?.city || "-"}</div>
+      <label style="font-size:11px;color:rgba(232,232,232,.62);font-weight:700">Accuracy</label>
+      <select name="accuracy" required style="width:100%;margin:6px 0 12px;padding:10px;border-radius:8px;background:#111f30;color:#fff;border:1px solid rgba(255,255,255,.16)"><option value="">Select</option><option>Very accurate</option><option>Mostly accurate</option><option>Average</option><option>Not accurate</option></select>
+      <label style="font-size:11px;color:rgba(232,232,232,.62);font-weight:700">Experience</label>
+      <select name="experience" required style="width:100%;margin:6px 0 12px;padding:10px;border-radius:8px;background:#111f30;color:#fff;border:1px solid rgba(255,255,255,.16)"><option value="">Select</option><option>Excellent</option><option>Good</option><option>Confusing</option><option>Poor</option></select>
+      <label style="font-size:11px;color:rgba(232,232,232,.62);font-weight:700">Usefulness</label>
+      <select name="usefulness" required style="width:100%;margin:6px 0 12px;padding:10px;border-radius:8px;background:#111f30;color:#fff;border:1px solid rgba(255,255,255,.16)"><option value="">Select</option><option>Very useful</option><option>Useful</option><option>Somewhat useful</option><option>Not useful</option></select>
+      <textarea name="comments" placeholder="Anything we should improve?" style="width:100%;min-height:80px;margin-bottom:14px;padding:10px;border-radius:8px;background:#111f30;color:#fff;border:1px solid rgba(255,255,255,.16)"></textarea>
+      <button style="width:100%;background:linear-gradient(135deg,#f5c16c,#d89b3c);border:0;border-radius:9px;padding:11px;font-weight:800;color:#000">Submit Feedback</button>
+    </form>`;
+  document.body.appendChild(modal);
+  document.getElementById("testingFeedbackForm").addEventListener("submit", async e => {
+    e.preventDefault();
+    const fd = new FormData(e.currentTarget);
+    await fetch("/api/testing-feedback", {
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        module,
+        person_name: person?.name || "",
+        birth_date: person?.dob || "",
+        birth_time: person?.tob || "",
+        birth_city: person?.city || "",
+        accuracy: fd.get("accuracy"),
+        experience: fd.get("experience"),
+        usefulness: fd.get("usefulness"),
+        comments: fd.get("comments")
+      })
+    });
+    modal.remove();
+    onDone?.();
+  });
+}
+
 // ── Main analyse ──────────────────────────────────
 async function analyse(){
+  const name=document.getElementById('fullName').value.trim();
   const dob=document.getElementById('dob').value;
   const tob=document.getElementById('tob').value;
   const city=document.getElementById('city').value.trim();
-  if(!dob||!tob||!city){toast('Please fill all fields','error');return}
+  if(!name||!dob||!tob||!city){toast('Please fill all fields','error');return}
   const [year,month,day]=dob.split('-').map(Number);
   const [hour,minute]=tob.split(':').map(Number);
   const btn=document.getElementById('analyseBtn');
@@ -396,11 +469,19 @@ async function analyse(){
     });
     if(!res.ok){const e=await res.json();toast(e.detail||'Server error','error');return}
     _data=await res.json();
+    const person={name,dob,tob,city};
+    recordTestingActivity("prediction", "search", person);
     document.getElementById('initialState').style.display='none';
     document.getElementById('resultsSection').style.display='block';
     renderResults(_data);
     document.getElementById('resultsSection').scrollIntoView({behavior:'smooth'});
     toast('Analysis complete','success');
+    if(!window.predictionFeedbackSubmitted){
+      openFeedbackModal("prediction", person, () => {
+        window.predictionFeedbackSubmitted = true;
+        toast('Thank you for the feedback','success');
+      });
+    }
   }catch(e){
     toast('Error: '+e.message,'error');
   }finally{

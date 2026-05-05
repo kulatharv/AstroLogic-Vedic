@@ -17,9 +17,56 @@ from astro_engine.prediction_builder import build_prediction_prompt
 from services.horoscope_service import fetch_horoscope
 from astro_engine.scoring import calculate_chart_scores
 
-router = APIRouter(prefix="/api", tags=["API"])
+# router = APIRouter(prefix="/api", tags=["API"])
+
+#------------------------------04/05/2026--------------
+
+
+
+from fastapi import APIRouter, HTTPException, Depends, Form
+from fastapi.responses import FileResponse
+from pydantic import BaseModel
+import swisseph as swe
+import json
+from datetime import date
+import os
+import re as _re
+
+from .schemas.chart_schemas import BirthData
+from astro_engine.panchang_engine import get_full_panchang
+from astro_engine.kundali_engine import calculate_kundali
+from astro_engine.planets import calculate_all_planets
+from astro_engine.zodiac import degree_to_sign
+from astro_engine.houses import calculate_lagna
+from astro_engine.chart_engine import generate_full_chart
+from astro_engine.llm_engine import ask_llm
+from astro_engine.prediction_builder import build_prediction_prompt
+from services.horoscope_service import fetch_horoscope
+from astro_engine.scoring import calculate_chart_scores
+from astro_engine.cities import CITIES, get_city
+from astro_engine.festival_engine import get_festivals_range, get_upcoming_festivals, get_today_festivals, generate_horoscope
+from astro_engine.horoscope_engine import generate_horoscope as generate_horoscope_direct
+from astro_engine.domain_engine import analyse_all_domains
+from database import SessionLocal
+from models.blog_model import Blog
+from sqlalchemy.orm import Session
+
+# Create router WITHOUT prefix (prefix will be added in main.py)
+router = APIRouter(tags=["API"])  # ← REMOVE prefix="/api" from here
+
+# Rest of your code continues...
+
+
+
+
+
+
+
 
 # ------------ Panchang --------------
+
+
+
 
 class PanchangRequest(BaseModel):
     city: str

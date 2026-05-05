@@ -1,10 +1,8 @@
-from fastapi import APIRouter, Depends, Form, HTTPException
+from fastapi import APIRouter, Depends, Form, HTTPException, Request
 from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
 from database import SessionLocal
 from models.blog_model import Blog
-from typing import List
-from fastapi import Request
 
 router = APIRouter(prefix="/api/admin", tags=["Admin Blogs"])
 
@@ -17,18 +15,18 @@ def get_db():
     finally:
         db.close()
 
-@router.get("/blogs.html")
-def get_all_blogs(request: Request, db: Session = Depends(get_db)):
 
+def require_admin(request: Request):
     if not request.session.get("admin"):
         raise HTTPException(status_code=401, detail="Unauthorized")
+    
 
-    return db.query(Blog).all()
 # ---------------------------
 # Get All Blogs (Admin View)
 # ---------------------------
-@router.get("/blogs.html")
-def get_all_blogs(db: Session = Depends(get_db)):
+@router.get("/blogs")
+def get_all_blogs(request: Request, db: Session = Depends(get_db)):
+    require_admin(request)
     blogs = db.query(Blog).order_by(Blog.id.desc()).all()
     return blogs
 
@@ -36,12 +34,15 @@ def get_all_blogs(db: Session = Depends(get_db)):
 # ---------------------------
 # Create Blog
 # ---------------------------
+@router.post("/blogs")
 @router.post("/blogs.html")
 def create_blog(
+    request: Request,
     title: str = Form(...),
     content: str = Form(...),
     db: Session = Depends(get_db)
 ):
+    require_admin(request)
     blog = Blog(title=title, content=content)
     db.add(blog)
     db.commit()
@@ -52,7 +53,8 @@ def create_blog(
 # Delete Blog
 # ---------------------------
 @router.post("/blogs/delete/{blog_id}")
-def delete_blog(blog_id: int, db: Session = Depends(get_db)):
+def delete_blog(request: Request, blog_id: int, db: Session = Depends(get_db)):
+    require_admin(request)
     blog = db.query(Blog).filter(Blog.id == blog_id).first()
 
     if not blog:
@@ -69,11 +71,13 @@ def delete_blog(blog_id: int, db: Session = Depends(get_db)):
 # ---------------------------
 @router.post("/blogs/update/{blog_id}")
 def update_blog(
+    request: Request,
     blog_id: int,
     title: str = Form(...),
     content: str = Form(...),
     db: Session = Depends(get_db)
 ):
+    require_admin(request)
     blog = db.query(Blog).filter(Blog.id == blog_id).first()
 
     if not blog:

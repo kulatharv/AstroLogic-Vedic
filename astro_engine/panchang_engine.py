@@ -488,9 +488,12 @@ def get_full_panchang(city):
     '''
 import swisseph as swe
 #from datetime import datetime, timedelta
-from datetime import datetime, timezone
+
+from datetime import datetime, timezone, timedelta
 
 
+def get_ist_now():
+    return datetime.utcnow() + timedelta(hours=5, minutes=30)
 # ==============================
 # BASIC SETTINGS
 # ==============================
@@ -584,11 +587,14 @@ def get_full_panchang(city):
 
     lat, lon = CITIES[city]
 
-    now = datetime.now()
+    #now = datetime.now()
+    now = get_ist_now()
     #jd = swe.julday(now.year, now.month, now.day,
     #                now.hour + now.minute/60 - IST_OFFSET)
 
-    now = datetime.now(timezone.utc)
+    # now = datetime.now(timezone.utc)
+    # now = datetime.now(timezone.utc)
+    now = get_ist_now()
 
     jd = swe.julday(
         now.year,
@@ -608,14 +614,23 @@ def get_full_panchang(city):
     diff = (moon - sun) % 360
 
     # ---------------- TITHI ----------------
-    tithi_no = int(diff / 12) + 1
-    paksha = "Shukla" if tithi_no <= 15 else "Krishna"
-    tithi_name = TITHI_NAMES[tithi_no - 1]
+    # tithi_no = int(diff / 12) + 1
+    # paksha = "Shukla" if tithi_no <= 15 else "Krishna"
+    # tithi_name = TITHI_NAMES[tithi_no - 1]
+
+    tithi_idx = int(diff / 12)   # 0–29
+    tithi_no = (tithi_idx % 15) + 1
+
+    paksha = "Shukla" if tithi_idx < 15 else "Krishna"
+    tithi_name = TITHI_NAMES[tithi_idx]
 
     # ---------------- NAKSHATRA ----------------
-    nak_no = int(moon / NAK_DIV) + 1
-    #nak_name = NAKSHATRA_NAMES[nak_no - 1]
-    nak_name = NAKSHATRA_NAMES[(nak_no - 1) % 27]
+    # nak_no = int(moon / NAK_DIV) + 1
+    # #nak_name = NAKSHATRA_NAMES[nak_no - 1]
+    # nak_name = NAKSHATRA_NAMES[(nak_no - 1) % 27]
+
+    nak_idx = int((moon + 1e-6) / NAK_DIV) % 27
+    nak_name = NAKSHATRA_NAMES[nak_idx]
 
     # ---------------- YOGA ----------------
     yoga_no = int(((sun + moon) % 360) / NAK_DIV) + 1
@@ -637,27 +652,43 @@ def get_full_panchang(city):
 
     weekday = now.weekday()
 
-    rahu_map = [7,1,6,4,5,3,2]
-    yam_map  = [4,3,2,1,0,6,5]
-    gulika_map = [6,5,4,3,2,1,0]
+    # rahu_map = [7,1,6,4,5,3,2]
+    # yam_map  = [4,3,2,1,0,6,5]
+    # gulika_map = [6,5,4,3,2,1,0]
 
-    rahu = jd_to_ist(sunrise_jd + segment * rahu_map[weekday]) + \
-           " - " + jd_to_ist(sunrise_jd + segment * (rahu_map[weekday]+1))
+    # rahu = jd_to_ist(sunrise_jd + segment * rahu_map[weekday]) + \
+    #        " - " + jd_to_ist(sunrise_jd + segment * (rahu_map[weekday]+1))
 
-    yamaganda = jd_to_ist(sunrise_jd + segment * yam_map[weekday]) + \
-                " - " + jd_to_ist(sunrise_jd + segment * (yam_map[weekday]+1))
+    # yamaganda = jd_to_ist(sunrise_jd + segment * yam_map[weekday]) + \
+    #             " - " + jd_to_ist(sunrise_jd + segment * (yam_map[weekday]+1))
 
-    gulika = jd_to_ist(sunrise_jd + segment * gulika_map[weekday]) + \
-             " - " + jd_to_ist(sunrise_jd + segment * (gulika_map[weekday]+1))
+    # gulika = jd_to_ist(sunrise_jd + segment * gulika_map[weekday]) + \
+    #          " - " + jd_to_ist(sunrise_jd + segment * (gulika_map[weekday]+1))
+
+    rahu_map   = [2,7,5,6,4,3,8]   # Mon–Sun
+    yama_map   = [5,4,3,2,1,7,6]
+    gulika_map = [7,6,5,4,3,2,1]
+
+    def segment_time(slot):
+        start = sunrise_jd + segment * (slot - 1)
+        end   = start + segment
+        return f"{jd_to_ist(start)} - {jd_to_ist(end)}"
+
+    rahu = segment_time(rahu_map[weekday])
+    yamaganda = segment_time(yama_map[weekday])
+    gulika = segment_time(gulika_map[weekday])
 
     # ---------------- ABHIJIT ----------------
-    mid = sunrise_jd + day_length/2
-    abhijit = jd_to_ist(mid - (24/1440)) + " - " + jd_to_ist(mid + (24/1440))
+    # mid = sunrise_jd + day_length/2
+    # abhijit = jd_to_ist(mid - (24/1440)) + " - " + jd_to_ist(mid + (24/1440))
+    mid = sunrise_jd + day_length / 2
+    abhijit = f"{jd_to_ist(mid - (24/1440))} - {jd_to_ist(mid + (24/1440))}"            
 
     # ---------------- BRAHMA ----------------
     brahma_start = sunrise_jd - (96/1440)
     brahma_end = sunrise_jd - (48/1440)
-    brahma = jd_to_ist(brahma_start) + " - " + jd_to_ist(brahma_end)
+    #brahma = jd_to_ist(brahma_start) + " - " + jd_to_ist(brahma_end)
+    brahma = f"{jd_to_ist(brahma_start)} - {jd_to_ist(brahma_end)}"
 
     # ---------------- MOON PHASE ----------------
     moon_phase_percent = round((diff / 360) * 100, 2)
@@ -688,7 +719,8 @@ def get_full_panchang(city):
             "name": name,
             "sign": sign_name,
             "degree": f"{int(lon%30)}°{int((lon%1)*60):02d}'",
-            "nakshatra": NAKSHATRA_NAMES[int(lon / NAK_DIV)],
+            # "nakshatra": NAKSHATRA_NAMES[int(lon / NAK_DIV)],
+            "nakshatra": NAKSHATRA_NAMES[int((lon + 1e-6) / NAK_DIV) % 27],
             "retrograde": speed < 0
         })
 
