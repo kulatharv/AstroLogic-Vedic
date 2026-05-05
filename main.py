@@ -686,6 +686,8 @@ from api.blogs import router as admin_blog_router
 
 
 from fastapi.templating import Jinja2Templates
+
+templates = Jinja2Templates(directory="templates")
 # ============================================================
 # APP SETUP
 # ============================================================
@@ -717,7 +719,7 @@ Base.metadata.create_all(bind=engine)
 app.include_router(router, prefix="/api")
 app.include_router(admin_blog_router)
 
-templates = Jinja2Templates(directory="templates")
+
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 ADMIN_USERNAME = "admin"
@@ -770,7 +772,11 @@ def log_activity(db, request: Request, action: str, user_id=None, details: str =
 # PUBLIC PAGES
 # ============================================================
 
-@app.get("/", response_class=HTMLResponse)
+# @app.get("/", response_class=HTMLResponse)
+# def home(request: Request):
+#     return templates.TemplateResponse("index.html", {"request": request})
+
+@app.get("/")
 def home(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
