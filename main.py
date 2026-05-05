@@ -1,4 +1,5 @@
 from models.user_model import Feedback, User, UserProfile, UserActivity
+from fastapi.responses import JSONResponse
 # '''
 # from fastapi import FastAPI
 # from api.api import router
@@ -686,6 +687,7 @@ from api.blogs import router as admin_blog_router
 
 
 from fastapi.templating import Jinja2Templates
+from fastapi import HTTPException
 
 templates = Jinja2Templates(directory="templates")
 # ============================================================
@@ -803,6 +805,24 @@ def about_page(request: Request):
 @app.get("/horoscope", response_class=HTMLResponse)
 def horoscope_page(request: Request):
     return templates.TemplateResponse("daily-horoscope.html", {"request": request})
+
+
+
+from fastapi import Request
+
+# @app.get("/api/check-session")
+# def check_session(request: Request):
+#     user_id = request.session.get("user_id")
+#     return {
+#         "logged_in": bool(user_id),
+#         "user_id": user_id
+#     }
+
+@app.get("/api/check-session")
+def check_session(request: Request):
+    user_id = request.session.get("user_id")
+    return {"logged_in": bool(user_id)}
+
 
 # @app.get("/kundali", response_class=HTMLResponse)
 # def kundali_page(request: Request):
@@ -957,12 +977,42 @@ def login_page(request: Request, redirect: str = None):
         return RedirectResponse(redirect_to, status_code=303)
     return templates.TemplateResponse("auth.html", {"request": request, "redirect": redirect})
 
+# @app.post("/login")
+# def login(request: Request, email: str = Form(...), password: str = Form(...), redirect: str = Form(None)):
+#     db = SessionLocal()
+#     try:
+#         email = email.strip().lower()
+#         user = db.query(User).filter(User.email == email).first()
+#         if not user or not verify_password(password, user.password_hash):
+#             return templates.TemplateResponse("auth.html", {
+#                 "request": request,
+#                 "mode": "login",
+#                 "error": "Invalid email or password",
+#                 "redirect": redirect
+#             })
+#         request.session["user_id"] = user.id
+#         user.last_login_at = datetime.utcnow()
+#         db.commit()
+#         log_activity(db, request, "login", user.id, "User logged in")
+        
+#         # Redirect to original page if specified, otherwise home
+#         redirect_to = redirect or "/"
+#         return RedirectResponse(redirect_to, status_code=303)
+#     finally:
+#         db.close()
+
 @app.post("/login")
-def login(request: Request, email: str = Form(...), password: str = Form(...), redirect: str = Form(None)):
+def login(
+    request: Request,
+    email: str = Form(...),
+    password: str = Form(...),
+    redirect: str = Form(None)
+):
     db = SessionLocal()
     try:
         email = email.strip().lower()
         user = db.query(User).filter(User.email == email).first()
+
         if not user or not verify_password(password, user.password_hash):
             return templates.TemplateResponse("auth.html", {
                 "request": request,
@@ -970,14 +1020,18 @@ def login(request: Request, email: str = Form(...), password: str = Form(...), r
                 "error": "Invalid email or password",
                 "redirect": redirect
             })
+
         request.session["user_id"] = user.id
         user.last_login_at = datetime.utcnow()
         db.commit()
+
         log_activity(db, request, "login", user.id, "User logged in")
-        
-        # Redirect to original page if specified, otherwise home
-        redirect_to = redirect or "/"
+
+        # ✅ FINAL FIX
+        redirect_to = redirect or request.query_params.get("next") or "/"
+
         return RedirectResponse(redirect_to, status_code=303)
+
     finally:
         db.close()
 
@@ -1504,7 +1558,10 @@ def update_profile(
 async def record_user_activity(request: Request):
     user_id = request.session.get("user_id")
     if not user_id:
-        return JSONResponse({"ok": False, "error": "Authentication required"}, status_code=401)
+        # return JSONResponse({"ok": False, "error": "Authentication required"}, status_code=401)
+        from fastapi import HTTPException
+        raise HTTPException(status_code=401, detail="Authentication required")
+
 
     payload = await request.json()
     module      = str(payload.get("module", "activity"))[:40]

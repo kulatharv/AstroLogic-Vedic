@@ -377,6 +377,7 @@ const API_URL = window.location.hostname === "localhost"
   || window.location.hostname === "127.0.0.1"
   ? "http://127.0.0.1:8000"
   : "https://astrologic-vedic-1.onrender.com";
+
 const safe = v => (v == null || v === "") ? "—" : v;
 const safeNum = (v, fb = 0) => { const n = parseFloat(v); return isNaN(n) ? fb : n; };
 
@@ -751,6 +752,26 @@ function renderDashaTimeline(data) {
 
 // ── Main Generate ─────────────────────────────────────────────────
 async function generateKundali() {
+
+    // 🔐 STEP 1: CHECK LOGIN FIRST
+  try {
+    const sessionRes = await fetch(`${API_URL}/api/check-session`);
+    const sessionData = await sessionRes.json();
+
+    if (!sessionData.logged_in) {
+      alert("Please login to generate Kundali");
+      // window.location.href = "/login?next=/kundali";
+      window.location.href = `/login?next=${encodeURIComponent(window.location.pathname)}`;
+      return;
+    }
+  } catch (e) {
+    console.log("Session check failed");
+    alert("Error checking login. Please login again.");
+    // window.location.href = "/login?next=/kundali";
+    window.location.href = `/login?next=${encodeURIComponent(window.location.pathname)}`;
+    return;
+  }
+
   const name = document.getElementById("fullName").value.trim();
   const dob  = document.getElementById("dob").value;
   const tob  = document.getElementById("tob").value;
@@ -764,7 +785,7 @@ async function generateKundali() {
   btn.disabled = true; btn.innerText = "Calculating…";
 
   try {
-    const res = await fetch('/api/kundali', {
+    const res = await fetch(`${API_URL}/api/kundali`, {
       method:"POST", headers:{"Content-Type":"application/json"},
       body: JSON.stringify({year, month, day, hour, minute, city})
     });
