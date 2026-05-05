@@ -936,7 +936,7 @@ def blog_detail(request: Request, blog_id: int):
 def signup_page(request: Request, redirect: str = None):
     if request.session.get("user_id"):
         # If already logged in, redirect to the original page or home
-        redirect_to = redirect or "/"
+        redirect_to = redirect or request.query_params.get("redirect") or request.query_params.get("next") or "/"        
         return RedirectResponse(redirect_to, status_code=303)
     return templates.TemplateResponse("auth.html", {"request": request, "redirect": redirect})
 
@@ -969,13 +969,31 @@ def signup(request: Request, name: str = Form(...), email: str = Form(...), pass
     finally:
         db.close()
 
+# @app.get("/login", response_class=HTMLResponse)
+# def login_page(request: Request, redirect: str = None):
+#     if request.session.get("user_id"):
+#         # If already logged in, redirect to the original page or home
+#         redirect_to = redirect or "/"
+#         return RedirectResponse(redirect_to, status_code=303)
+#     return templates.TemplateResponse("auth.html", {"request": request, "redirect": redirect})
+
+from fastapi.responses import RedirectResponse, HTMLResponse
+
 @app.get("/login", response_class=HTMLResponse)
-def login_page(request: Request, redirect: str = None):
+def login_page(request: Request, redirect: str = None, next: str = None):
+
+    # ✅ accept both 'redirect' and 'next'
+    redirect_to = redirect or next
+
+    # ✅ if already logged in → go back
     if request.session.get("user_id"):
-        # If already logged in, redirect to the original page or home
-        redirect_to = redirect or "/"
-        return RedirectResponse(redirect_to, status_code=303)
-    return templates.TemplateResponse("auth.html", {"request": request, "redirect": redirect})
+        return RedirectResponse(redirect_to or "/", status_code=303)
+
+    # ✅ pass redirect to template
+    return templates.TemplateResponse("auth.html", {
+        "request": request,
+        "redirect": redirect_to
+    })
 
 # @app.post("/login")
 # def login(request: Request, email: str = Form(...), password: str = Form(...), redirect: str = Form(None)):
@@ -1000,6 +1018,12 @@ def login_page(request: Request, redirect: str = None):
 #         return RedirectResponse(redirect_to, status_code=303)
 #     finally:
 #         db.close()
+
+@app.get("/api/check-session")
+def check_session(request: Request):
+    user_id = request.session.get("user_id")
+    return {"logged_in": bool(user_id)}
+
 
 @app.post("/login")
 def login(

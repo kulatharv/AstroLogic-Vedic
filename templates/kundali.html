@@ -761,7 +761,7 @@ async function generateKundali() {
     if (!sessionData.logged_in) {
       alert("Please login to generate Kundali");
       // window.location.href = "/login?next=/kundali";
-      window.location.href = `/login?next=${encodeURIComponent(window.location.pathname)}`;
+      window.location.href =`https://astrologic-vedic-1.onrender.com/login?redirect=${encodeURIComponent(window.location.pathname)}`;
       return;
     }
   } catch (e) {

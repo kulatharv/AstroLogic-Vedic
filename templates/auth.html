@@ -856,9 +856,7 @@ body::before{
       <button class="btn-auth" type="submit" id="submitBtn">Login</button>
       
       <!-- Hidden redirect field -->
-      {% if redirect %}
-      <input type="hidden" name="redirect" value="{{ redirect }}">
-      {% endif %}
+      <input type="hidden" name="redirect" value="{{ redirect or '' }}">
     </form>
 
     <div class="switch-row">
@@ -881,7 +879,7 @@ body::before{
 
 <script>
 const urlParams = new URLSearchParams(window.location.search);
-const redirectUrl = urlParams.get('redirect');
+const redirectUrl = urlParams.get('redirect') || urlParams.get('next');
 const isSignup = window.location.pathname.includes("signup");
 
 const pageTitle = document.querySelector("title");
@@ -945,7 +943,12 @@ if (isSignup) {
 }
 
 // Optional: Show error message if passed from backend
-const errorMsg = "{{ error }}" if "{{ error }}" != "None" else "";
+const errorMsg = "{{ error }}";
+if (errorMsg && errorMsg !== "None") {
+  const errorBox = document.getElementById("errorBox");
+  errorBox.textContent = errorMsg;
+  errorBox.style.display = "block";
+}
 if (errorMsg && errorMsg.trim() && errorMsg !== "None") {
   const errorBox = document.getElementById("errorBox");
   errorBox.textContent = errorMsg;
