@@ -352,6 +352,14 @@ footer{position:relative;z-index:1;text-align:center;padding:24px;
 <footer>© 2026 AstroLogic · Vedic Life Domain Analysis · Swiss Ephemeris · Lahiri Ayanamsa</footer>
 
 <script>
+
+const BACKEND_URL = (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")
+  ? "http://127.0.0.1:8000"
+  : "https://astrologic-vedic-1.onrender.com";
+
+// API_URL alias (used in fetch calls below)
+const API_URL = BACKEND_URL;
+
 const DOMAIN_META = {
   marriage:    {icon:'♥', name:'Marriage & Relationships', color:'#f87171'},
   career:      {icon:'★', name:'Career & Profession',      color:'#f5c16c'},
@@ -368,7 +376,7 @@ const DOMAIN_META = {
 let _cities = [], _data = null, _activeDomain = 'marriage';
 
 // Autocomplete
-fetch('/api/cities').then(r=>r.ok?r.json():[]).then(c=>{_cities=c}).catch(()=>{});
+fetch(`${API_URL}/api/cities`).then(r=>r.ok?r.json():[]).then(c=>{_cities=c}).catch(()=>{});
 const cityInput = document.getElementById('city');
 const acList    = document.getElementById('acList');
 cityInput.addEventListener('input',()=>{
@@ -395,7 +403,7 @@ function scoreColor(s){
 }
 
 function recordTestingActivity(module, action, person){
-  fetch("/api/user-activity", {
+  fetch(`${API_URL}/api/user-activity`, {
     method:"POST",
     headers:{"Content-Type":"application/json"},
     body:JSON.stringify({
@@ -432,7 +440,7 @@ function openFeedbackModal(module, person, onDone){
   document.getElementById("testingFeedbackForm").addEventListener("submit", async e => {
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
-    await fetch("/api/testing-feedback", {
+    await fetch(`${API_URL}/api/testing-feedback`, {
       method:"POST",
       headers:{"Content-Type":"application/json"},
       body:JSON.stringify({
@@ -465,7 +473,7 @@ async function analyse(){
   btn.disabled=true;btn.textContent='Analysing…';
 
   try{
-    const res=await fetch('/api/domains',{
+    const res=await fetch(`${API_URL}/api/domains`,{
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({year,month,day,hour,minute,city})
     });
