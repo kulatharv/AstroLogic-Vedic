@@ -306,34 +306,34 @@ def home(request: Request):
     db = SessionLocal()
     try:
         user = get_current_user_jwt(request, db)
-        return templates.TemplateResponse("index.html", {"request": request, "user": user})
+        return templates.TemplateResponse("index.html", context={"request": request, "user": user})
     finally:
         db.close()
 
 
 @app.get("/about", response_class=HTMLResponse)
 def about_page(request: Request):
-    return templates.TemplateResponse("about.html", {"request": request})
+    return templates.TemplateResponse("about.html", context={"request": request})
 
 
 @app.get("/blogs", response_class=HTMLResponse)
 def blogs_page(request: Request):
-    return templates.TemplateResponse("blogs.html", {"request": request})
+    return templates.TemplateResponse("blogs.html", context={"request": request})
 
 
 @app.get("/blog/{blog_id}", response_class=HTMLResponse)
 def blog_detail(request: Request, blog_id: int):
-    return templates.TemplateResponse("blog-detail.html", {"request": request, "blog_id": blog_id})
+    return templates.TemplateResponse("blog-detail.html", context={"request": request, "blog_id": blog_id})
 
 
 @app.get("/horoscope", response_class=HTMLResponse)
 def horoscope_page(request: Request):
-    return templates.TemplateResponse("daily-horoscope.html", {"request": request})
+    return templates.TemplateResponse("daily-horoscope.html", context={"request": request})
 
 
 @app.get("/panchang.html", response_class=HTMLResponse)
 def panchang_page(request: Request):
-    return templates.TemplateResponse("panchang.html", {"request": request})
+    return templates.TemplateResponse("panchang.html", context={"request": request})
 
 
 # ============================================================
@@ -345,7 +345,7 @@ def kundali_page(request: Request):
     db = SessionLocal()
     try:
         user = get_current_user_jwt(request, db)
-        return templates.TemplateResponse("kundali.html", {
+        return templates.TemplateResponse("kundali.html", context={
             "request": request,
             "user": user,
             "require_login": user is None,
@@ -359,7 +359,7 @@ def prediction_page(request: Request):
     db = SessionLocal()
     try:
         user = get_current_user_jwt(request, db)
-        return templates.TemplateResponse("prediction.html", {
+        return templates.TemplateResponse("prediction.html", context={
             "request": request,
             "user": user,
             "require_login": user is None,
@@ -405,7 +405,7 @@ def login_page(request: Request, redirect: str = None, next: str = None):
             return RedirectResponse(redirect_to, status_code=303)
     finally:
         db.close()
-    return templates.TemplateResponse("auth.html", {"request": request, "redirect": redirect_to})
+    return templates.TemplateResponse("auth.html", context={"request": request, "redirect": redirect_to})
 
 
 @app.get("/signup", response_class=HTMLResponse)
@@ -418,7 +418,7 @@ def signup_page(request: Request, redirect: str = None):
             return RedirectResponse(redirect_to, status_code=303)
     finally:
         db.close()
-    return templates.TemplateResponse("auth.html", {"request": request, "redirect": redirect_to})
+    return templates.TemplateResponse("auth.html", context={"request": request, "redirect": redirect_to})
 
 
 @app.get("/logout")
@@ -437,7 +437,7 @@ def chat_page(request: Request):
     db = SessionLocal()
     try:
         user = get_current_user_jwt(request, db)
-        return templates.TemplateResponse("chat.html", {"request": request, "user": user})
+        return templates.TemplateResponse("chat.html", context={"request": request, "user": user})
     finally:
         db.close()
 
@@ -461,7 +461,7 @@ def profile_page(request: Request):
             .limit(10)
             .all()
         )
-        return templates.TemplateResponse("profile.html", {
+        return templates.TemplateResponse("profile.html", context={
             "request": request,
             "user": user,
             "profile": profile,
@@ -572,7 +572,7 @@ def admin_home(request: Request):
 
 @app.get("/admin/login", response_class=HTMLResponse)
 def admin_login_page(request: Request):
-    return templates.TemplateResponse("admin-login.html", {"request": request})
+    return templates.TemplateResponse("admin-login.html", context={"request": request})
 
 
 @app.post("/admin/login")
@@ -580,7 +580,7 @@ def admin_login(request: Request, username: str = Form(...), password: str = For
     if username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
         request.session["admin"] = "true"
         return RedirectResponse("/admin/blogs", status_code=303)
-    return templates.TemplateResponse("admin-login.html", {
+    return templates.TemplateResponse("admin-login.html", context={
         "request": request, "error": "Invalid credentials"
     })
 
@@ -595,7 +595,7 @@ def admin_logout(request: Request):
 def admin_blog_page(request: Request):
     if request.session.get("admin") != "true":
         return RedirectResponse("/admin/login", status_code=303)
-    return templates.TemplateResponse("admin-blog.html", {"request": request})
+    return templates.TemplateResponse("admin-blog.html", context={"request": request})
 
 
 @app.get("/admin/users", response_class=HTMLResponse)
@@ -610,7 +610,7 @@ def admin_users_page(request: Request):
             .order_by(User.created_at.desc())
             .all()
         )
-        return templates.TemplateResponse("admin-users.html", {
+        return templates.TemplateResponse("admin-users.html", context={
             "request": request,
             "users": users,
             "total_users": db.query(User).count(),
@@ -635,7 +635,7 @@ def admin_activity_page(request: Request):
             .all()
         )
         since = datetime.utcnow() - timedelta(days=7)
-        return templates.TemplateResponse("admin-activity.html", {
+        return templates.TemplateResponse("admin-activity.html", context={
             "request": request,
             "activities": activities,
             "total_users": db.query(User).count(),
@@ -659,7 +659,7 @@ def admin_feedback_page(request: Request):
             .limit(200)
             .all()
         )
-        return templates.TemplateResponse("admin-feedback.html", {
+        return templates.TemplateResponse("admin-feedback.html", context={
             "request": request,
             "feedback_items": feedback_items,
             "total_feedback": db.query(Feedback).count(),
