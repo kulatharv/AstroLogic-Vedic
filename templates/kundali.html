@@ -373,8 +373,20 @@ footer{position:relative;z-index:1;text-align:center;padding:24px;font-size:12px
 // kundali.js — AstroLogic Complete Frontend v2
 // Fixes: getRashi, house analysis, dasha timeline, download
 // ================================================================
-// Always use relative URLs — frontend and backend are on the same origin
-const API_URL = "";
+// Backend URL — all API calls and auth go here
+// Detects local dev vs production automatically
+const BACKEND_URL = (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")
+  ? "http://127.0.0.1:8000"
+  : "https://astrologic-vedic-1.onrender.com";
+
+// API_URL alias (used in fetch calls below)
+const API_URL = BACKEND_URL;
+
+// Redirect to backend login, passing current full URL so we return here after login
+function redirectToLogin() {
+  const returnTo = encodeURIComponent(window.location.href);
+  window.location.href = `${BACKEND_URL}/login?redirect=${returnTo}`;
+}
 
 // Returns auth headers with JWT token for all API calls
 function getAuthHeaders(extra = {}) {
@@ -767,13 +779,13 @@ async function generateKundali() {
     const sessionData = await sessionRes.json();
 
     if (!sessionData.logged_in) {
-      // Use relative /login — works on localhost and production
-      window.location.href = "/login?redirect=" + encodeURIComponent(window.location.pathname);
+      // Redirect to backend login, return to this page after
+      redirectToLogin();
       return;
     }
   } catch (e) {
     console.log("Session check failed");
-    window.location.href = "/login?redirect=" + encodeURIComponent(window.location.pathname);
+    redirectToLogin();
     return;
   }
 
@@ -1571,7 +1583,7 @@ async function checkLoginStatus() {
     try {
         const token = localStorage.getItem("astro_token");
         const headers = token ? { "Authorization": `Bearer ${token}` } : {};
-        const response = await fetch('/api/check-session', {
+        const response = await fetch(`${BACKEND_URL}/api/check-session`, {
             headers,
             credentials: "include"
         });
@@ -1586,8 +1598,15 @@ async function checkLoginStatus() {
 checkLoginStatus().then(isLoggedIn => {
     const requireLogin = document.body.dataset.requireLogin === "true";
     const popup = document.getElementById("loginPopup");
-    
+
     if (requireLogin && !isLoggedIn && popup) {
+        // Fix popup login/signup buttons to point to backend
+        const loginBtn = popup.querySelector('a[href="/login"]');
+        const signupBtn = popup.querySelector('a[href="/signup"]');
+        const returnTo = encodeURIComponent(window.location.href);
+        if (loginBtn)  loginBtn.href  = `${BACKEND_URL}/login?redirect=${returnTo}`;
+        if (signupBtn) signupBtn.href = `${BACKEND_URL}/signup?redirect=${returnTo}`;
+
         popup.style.display = "flex";
         document.body.style.overflow = "hidden";
     }

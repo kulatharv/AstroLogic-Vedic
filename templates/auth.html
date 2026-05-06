@@ -882,6 +882,12 @@ const urlParams = new URLSearchParams(window.location.search);
 const redirectUrl = urlParams.get('redirect') || urlParams.get('next');
 const isSignup = window.location.pathname.includes("signup");
 
+// Auth.html is served from the backend (Render), so relative URLs work here
+// But keep this in sync with kundali.html just in case
+const BACKEND_URL = (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")
+  ? "http://127.0.0.1:8000"
+  : "https://astrologic-vedic-1.onrender.com";
+
 const pageTitle = document.querySelector("title");
 const eyebrowText = document.getElementById("eyebrowText");
 const heroTitle = document.getElementById("heroTitle");
@@ -971,8 +977,8 @@ authForm.addEventListener("submit", async (e) => {
 
   const formData = new FormData(authForm);
 
-  // Use relative URL — works on localhost AND production
-  const endpoint = isSignup ? "/api/signup" : "/api/login";
+  // Use BACKEND_URL — auth.html is on backend, but safe to be explicit
+  const endpoint = isSignup ? `${BACKEND_URL}/api/signup` : `${BACKEND_URL}/api/login`;
 
   try {
     const res = await fetch(endpoint, {
