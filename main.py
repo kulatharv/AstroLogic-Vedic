@@ -391,41 +391,34 @@ def safe_redirect(url: str | None, fallback: str = "/") -> str:
 
 
 # ============================================================
-# AUTH PAGES
-# auth.html lives on VERCEL (frontend).
-# /login and /signup on the backend redirect to Vercel frontend.
+# AUTH PAGES  — served statically by Vercel, NOT by FastAPI
+# These routes kept only as fallback for local development
 # ============================================================
 
-FRONTEND_BASE = os.environ.get("FRONTEND_URL", "https://astro-logic-vedic.vercel.app")
-
-
-@app.get("/login")
+@app.get("/login", response_class=HTMLResponse)
 def login_page(request: Request, redirect: str = None, next: str = None):
-    redirect_param = redirect or next
+    """In production, /login is served by Vercel. This is local dev fallback."""
+    redirect_to = safe_redirect(redirect or next)
     db = SessionLocal()
     try:
         if get_current_user_jwt(request, db):
-            return RedirectResponse(safe_redirect(redirect_param), status_code=303)
+            return RedirectResponse(redirect_to, status_code=303)
     finally:
         db.close()
-    dest = f"{FRONTEND_BASE}/login"
-    if redirect_param:
-        dest += f"?redirect={redirect_param}"
-    return RedirectResponse(dest, status_code=302)
+    return templates.TemplateResponse("auth.html", context={"request": request, "redirect": redirect_to})
 
 
-@app.get("/signup")
+@app.get("/signup", response_class=HTMLResponse)
 def signup_page(request: Request, redirect: str = None):
+    """In production, /signup is served by Vercel. This is local dev fallback."""
+    redirect_to = safe_redirect(redirect)
     db = SessionLocal()
     try:
         if get_current_user_jwt(request, db):
-            return RedirectResponse(safe_redirect(redirect), status_code=303)
+            return RedirectResponse(redirect_to, status_code=303)
     finally:
         db.close()
-    dest = f"{FRONTEND_BASE}/signup"
-    if redirect:
-        dest += f"?redirect={redirect}"
-    return RedirectResponse(dest, status_code=302)
+    return templates.TemplateResponse("auth.html", context={"request": request, "redirect": redirect_to})
 
 
 @app.get("/logout")
