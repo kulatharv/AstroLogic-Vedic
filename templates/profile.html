@@ -650,4 +650,68 @@ button{
 </main>
 
 </body>
+<script>
+
+const BACKEND_URL =
+  (window.location.hostname === "localhost" ||
+   window.location.hostname === "127.0.0.1")
+    ? "http://127.0.0.1:8000"
+    : "https://astrologic-vedic-1.onrender.com";
+
+async function loadProfile(){
+
+  try{
+
+    const res = await fetch(
+      `${BACKEND_URL}/api/profile`,
+      {
+        credentials:"include"
+      }
+    );
+
+    if(res.status === 401){
+
+      window.location.href =
+        `${BACKEND_URL}/login?redirect=` +
+        encodeURIComponent(window.location.href);
+
+      return;
+    }
+
+    const user = await res.json();
+
+    document.getElementById(
+      "profileName"
+    ).textContent = user.name || "";
+
+    document.getElementById(
+      "profileEmail"
+    ).textContent = user.email || "";
+
+    document.getElementById(
+      "profilePhone"
+    ).value = user.phone || "";
+
+    document.getElementById(
+      "birthDate"
+    ).value = user.birth_date || "";
+
+    document.getElementById(
+      "birthTime"
+    ).value = user.birth_time || "";
+
+    document.getElementById(
+      "birthCity"
+    ).value = user.birth_city || "";
+
+  }catch(err){
+
+    console.error(err);
+
+  }
+}
+
+loadProfile();
+
+</script>
 </html>

@@ -1,25 +1,26 @@
 {
   "routes": [
-    { "src": "^/$",           "dest": "/index.html" },
-    { "src": "^/login$",      "dest": "/auth.html" },
-    { "src": "^/signup$",     "dest": "/auth.html" },
-    { "src": "^/kundali$",    "dest": "/kundali.html" },
+    { "src": "^/$", "dest": "/index.html" },
+    { "src": "^/login$", "dest": "/auth.html" },
+    { "src": "^/signup$", "dest": "/auth.html" },
+    { "src": "^/kundali$", "dest": "/kundali.html" },
     { "src": "^/prediction$", "dest": "/prediction.html" },
-    { "src": "^/panchang$",   "dest": "/panchang.html" },
-    { "src": "^/horoscope$",  "dest": "/daily-horoscope.html" },
+    { "src": "^/panchang$", "dest": "/panchang.html" },
+    { "src": "^/horoscope$", "dest": "/daily-horoscope.html" },
     { "src": "^/blogs$", "dest": "/blogs.html" },
-
     {
       "src": "^/blogs/(.*)$",
       "dest": "/blog-detail.html"
     },
-
     { "src": "^/blog-detail$", "dest": "/blog-detail.html" },
-    { "src": "^/blog-detail$","dest": "/blog-detail.html" },
-    { "src": "^/about$",      "dest": "/about.html" },
-    { "src": "^/profile$",    "dest": "/profile.html" },
-    { "src": "^/chat$",       "dest": "/chat.html" },
-    { "src": "^/admin-login$","dest": "/admin-login.html" },
-    { "src": "^/admin-blog$", "dest": "/admin-blog.html" }
+    { "src": "^/about$", "dest": "/about.html" },
+    { "src": "^/profile$", "dest": "/profile.html" },
+    { "src": "^/chat$", "dest": "/chat.html" },
+    { "src": "^/admin-login$", "dest": "/admin-login.html" },
+    { "src": "^/admin/users$", "dest": "/admin-users.html" },
+    { "src": "^/admin/activity$", "dest": "/admin-activity.html" },
+    { "src": "^/admin/feedback$", "dest": "/admin-feedback.html" },
+    { "src": "^/admin/blogs$", "dest": "/admin-blog.html" },
+    { "src": "^/admin/login$", "dest": "/admin-login.html" }
   ]
 }
