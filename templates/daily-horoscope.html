@@ -320,6 +320,17 @@ footer{position:relative;z-index:1;text-align:center;padding:24px;
 <footer>© 2026 AstroLogic · Horoscope generated from live Swiss Ephemeris transits · Lahiri Ayanamsa · Updated every hour</footer>
 
 <script>
+
+// Backend URL — all API calls and auth go here
+// Detects local dev vs production automatically
+const BACKEND_URL = (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")
+  ? "http://127.0.0.1:8000"
+  : "https://astrologic-vedic-1.onrender.com";
+
+// API_URL alias (used in fetch calls below)
+const API_URL = BACKEND_URL;
+
+
 const SIGNS = [
   {name:"Aries",    glyph:"♈", dates:"Mar 21 – Apr 19", elem:"Fire",  ruler:"Mars",    cls:"elem-fire",   emoji:"🔥"},
   {name:"Taurus",   glyph:"♉", dates:"Apr 20 – May 20", elem:"Earth", ruler:"Venus",   cls:"elem-earth",  emoji:"🌍"},
