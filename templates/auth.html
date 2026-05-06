@@ -961,6 +961,55 @@ if (errorMsg && errorMsg.trim() && errorMsg !== "None") {
     }, 500);
   }, 5000);
 }
+
+authForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const submitBtn = document.getElementById("submitBtn");
+  submitBtn.disabled = true;
+  submitBtn.textContent = "Please wait…";
+
+  const formData = new FormData(authForm);
+
+  // Use relative URL — works on localhost AND production
+  const endpoint = isSignup ? "/api/signup" : "/api/login";
+
+  try {
+    const res = await fetch(endpoint, {
+      method: "POST",
+      body: formData,
+      credentials: "include"   // sends/receives the astro_token cookie
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      const errorBox = document.getElementById("errorBox");
+      errorBox.textContent = data.error || "Authentication failed";
+      errorBox.style.display = "block";
+      submitBtn.disabled = false;
+      submitBtn.textContent = isSignup ? "Create Account" : "Login";
+      return;
+    }
+
+    // Store JWT in localStorage (used by JS fetch calls in kundali.html etc.)
+    if (data.access_token) {
+      localStorage.setItem("astro_token", data.access_token);
+    }
+
+    // Redirect: use redirect param, or profile for new signup, or home
+    const redirectTo = redirectUrl || (isSignup ? "/profile" : "/");
+    window.location.href = redirectTo;
+
+  } catch (err) {
+    console.error(err);
+    const errorBox = document.getElementById("errorBox");
+    errorBox.textContent = "Server error. Please try again.";
+    errorBox.style.display = "block";
+    submitBtn.disabled = false;
+    submitBtn.textContent = isSignup ? "Create Account" : "Login";
+  }
+});
 </script>
 
 </body>

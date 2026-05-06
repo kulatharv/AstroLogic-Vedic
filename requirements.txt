@@ -8,3 +8,10 @@ jinja2
 swisseph
 python-multipart
 pyswisseph
+fastapi
+uvicorn
+jinja2
+python-multipart
+sqlalchemy
+passlib[bcrypt]
+python-jose[cryptography]
