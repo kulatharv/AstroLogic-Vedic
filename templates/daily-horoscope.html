@@ -430,7 +430,7 @@ async function loadHoroscope(signIdx) {
 
   if (!data) {
     try {
-      const res = await fetch(`/api/horoscope/${signIdx}`);
+      const res = await fetch(`${API_URL}/api/horoscope/${signIdx}`);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       data = await res.json();
       _cache[cKey] = data;
