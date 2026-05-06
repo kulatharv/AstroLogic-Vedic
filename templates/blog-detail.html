@@ -110,10 +110,18 @@ footer{position:relative;z-index:1;text-align:center;padding:24px;font-size:12px
 <footer>© 2026 AstroLogic. All rights reserved.</footer>
 
 <script>
+const BACKEND_URL =
+  (window.location.hostname === "localhost" ||
+   window.location.hostname === "127.0.0.1")
+    ? "http://127.0.0.1:8000"
+    : "https://astrologic-vedic-1.onrender.com";
+
 const blogId = "{{ blog_id }}";
 async function loadBlog() {
   try {
-    const res = await fetch(`/api/blogs/${blogId}`);
+    const res = await fetch(
+      `${BACKEND_URL}/api/blogs/${blogId}`
+    );
     const blog = await res.json();
     if (!blog || blog.error) {
       document.getElementById('blogTitle').textContent = 'Article not found';
