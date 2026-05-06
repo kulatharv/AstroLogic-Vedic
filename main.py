@@ -44,7 +44,12 @@ app.add_middleware(SessionMiddleware, secret_key="astro-session-secret-change-in
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        "http://localhost:8000",
+        "http://127.0.0.1:8000",
+        "https://astrologic-vedic-1.onrender.com",
+        "https://astro-logic-vedic.vercel.app",   # ← your Vercel frontend
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -186,7 +191,7 @@ async def api_login(request: Request):
             key="astro_token",
             value=token,
             httponly=True,
-            samesite="lax",
+            samesite="none", secure=True,
             max_age=60 * 60 * 24 * JWT_EXPIRE_DAYS,
         )
         return response
@@ -238,7 +243,7 @@ async def api_signup(request: Request):
             key="astro_token",
             value=token,
             httponly=True,
-            samesite="lax",
+            samesite="none", secure=True,
             max_age=60 * 60 * 24 * JWT_EXPIRE_DAYS,
         )
         return response
@@ -363,17 +368,41 @@ def prediction_page(request: Request):
         db.close()
 
 
+ALLOWED_REDIRECT_HOSTS = {
+    "localhost", "127.0.0.1",
+    "astrologic-vedic-1.onrender.com",
+    "astro-logic-vedic.vercel.app",
+}
+
+def safe_redirect(url: str | None, fallback: str = "/") -> str:
+    """Allow redirects to known hosts only — prevents open redirect attacks."""
+    if not url:
+        return fallback
+    from urllib.parse import urlparse
+    try:
+        parsed = urlparse(url)
+        # Relative URL (no host) — always safe
+        if not parsed.netloc:
+            return url
+        # Absolute URL — check host is whitelisted
+        if parsed.hostname in ALLOWED_REDIRECT_HOSTS:
+            return url
+    except Exception:
+        pass
+    return fallback
+
+
 # ============================================================
 # AUTH PAGES  (just serve the HTML — JS handles form submit)
 # ============================================================
 
 @app.get("/login", response_class=HTMLResponse)
 def login_page(request: Request, redirect: str = None, next: str = None):
-    redirect_to = redirect or next
+    redirect_to = safe_redirect(redirect or next)
     db = SessionLocal()
     try:
         if get_current_user_jwt(request, db):
-            return RedirectResponse(redirect_to or "/", status_code=303)
+            return RedirectResponse(redirect_to, status_code=303)
     finally:
         db.close()
     return templates.TemplateResponse("auth.html", {"request": request, "redirect": redirect_to})
@@ -381,13 +410,14 @@ def login_page(request: Request, redirect: str = None, next: str = None):
 
 @app.get("/signup", response_class=HTMLResponse)
 def signup_page(request: Request, redirect: str = None):
+    redirect_to = safe_redirect(redirect)
     db = SessionLocal()
     try:
         if get_current_user_jwt(request, db):
-            return RedirectResponse(redirect or "/", status_code=303)
+            return RedirectResponse(redirect_to, status_code=303)
     finally:
         db.close()
-    return templates.TemplateResponse("auth.html", {"request": request, "redirect": redirect})
+    return templates.TemplateResponse("auth.html", {"request": request, "redirect": redirect_to})
 
 
 @app.get("/logout")
