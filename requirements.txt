@@ -15,3 +15,13 @@ python-multipart
 sqlalchemy
 passlib[bcrypt]
 python-jose[cryptography]
+fastapi
+uvicorn[standard]
+sqlalchemy
+PyJWT
+python-multipart
+jinja2
+starlette
+aiofiles
+pyswisseph
+python-dotenv
