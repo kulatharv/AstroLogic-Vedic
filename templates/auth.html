@@ -878,32 +878,41 @@ body::before{
 </main>
 
 <script>
-const urlParams = new URLSearchParams(window.location.search);
-const redirectUrl = urlParams.get('redirect') || urlParams.get('next');
-const isSignup = window.location.pathname.includes("signup");
-
-// Auth.html is served from the backend (Render), so relative URLs work here
-// But keep this in sync with kundali.html just in case
+// ── Config ────────────────────────────────────────────────
+// This file lives on VERCEL (frontend). All API calls go to the backend.
 const BACKEND_URL = (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")
   ? "http://127.0.0.1:8000"
   : "https://astrologic-vedic-1.onrender.com";
 
-const pageTitle = document.querySelector("title");
-const eyebrowText = document.getElementById("eyebrowText");
-const heroTitle = document.getElementById("heroTitle");
-const heroText = document.getElementById("heroText");
-const cardTitle = document.getElementById("cardTitle");
-const cardSub = document.getElementById("cardSub");
-const nameField = document.getElementById("nameField");
-const nameInput = document.getElementById("nameInput");
-const phoneField = document.getElementById("phoneField");
-const phoneInput = document.getElementById("phoneInput");
-const submitBtn = document.getElementById("submitBtn");
-const switchText = document.getElementById("switchText");
-const switchLink = document.getElementById("switchLink");
-const passwordInput = document.getElementById("passwordInput");
-const authForm = document.getElementById("authForm");
+// Frontend base (Vercel) — for internal page links
+const FRONTEND_URL = window.location.origin;
 
+// ── URL params ────────────────────────────────────────────
+const urlParams  = new URLSearchParams(window.location.search);
+const redirectUrl = urlParams.get("redirect") || urlParams.get("next") || null;
+
+// Determine mode from URL: /login → login, /signup → signup
+const isSignup = window.location.pathname.includes("signup");
+
+// ── DOM refs ──────────────────────────────────────────────
+const pageTitle    = document.querySelector("title");
+const eyebrowText  = document.getElementById("eyebrowText");
+const heroTitle    = document.getElementById("heroTitle");
+const heroText     = document.getElementById("heroText");
+const cardTitle    = document.getElementById("cardTitle");
+const cardSub      = document.getElementById("cardSub");
+const nameField    = document.getElementById("nameField");
+const nameInput    = document.getElementById("nameInput");
+const phoneField   = document.getElementById("phoneField");
+const phoneInput   = document.getElementById("phoneInput");
+const submitBtn    = document.getElementById("submitBtn");
+const switchText   = document.getElementById("switchText");
+const switchLink   = document.getElementById("switchLink");
+const passwordInput = document.getElementById("passwordInput");
+const authForm     = document.getElementById("authForm");
+const errorBox     = document.getElementById("errorBox");
+
+// ── Mode setup ────────────────────────────────────────────
 if (isSignup) {
   pageTitle.textContent = "AstroLogic | Create Account";
   eyebrowText.textContent = "Begin Your Journey";
@@ -917,13 +926,11 @@ if (isSignup) {
   phoneInput.required = true;
   submitBtn.textContent = "Create Account";
   switchText.textContent = "Already have an account?";
-  if (redirectUrl) {
-    switchLink.href = `/login?redirect=${encodeURIComponent(redirectUrl)}`;
-    switchLink.textContent = "Login";
-  } else {
-    switchLink.href = "/login";
-    switchLink.textContent = "Login";
-  }
+  // Switch link stays on frontend
+  switchLink.href = redirectUrl
+    ? `${FRONTEND_URL}/login?redirect=${encodeURIComponent(redirectUrl)}`
+    : `${FRONTEND_URL}/login`;
+  switchLink.textContent = "Login";
   passwordInput.autocomplete = "new-password";
 } else {
   pageTitle.textContent = "AstroLogic | User Login";
@@ -938,80 +945,64 @@ if (isSignup) {
   phoneInput.required = false;
   submitBtn.textContent = "Login";
   switchText.textContent = "New to AstroLogic?";
-  if (redirectUrl) {
-    switchLink.href = `/signup?redirect=${encodeURIComponent(redirectUrl)}`;
-    switchLink.textContent = "Create account";
-  } else {
-    switchLink.href = "/signup";
-    switchLink.textContent = "Create account";
-  }
+  switchLink.href = redirectUrl
+    ? `${FRONTEND_URL}/signup?redirect=${encodeURIComponent(redirectUrl)}`
+    : `${FRONTEND_URL}/signup`;
+  switchLink.textContent = "Create account";
   passwordInput.autocomplete = "current-password";
 }
 
-// Optional: Show error message if passed from backend
-const errorMsg = "{{ error }}";
-if (errorMsg && errorMsg !== "None") {
-  const errorBox = document.getElementById("errorBox");
-  errorBox.textContent = errorMsg;
-  errorBox.style.display = "block";
-}
-if (errorMsg && errorMsg.trim() && errorMsg !== "None") {
-  const errorBox = document.getElementById("errorBox");
-  errorBox.textContent = errorMsg;
+// ── Show error ────────────────────────────────────────────
+function showError(msg) {
+  errorBox.textContent = msg;
   errorBox.style.display = "block";
   setTimeout(() => {
     errorBox.style.opacity = "0";
-    setTimeout(() => {
-      errorBox.style.display = "none";
-      errorBox.style.opacity = "1";
-    }, 500);
+    setTimeout(() => { errorBox.style.display = "none"; errorBox.style.opacity = "1"; }, 500);
   }, 5000);
 }
 
+// ── Form submit → calls BACKEND API ──────────────────────
 authForm.addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  const submitBtn = document.getElementById("submitBtn");
   submitBtn.disabled = true;
   submitBtn.textContent = "Please wait…";
 
   const formData = new FormData(authForm);
-
-  // Use BACKEND_URL — auth.html is on backend, but safe to be explicit
-  const endpoint = isSignup ? `${BACKEND_URL}/api/signup` : `${BACKEND_URL}/api/login`;
+  const endpoint = isSignup
+    ? `${BACKEND_URL}/api/signup`
+    : `${BACKEND_URL}/api/login`;
 
   try {
     const res = await fetch(endpoint, {
       method: "POST",
       body: formData,
-      credentials: "include"   // sends/receives the astro_token cookie
+      credentials: "include",   // needed for cross-origin cookie
     });
 
     const data = await res.json();
 
     if (!res.ok) {
-      const errorBox = document.getElementById("errorBox");
-      errorBox.textContent = data.error || "Authentication failed";
-      errorBox.style.display = "block";
+      showError(data.error || "Authentication failed. Please try again.");
       submitBtn.disabled = false;
       submitBtn.textContent = isSignup ? "Create Account" : "Login";
       return;
     }
 
-    // Store JWT in localStorage (used by JS fetch calls in kundali.html etc.)
+    // ✅ Store JWT — all pages read this from localStorage
     if (data.access_token) {
       localStorage.setItem("astro_token", data.access_token);
     }
 
-    // Redirect: use redirect param, or profile for new signup, or home
-    const redirectTo = redirectUrl || (isSignup ? "/profile" : "/");
-    window.location.href = redirectTo;
+    // ✅ Redirect back to where the user came from
+    // redirectUrl could be a full URL like https://vercel.app/kundali — that's fine
+    const goTo = redirectUrl || (isSignup ? `${FRONTEND_URL}/profile` : FRONTEND_URL);
+    window.location.href = goTo;
 
   } catch (err) {
-    console.error(err);
-    const errorBox = document.getElementById("errorBox");
-    errorBox.textContent = "Server error. Please try again.";
-    errorBox.style.display = "block";
+    console.error("Auth error:", err);
+    showError("Server error. Please try again.");
     submitBtn.disabled = false;
     submitBtn.textContent = isSignup ? "Create Account" : "Login";
   }
