@@ -116,7 +116,9 @@ const BACKEND_URL =
     ? "http://127.0.0.1:8000"
     : "https://astrologic-vedic-1.onrender.com";
 
-const blogId = "{{ blog_id }}";
+// const blogId = "{{ blog_id }}";
+const blogId =
+  window.location.pathname.split("/").pop();
 async function loadBlog() {
   try {
     const res = await fetch(
