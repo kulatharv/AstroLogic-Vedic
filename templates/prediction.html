@@ -360,6 +360,36 @@ const BACKEND_URL = (window.location.hostname === "localhost" || window.location
 // API_URL alias (used in fetch calls below)
 const API_URL = BACKEND_URL;
 
+async function isLoggedIn(){
+
+  try{
+
+    const res = await fetch(
+      `${API_URL}/api/check-session`,
+      {
+        credentials:"include"
+      }
+    );
+
+    const data = await res.json();
+
+    return data.logged_in === true;
+
+  }catch(err){
+
+    return false;
+
+  }
+}
+function redirectToLogin() {
+
+  const returnTo =
+    encodeURIComponent(window.location.href);
+
+  window.location.href =
+    `${BACKEND_URL}/login?redirect=${returnTo}`;
+}
+
 const DOMAIN_META = {
   marriage:    {icon:'♥', name:'Marriage & Relationships', color:'#f87171'},
   career:      {icon:'★', name:'Career & Profession',      color:'#f5c16c'},
@@ -462,6 +492,15 @@ function openFeedbackModal(module, person, onDone){
 
 // ── Main analyse ──────────────────────────────────
 async function analyse(){
+    // 🔐 Check login
+  const loggedIn = await isLoggedIn();
+
+  if(!loggedIn){
+
+    redirectToLogin();
+
+    return;
+  }
   const name=document.getElementById('fullName').value.trim();
   const dob=document.getElementById('dob').value;
   const tob=document.getElementById('tob').value;
@@ -486,18 +525,182 @@ async function analyse(){
     renderResults(_data);
     document.getElementById('resultsSection').scrollIntoView({behavior:'smooth'});
     toast('Analysis complete','success');
-    if(!window.predictionFeedbackSubmitted){
-      openFeedbackModal("prediction", person, () => {
-        window.predictionFeedbackSubmitted = true;
-        toast('Thank you for the feedback','success');
-      });
-    }
+    // if(!window.predictionFeedbackSubmitted){
+    //   openFeedbackModal("prediction", person, () => {
+    //     window.predictionFeedbackSubmitted = true;
+    //     toast('Thank you for the feedback','success');
+        // Show feedback after 2 minutes
+          setTimeout(() => {
+
+            if(!window.predictionFeedbackSubmitted){
+
+              openFeedbackModal(
+                "prediction",
+                person,
+                () => {
+
+                  window.predictionFeedbackSubmitted = true;
+
+                  toast(
+                    'Thank you for the feedback',
+                    'success'
+                  );
+
+                }
+              );
+
+            }
+
+          }, 120000);
   }catch(e){
     toast('Error: '+e.message,'error');
   }finally{
     btn.disabled=false;btn.textContent='Analyse All 10 Domains ✦';
   }
 }
+
+// async function analyse(){
+
+//     // 🔐 Check Login
+//   const token = localStorage.getItem("token");
+
+//   if(!token){
+
+//     redirectToLogin();
+
+//     return;
+//   }
+
+//   const name =
+//     document.getElementById('fullName').value.trim();
+
+//   const dob =
+//     document.getElementById('dob').value;
+
+//   const tob =
+//     document.getElementById('tob').value;
+
+//   const city =
+//     document.getElementById('city').value.trim();
+
+//   if(!name || !dob || !tob || !city){
+
+//     toast('Please fill all fields','error');
+
+//     return;
+//   }
+
+//   const [year,month,day] =
+//     dob.split('-').map(Number);
+
+//   const [hour,minute] =
+//     tob.split(':').map(Number);
+
+//   const btn =
+//     document.getElementById('analyseBtn');
+
+//   btn.disabled = true;
+
+//   btn.textContent = 'Analysing…';
+
+//   try{
+
+//     const res = await fetch(`${API_URL}/api/domains`,{
+//       method:'POST',
+//       headers:{
+//         'Content-Type':'application/json',
+//         'Authorization':'Bearer ' + token
+//       },
+//       body:JSON.stringify({
+//         year,
+//         month,
+//         day,
+//         hour,
+//         minute,
+//         city
+//       })
+//     });
+
+//     if(!res.ok){
+
+//       const e = await res.json();
+
+//       toast(e.detail || 'Server error','error');
+
+//       return;
+//     }
+
+//     _data = await res.json();
+
+//     const person = {
+//       name,
+//       dob,
+//       tob,
+//       city
+//     };
+
+//     // Record activity
+//     recordTestingActivity(
+//       "prediction",
+//       "search",
+//       person
+//     );
+
+//     // Show results
+//     document.getElementById('initialState')
+//       .style.display = 'none';
+
+//     document.getElementById('resultsSection')
+//       .style.display = 'block';
+
+//     // Render prediction data
+//     renderResults(_data);
+
+//     // Scroll to results
+//     document.getElementById('resultsSection')
+//       .scrollIntoView({
+//         behavior:'smooth'
+//       });
+
+//     // Success toast
+//     toast('Analysis complete','success');
+
+//     // Show download + feedback after 2 minutes
+//     setTimeout(() => {
+
+//       const section =
+//         document.getElementById(
+//           "predictionActions"
+//         );
+
+//       if(section){
+
+//         section.style.display = "block";
+
+//         section.scrollIntoView({
+//           behavior: "smooth",
+//           block: "center"
+//         });
+
+//       }
+
+//     }, 120000);
+
+//   }catch(e){
+
+//     toast(
+//       'Error: ' + e.message,
+//       'error'
+//     );
+
+//   }finally{
+
+//     btn.disabled = false;
+
+//     btn.textContent =
+//       'Analyse All 10 Domains ✦';
+//   }
+// }
 
 function renderResults(data){
   // Birth context
