@@ -485,8 +485,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 async function loadCities() {
   try {
-    // const r = await fetch('https://astrologic-vedic-1.onrender.com/api/cities');
-    const r = await fetch('/api/cities');
+    const r = await fetch(`${BACKEND_URL}/api/cities`);
     if (r.ok) _cities = await r.json();
   } catch {}
 }
@@ -775,7 +774,10 @@ async function generateKundali() {
 
     // 🔐 STEP 1: CHECK LOGIN FIRST
   try {
-    const sessionRes = await fetch(`${API_URL}/api/check-session`);
+    const sessionRes = await fetch(`${API_URL}/api/check-session`, {
+      headers: getAuthHeaders(),
+      credentials: "include"
+    });
     const sessionData = await sessionRes.json();
 
     if (!sessionData.logged_in) {
@@ -878,7 +880,7 @@ function showToast(msg, type = "info") {
 }
 
 function recordTestingActivity(module, action, person){
-  fetch("/api/user-activity", {
+  fetch(`${BACKEND_URL}/api/user-activity`, {
     method:"POST",
     headers: getAuthHeaders(),
     credentials: "include",
@@ -916,7 +918,7 @@ function openFeedbackModal(module, person, onDone){
   document.getElementById("testingFeedbackForm").addEventListener("submit", async e => {
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
-    await fetch("/api/testing-feedback", {
+    await fetch(`${BACKEND_URL}/api/testing-feedback`, {
       method:"POST",
       headers: getAuthHeaders(),
       credentials: "include",
@@ -1542,7 +1544,7 @@ async function sendMessage() {
   cb.scrollTop = cb.scrollHeight;
 
   try {
-    const r = await fetch('api/kundali-chat' , {
+    const r = await fetch(`${BACKEND_URL}/api/kundali-chat` , {
       method:"POST", headers:{"Content-Type":"application/json"},
       body: JSON.stringify({ message: msg, chart: _data })
     });
