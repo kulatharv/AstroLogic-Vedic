@@ -381,10 +381,8 @@ def safe_redirect(url: str | None, fallback: str = "/") -> str:
     from urllib.parse import urlparse
     try:
         parsed = urlparse(url)
-        # Relative URL (no host) — always safe
         if not parsed.netloc:
             return url
-        # Absolute URL — check host is whitelisted
         if parsed.hostname in ALLOWED_REDIRECT_HOSTS:
             return url
     except Exception:
@@ -393,11 +391,13 @@ def safe_redirect(url: str | None, fallback: str = "/") -> str:
 
 
 # ============================================================
-# AUTH PAGES  (just serve the HTML — JS handles form submit)
+# AUTH PAGES  — served statically by Vercel, NOT by FastAPI
+# These routes kept only as fallback for local development
 # ============================================================
 
 @app.get("/login", response_class=HTMLResponse)
 def login_page(request: Request, redirect: str = None, next: str = None):
+    """In production, /login is served by Vercel. This is local dev fallback."""
     redirect_to = safe_redirect(redirect or next)
     db = SessionLocal()
     try:
@@ -410,6 +410,7 @@ def login_page(request: Request, redirect: str = None, next: str = None):
 
 @app.get("/signup", response_class=HTMLResponse)
 def signup_page(request: Request, redirect: str = None):
+    """In production, /signup is served by Vercel. This is local dev fallback."""
     redirect_to = safe_redirect(redirect)
     db = SessionLocal()
     try:

@@ -854,25 +854,14 @@ body::before{
       </div>
 
       <button class="btn-auth" type="submit" id="submitBtn">Login</button>
-      
-      <!-- Hidden redirect field -->
-      <input type="hidden" name="redirect" value="{{ redirect or '' }}">
     </form>
 
     <div class="switch-row">
       <span id="switchText">New to AstroLogic?</span>
-      {% if redirect %}
-      <a href="{{ '/signup?redirect=' + redirect }}" id="switchLink">Create account</a>
-      {% else %}
       <a href="/signup" id="switchLink">Create account</a>
-      {% endif %}
     </div>
 
-    {% if redirect %}
-    <a class="back-link" href="{{ redirect }}">← Back to Previous Page</a>
-    {% else %}
-    <a class="back-link" href="/">← Back to Home</a>
-    {% endif %}
+    <a class="back-link" href="/" id="backLink">← Back to Home</a>
   </section>
 
 </main>
@@ -911,6 +900,13 @@ const switchLink   = document.getElementById("switchLink");
 const passwordInput = document.getElementById("passwordInput");
 const authForm     = document.getElementById("authForm");
 const errorBox     = document.getElementById("errorBox");
+const backLink     = document.getElementById("backLink");
+
+// Set back link
+if (redirectUrl) {
+  backLink.href = redirectUrl;
+  backLink.textContent = "← Back to Previous Page";
+}
 
 // ── Mode setup ────────────────────────────────────────────
 if (isSignup) {
