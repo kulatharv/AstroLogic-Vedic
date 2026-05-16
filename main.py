@@ -599,28 +599,156 @@ def admin_blog_page(request: Request):
     return templates.TemplateResponse("admin-blog.html", context={"request": request})
 
 
+# @app.get("/admin/users", response_class=HTMLResponse)
+# def admin_users_page(request: Request):
+#     if request.session.get("admin") != "true":
+#         return RedirectResponse("/admin/login", status_code=303)
+#     db = SessionLocal()
+#     try:
+#         users = (
+#             db.query(User)
+#             .options(joinedload(User.profile))
+#             .order_by(User.created_at.desc())
+#             .all()
+#         )
+#         return templates.TemplateResponse("admin-users.html", context={
+#             "request": request,
+#             "users": users,
+#             "total_users": db.query(User).count(),
+#             "total_profiles": db.query(UserProfile).count(),
+#             "total_activities": db.query(UserActivity).count(),
+#         })
+#     finally:
+#         db.close()
 @app.get("/admin/users", response_class=HTMLResponse)
 def admin_users_page(request: Request):
     if request.session.get("admin") != "true":
         return RedirectResponse("/admin/login", status_code=303)
+    
     db = SessionLocal()
     try:
+        # Add debug print
+        print("=" * 50)
+        print("ADMIN USERS PAGE - Fetching data...")
+        
         users = (
             db.query(User)
             .options(joinedload(User.profile))
             .order_by(User.created_at.desc())
             .all()
         )
-        return templates.TemplateResponse("admin-users.html", context={
+        
+        total_users = db.query(User).count()
+        total_profiles = db.query(UserProfile).count()
+        total_activities = db.query(UserActivity).count()
+        
+        # Debug prints
+        print(f"Total users in DB: {total_users}")
+        print(f"Total profiles in DB: {total_profiles}")
+        print(f"First user: {users[0].name if users else 'No users found'}")
+        print("=" * 50)
+        
+        return templates.TemplateResponse("admin-users.html", {
             "request": request,
             "users": users,
-            "total_users": db.query(User).count(),
-            "total_profiles": db.query(UserProfile).count(),
-            "total_activities": db.query(UserActivity).count(),
+            "total_users": total_users,
+            "total_profiles": total_profiles,
+            "total_activities": total_activities,
+        })
+    except Exception as e:
+        print(f"ERROR in admin/users: {e}")
+        import traceback
+        traceback.print_exc()
+        return templates.TemplateResponse("admin-users.html", {
+            "request": request,
+            "users": [],
+            "total_users": 0,
+            "total_profiles": 0,
+            "total_activities": 0,
+            "error": str(e)
         })
     finally:
         db.close()
 
+# ============================================================
+# TEST DATA ENDPOINT (Admin only - for testing)
+# ============================================================
+
+@app.post("/admin/debug/create-test-user")
+def admin_create_test_user(request: Request):
+    """Create a test user - ADMIN ONLY"""
+    if request.session.get("admin") != "true":
+        return JSONResponse({"error": "Unauthorized"}, status_code=401)
+    
+    db = SessionLocal()
+    try:
+        # Check if test user already exists
+        existing = db.query(User).filter(User.email == "test@example.com").first()
+        if existing:
+            return {"message": "Test user already exists", "user": {"id": existing.id, "name": existing.name}}
+        
+        # Create test user
+        test_user = User(
+            name="Test User",
+            email="test@example.com",
+            password_hash=hash_password("test123")
+        )
+        db.add(test_user)
+        db.commit()
+        db.refresh(test_user)
+        
+        # Create profile for test user
+        profile = UserProfile(
+            user_id=test_user.id,
+            phone="+1234567890",
+            birth_date="1990-01-15",
+            birth_time="10:30",
+            birth_city="Mumbai",
+            zodiac_sign="Capricorn"
+        )
+        db.add(profile)
+        db.commit()
+        
+        return {"success": True, "message": "Test user created", "user": {"id": test_user.id, "name": test_user.name, "email": test_user.email}}
+    except Exception as e:
+        db.rollback()
+        return {"error": str(e)}
+    finally:
+        db.close()
+# ============================================================
+# DATABASE DEBUG ENDPOINT (Admin only)
+# ============================================================
+
+@app.get("/admin/debug/db")
+def admin_debug_db(request: Request):
+    """Debug endpoint to check database status - ADMIN ONLY"""
+    if request.session.get("admin") != "true":
+        return JSONResponse({"error": "Unauthorized"}, status_code=401)
+    
+    db = SessionLocal()
+    try:
+        user_count = db.query(User).count()
+        profile_count = db.query(UserProfile).count()
+        activity_count = db.query(UserActivity).count()
+        feedback_count = db.query(Feedback).count()
+        
+        # Get first few users
+        users = db.query(User).limit(5).all()
+        user_sample = [{"id": u.id, "name": u.name, "email": u.email} for u in users]
+        
+        return {
+            "database_connected": True,
+            "users_count": user_count,
+            "profiles_count": profile_count,
+            "activities_count": activity_count,
+            "feedback_count": feedback_count,
+            "sample_users": user_sample,
+            "database_url": str(engine.url).split("@")[-1] if "@" in str(engine.url) else "sqlite_local"
+        }
+    except Exception as e:
+        return {"database_connected": False, "error": str(e)}
+    finally:
+        db.close()
 
 @app.get("/admin/activity", response_class=HTMLResponse)
 def admin_activity_page(request: Request):
