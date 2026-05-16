@@ -12,6 +12,7 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from starlette.middleware.sessions import SessionMiddleware
 from sqlalchemy.orm import joinedload
 import jwt
+from fastapi.responses import JSONResponse
 
 from database import Base, SessionLocal, engine
 from models.user_model import Feedback, User, UserProfile, UserActivity
@@ -669,6 +670,92 @@ def admin_feedback_page(request: Request):
     finally:
         db.close()
 
+
+# ============================================================
+# PROFILE API ENDPOINTS (for AJAX calls from frontend)
+# ============================================================
+
+@app.get("/api/profile")
+def api_get_profile(request: Request):
+    """Get current user's profile data as JSON (for AJAX calls)"""
+    db = SessionLocal()
+    try:
+        user = get_current_user_jwt(request, db)
+        if not user:
+            return JSONResponse({"error": "Not authenticated"}, status_code=401)
+        
+        profile = db.query(UserProfile).filter(UserProfile.user_id == user.id).first()
+        
+        return JSONResponse({
+            "success": True,
+            "user": {
+                "id": user.id,
+                "name": user.name,
+                "email": user.email,
+            },
+            "profile": {
+                "phone": profile.phone if profile else "",
+                "birth_date": profile.birth_date if profile else "",
+                "birth_time": profile.birth_time if profile else "",
+                "birth_city": profile.birth_city if profile else "",
+                "zodiac_sign": profile.zodiac_sign if profile else "",
+                "timezone": profile.timezone if hasattr(profile, 'timezone') else "",
+                "notes": profile.notes if profile else "",
+            } if profile else {}
+        })
+    finally:
+        db.close()
+
+
+@app.post("/api/profile/update")
+async def api_update_profile(request: Request):
+    """Update user profile via JSON (for AJAX calls from frontend)"""
+    db = SessionLocal()
+    try:
+        user = get_current_user_jwt(request, db)
+        if not user:
+            return JSONResponse({"error": "Not authenticated"}, status_code=401)
+        
+        data = await request.json()
+        
+        # Update user name if provided
+        if "name" in data and data["name"]:
+            user.name = data["name"].strip()
+        
+        # Get or create profile
+        profile = db.query(UserProfile).filter(UserProfile.user_id == user.id).first()
+        if not profile:
+            profile = UserProfile(user_id=user.id)
+            db.add(profile)
+        
+        # Update profile fields
+        if "phone" in data:
+            profile.phone = data["phone"].strip() if data["phone"] else ""
+        if "birth_date" in data:
+            profile.birth_date = data["birth_date"] if data["birth_date"] else None
+        if "birth_time" in data:
+            profile.birth_time = data["birth_time"] if data["birth_time"] else ""
+        if "birth_city" in data:
+            profile.birth_city = data["birth_city"].strip() if data["birth_city"] else ""
+        if "zodiac_sign" in data:
+            profile.zodiac_sign = data["zodiac_sign"].strip() if data["zodiac_sign"] else ""
+        if "timezone" in data:
+            profile.timezone = data["timezone"] if data["timezone"] else ""
+        if "notes" in data:
+            profile.notes = data["notes"].strip() if data["notes"] else ""
+        
+        db.commit()
+        
+        # Log activity
+        log_activity(db, request, "profile_update", user.id, "User updated profile via API")
+        
+        return JSONResponse({"success": True, "message": "Profile updated successfully"})
+        
+    except Exception as e:
+        db.rollback()
+        return JSONResponse({"error": str(e)}, status_code=500)
+    finally:
+        db.close()
 
 # ============================================================
 # RUN
