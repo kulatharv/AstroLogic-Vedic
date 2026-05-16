@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -93,5 +93,475 @@ h2{
   </form>
   <a href="/" class="back">← Back to Website</a>
 </div>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AstroLogic | Admin Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --gold:#f5c16c;
+  --gold2:#d89b3c;
+  --gold-dim:rgba(245,193,108,0.12);
+  --gold-border:rgba(245,193,108,0.28);
+  --surface:rgba(255,255,255,0.05);
+  --border:rgba(255,255,255,0.1);
+  --border2:rgba(255,255,255,0.14);
+  --text:#e8e8e8;
+  --text-dim:rgba(232,232,232,0.52);
+  --danger:#ff6b6b;
+  --success:#4ade80;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+
+body{
+  background:radial-gradient(ellipse 140% 70% at 50% -5%,#0c2a4a,#010812);
+  color:var(--text);
+  font-family:'Inter',sans-serif;
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  position:relative;
+}
+
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  background-image:
+    radial-gradient(1px 1px at 12% 18%,rgba(155,220,255,.38),transparent),
+    radial-gradient(1px 1px at 78% 8%,rgba(245,193,108,.32),transparent),
+    radial-gradient(1.5px 1.5px at 33% 55%,rgba(155,220,255,.25),transparent),
+    radial-gradient(1px 1px at 91% 72%,rgba(245,193,108,.22),transparent);
+  pointer-events:none;
+  z-index:0;
+}
+
+/* Stars animation */
+@keyframes twinkle {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.8; }
+}
+
+.star{
+  position:fixed;
+  background:white;
+  border-radius:50%;
+  pointer-events:none;
+  z-index:0;
+}
+
+.card{
+  position:relative;
+  z-index:1;
+  background:rgba(1,8,18,0.85);
+  backdrop-filter:blur(20px);
+  border:1px solid var(--border);
+  border-radius:28px;
+  padding:48px 44px;
+  width:100%;
+  max-width:420px;
+  transition:transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover{
+  transform:translateY(-5px);
+  box-shadow:0 25px 50px -12px rgba(0,0,0,0.5);
+}
+
+.logo-link{
+  display:block;
+  text-align:center;
+  margin-bottom:32px;
+  font-family:'Cinzel',serif;
+  font-size:26px;
+  font-weight:600;
+  color:var(--gold);
+  text-decoration:none;
+  letter-spacing:2px;
+}
+
+.logo-link sup{
+  font-size:11px;
+  opacity:.7;
+  font-weight:400;
+  vertical-align:super;
+}
+
+.admin-shield{
+  text-align:center;
+  margin-bottom:20px;
+  font-size:48px;
+}
+
+h2{
+  font-family:'Cinzel',serif;
+  text-align:center;
+  font-size:18px;
+  font-weight:600;
+  letter-spacing:1px;
+  color:var(--gold);
+  margin-bottom:10px;
+  text-transform:uppercase;
+}
+
+.subtitle{
+  text-align:center;
+  font-size:12px;
+  color:var(--text-dim);
+  margin-bottom:28px;
+}
+
+.divider{
+  width:60px;
+  height:2px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  margin:0 auto 28px;
+}
+
+.err{
+  background:rgba(248,113,113,.12);
+  border:1px solid rgba(248,113,113,.4);
+  color:#f87171;
+  border-radius:12px;
+  padding:12px 16px;
+  font-size:13px;
+  margin-bottom:20px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.success{
+  background:rgba(74,222,128,.12);
+  border:1px solid rgba(74,222,128,.4);
+  color:var(--success);
+  border-radius:12px;
+  padding:12px 16px;
+  font-size:13px;
+  margin-bottom:20px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.field{
+  margin-bottom:20px;
+  position:relative;
+}
+
+.field label{
+  display:block;
+  font-size:11px;
+  font-weight:600;
+  letter-spacing:.8px;
+  text-transform:uppercase;
+  color:var(--text-dim);
+  margin-bottom:8px;
+}
+
+.field input{
+  width:100%;
+  background:rgba(255,255,255,.07)!important;
+  border:1px solid var(--border2)!important;
+  color:#fff!important;
+  border-radius:12px;
+  padding:12px 16px;
+  font-size:14px;
+  font-family:'Inter',sans-serif;
+  transition:all 0.2s ease;
+}
+
+.field input:focus{
+  outline:none;
+  border-color:var(--gold)!important;
+  background:rgba(255,255,255,.12)!important;
+  box-shadow:0 0 0 3px rgba(245,193,108,.1);
+}
+
+.field input::placeholder{
+  color:rgba(255,255,255,.3)!important;
+}
+
+.toggle-password{
+  position:absolute;
+  right:14px;
+  bottom:12px;
+  background:transparent;
+  border:none;
+  color:var(--text-dim);
+  cursor:pointer;
+  font-size:16px;
+  transition:color 0.2s;
+}
+
+.toggle-password:hover{
+  color:var(--gold);
+}
+
+.btn-login{
+  width:100%;
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:#000;
+  font-weight:800;
+  font-size:15px;
+  padding:12px;
+  border-radius:12px;
+  border:none;
+  cursor:pointer;
+  font-family:'Inter',sans-serif;
+  margin-top:8px;
+  transition:all 0.25s ease;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+}
+
+.btn-login:hover{
+  filter:brightness(1.1);
+  transform:translateY(-2px);
+  box-shadow:0 8px 24px rgba(245,193,108,.3);
+}
+
+.btn-login:active{
+  transform:translateY(0);
+}
+
+.back{
+  display:block;
+  text-align:center;
+  margin-top:24px;
+  font-size:13px;
+  color:var(--text-dim);
+  text-decoration:none;
+  transition:all 0.2s;
+  padding:8px;
+  border-radius:8px;
+}
+
+.back:hover{
+  color:var(--gold);
+  background:var(--gold-dim);
+}
+
+.security-note{
+  text-align:center;
+  margin-top:24px;
+  font-size:10px;
+  color:var(--text-dim);
+  border-top:1px solid var(--border);
+  padding-top:20px;
+}
+
+.loading{
+  opacity:0.7;
+  cursor:wait;
+}
+
+.loading .btn-login{
+  pointer-events:none;
+}
+
+@keyframes shake{
+  0%,100%{transform:translateX(0);}
+  25%{transform:translateX(-5px);}
+  75%{transform:translateX(5px);}
+}
+
+.shake{
+  animation:shake 0.3s ease;
+}
+
+@media(max-width:480px){
+  .card{
+    padding:32px 24px;
+  }
+  .logo-link{
+    font-size:22px;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="card">
+  <a class="logo-link" href="/">Astro<sup>✦</sup>Logic</a>
+  <div class="admin-shield">🛡️</div>
+  <h2>Admin Access</h2>
+  <div class="subtitle">Secure portal for administrators</div>
+  <div class="divider"></div>
+
+  {% if error %}
+  <div class="err">
+    <span>⚠️</span> {{ error }}
+  </div>
+  {% endif %}
+
+  {% if message %}
+  <div class="success">
+    <span>✅</span> {{ message }}
+  </div>
+  {% endif %}
+
+  <form id="loginForm" method="POST">
+    <div class="field">
+      <label>🔐 Username</label>
+      <input type="text" name="username" id="username" placeholder="Enter admin username" required autocomplete="username">
+    </div>
+    
+    <div class="field">
+      <label>🔑 Password</label>
+      <input type="password" name="password" id="password" placeholder="Enter password" required autocomplete="current-password">
+      <button type="button" class="toggle-password" onclick="togglePassword()">👁️</button>
+    </div>
+    
+    <div class="field">
+      <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+        <input type="checkbox" id="remember" name="remember" style="width:auto; margin:0;">
+        <span>Remember me on this device</span>
+      </label>
+    </div>
+    
+    <button type="submit" class="btn-login">
+      <span>→</span> Sign In
+    </button>
+  </form>
+  
+  <a href="/" class="back">← Back to Website</a>
+  
+  <div class="security-note">
+    🔒 Secure admin area • All access is logged
+  </div>
+</div>
+
+<script>
+// Toggle password visibility
+function togglePassword() {
+  const passwordInput = document.getElementById('password');
+  const toggleBtn = document.querySelector('.toggle-password');
+  
+  if (passwordInput.type === 'password') {
+    passwordInput.type = 'text';
+    toggleBtn.textContent = '🙈';
+  } else {
+    passwordInput.type = 'password';
+    toggleBtn.textContent = '👁️';
+  }
+}
+
+// Form submission with loading state
+const form = document.getElementById('loginForm');
+const submitBtn = document.querySelector('.btn-login');
+
+if (form) {
+  form.addEventListener('submit', function(e) {
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value;
+    
+    // Basic validation
+    if (!username || !password) {
+      e.preventDefault();
+      showError('Please enter both username and password');
+      return;
+    }
+    
+    // Add loading state
+    submitBtn.innerHTML = '<span>⏳</span> Authenticating...';
+    submitBtn.parentElement?.classList.add('loading');
+    
+    // Allow form to submit normally
+    setTimeout(() => {
+      // If submission takes too long, remove loading
+      // This will be cleared on page navigation anyway
+    }, 5000);
+  });
+}
+
+// Show error message
+function showError(message) {
+  let errorDiv = document.querySelector('.err');
+  if (!errorDiv) {
+    errorDiv = document.createElement('div');
+    errorDiv.className = 'err';
+    const formElement = document.getElementById('loginForm');
+    formElement.parentElement?.insertBefore(errorDiv, formElement);
+  }
+  errorDiv.innerHTML = `<span>⚠️</span> ${message}`;
+  errorDiv.style.display = 'flex';
+  
+  // Shake animation
+  const card = document.querySelector('.card');
+  card?.classList.add('shake');
+  setTimeout(() => {
+    card?.classList.remove('shake');
+  }, 300);
+  
+  // Remove loading state
+  submitBtn.innerHTML = '<span>→</span> Sign In';
+  submitBtn.parentElement?.classList.remove('loading');
+}
+
+// Remember me functionality
+const rememberCheckbox = document.getElementById('remember');
+if (rememberCheckbox && localStorage.getItem('admin_remember')) {
+  rememberCheckbox.checked = true;
+  const savedUsername = localStorage.getItem('admin_username');
+  if (savedUsername) {
+    document.getElementById('username').value = savedUsername;
+  }
+}
+
+if (rememberCheckbox) {
+  rememberCheckbox.addEventListener('change', function() {
+    const username = document.getElementById('username').value;
+    if (this.checked) {
+      localStorage.setItem('admin_remember', 'true');
+      localStorage.setItem('admin_username', username);
+    } else {
+      localStorage.removeItem('admin_remember');
+      localStorage.removeItem('admin_username');
+    }
+  });
+}
+
+// Save username when typing
+const usernameInput = document.getElementById('username');
+if (usernameInput) {
+  usernameInput.addEventListener('input', function() {
+    if (rememberCheckbox?.checked) {
+      localStorage.setItem('admin_username', this.value);
+    }
+  });
+}
+
+// Generate floating stars
+function createStars() {
+  const starCount = 50;
+  for (let i = 0; i < starCount; i++) {
+    const star = document.createElement('div');
+    star.className = 'star';
+    star.style.width = Math.random() * 3 + 'px';
+    star.style.height = star.style.width;
+    star.style.left = Math.random() * 100 + '%';
+    star.style.top = Math.random() * 100 + '%';
+    star.style.animationDelay = Math.random() * 5 + 's';
+    star.style.animationDuration = 2 + Math.random() * 3 + 's';
+    star.style.animationName = 'twinkle';
+    star.style.animationIterationCount = 'infinite';
+    document.body.appendChild(star);
+  }
+}
+
+// Initialize stars on page load
+createStars();
+</script>
 </body>
 </html>

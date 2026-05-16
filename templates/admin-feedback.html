@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -53,5 +53,369 @@
     </div>
   </section>
 </main>
+</body>
+</html> -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AstroLogic | Testing Feedback</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--gold:#f5c16c;--gold2:#d89b3c;--gold-dim:rgba(245,193,108,.12);--gold-border:rgba(245,193,108,.28);--blue:#9bdcff;--green:#4ade80;--yellow:#fbbf24;--orange:#fb923c;--surface:rgba(255,255,255,.05);--surface2:rgba(255,255,255,.075);--border:rgba(255,255,255,.1);--text:#e8e8e8;--dim:rgba(232,232,232,.58);--danger:#ff6b6b}
+*{box-sizing:border-box;margin:0;padding:0}
+body{min-height:100vh;background:radial-gradient(ellipse 150% 80% at 50% -10%,#0c2a4a,#010812);color:var(--text);font-family:Inter,sans-serif}
+body:before{content:"";position:fixed;inset:0;background-image:radial-gradient(1px 1px at 12% 18%,rgba(155,220,255,.32),transparent),radial-gradient(1px 1px at 78% 8%,rgba(245,193,108,.28),transparent);pointer-events:none}
+.sidebar{position:fixed;inset:0 auto 0 0;width:260px;background:rgba(1,8,18,.96);backdrop-filter:blur(12px);border-right:1px solid var(--border);padding:28px 20px;z-index:2;overflow-y:auto}
+.brand{font-family:Cinzel,serif;color:var(--gold);font-size:22px;letter-spacing:1.5px;text-decoration:none;display:block;margin:0 0 32px 0;text-align:center}
+.admin-badge{background:var(--gold-dim);border:1px solid var(--gold-border);color:var(--gold);font-size:10px;font-weight:800;text-align:center;padding:6px 12px;border-radius:30px;width:fit-content;margin:0 auto 28px auto;letter-spacing:1px}
+.side-link{display:flex;align-items:center;gap:12px;color:var(--dim);text-decoration:none;padding:10px 14px;border-radius:10px;margin-bottom:4px;font-size:14px;font-weight:500;transition:.2s}
+.side-link:hover,.side-link.active{color:var(--gold);background:var(--gold-dim)}
+.side-icon{font-size:18px}
+.side-footer{margin-top:40px;padding-top:20px;border-top:1px solid var(--border)}
+.main{position:relative;z-index:1;margin-left:260px;padding:28px 32px;max-width:1300px}
+.top{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;margin-bottom:28px;flex-wrap:wrap}
+.eyebrow{font-size:11px;font-weight:800;letter-spacing:2.4px;text-transform:uppercase;color:var(--blue);margin-bottom:8px}
+h1{font-family:Cinzel,serif;font-size:34px;color:#fff;font-weight:600;margin-bottom:6px}
+.muted{color:var(--dim);font-size:13px;line-height:1.6}
+.btn-group{display:flex;gap:12px;flex-wrap:wrap}
+.btn{border:0;border-radius:10px;padding:10px 18px;font-weight:700;text-decoration:none;cursor:pointer;font-family:Inter,sans-serif;font-size:13px;transition:.2s;display:inline-flex;align-items:center;gap:6px}
+.btn-outline{border:1px solid var(--gold-border);color:var(--gold);background:transparent}
+.btn-outline:hover{background:var(--gold-dim);transform:translateY(-1px)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:28px}
+.stat,.panel{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:22px 20px;backdrop-filter:blur(18px);transition:.2s}
+.stat:hover{background:rgba(255,255,255,.08);border-color:var(--gold-border)}
+.stat h2{font-family:Cinzel,serif;color:var(--gold);font-size:32px;margin-bottom:4px}
+.stat p{color:var(--dim);font-size:13px;margin-top:4px}
+.stat-trend{font-size:11px;color:var(--gold);margin-top:8px;display:block}
+.panel h3{font-family:Cinzel,serif;color:var(--gold);font-size:16px;letter-spacing:.8px;text-transform:uppercase;margin-bottom:20px;display:flex;align-items:center;gap:10px}
+.panel h3:after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--gold-border),transparent)}
+.filter-bar{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap}
+.filter-btn{background:transparent;border:1px solid var(--border);color:var(--dim);padding:8px 16px;border-radius:20px;font-size:12px;cursor:pointer;transition:.2s;font-weight:500}
+.filter-btn:hover,.filter-btn.active{background:var(--gold-dim);border-color:var(--gold);color:var(--gold)}
+table{width:100%;border-collapse:collapse}
+th,td{padding:14px 12px;border-bottom:1px solid var(--border);text-align:left;vertical-align:top}
+th{color:var(--gold);font-size:11px;text-transform:uppercase;letter-spacing:1px;font-weight:700}
+td{font-size:13px}
+.sub{display:block;color:var(--dim);font-size:11px;margin-top:4px}
+.badge{display:inline-flex;border:1px solid var(--gold-border);background:var(--gold-dim);color:var(--gold);border-radius:999px;padding:4px 12px;font-size:11px;font-weight:800;letter-spacing:.3px}
+.badge-kundali{background:rgba(155,220,255,.1);border-color:rgba(155,220,255,.3);color:var(--blue)}
+.badge-prediction{background:rgba(74,222,128,.1);border-color:rgba(74,222,128,.3);color:var(--green)}
+.user-cell{display:flex;align-items:center;gap:10px}
+.user-avatar{width:32px;height:32px;background:var(--gold-dim);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
+.comment-cell{max-width:300px;word-wrap:break-word}
+.rating-container{display:flex;flex-direction:column;gap:8px}
+.rating-item{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.rating-label{font-weight:600;min-width:85px;font-size:12px}
+.rating-value{font-weight:700;font-size:13px}
+.rating-stars{display:inline-flex;gap:2px;margin-left:5px}
+.star{font-size:12px;color:var(--dim)}
+.star.filled{color:var(--yellow)}
+.rating-badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;margin-left:8px}
+.rating-badge.excellent{background:rgba(74,222,128,.15);color:var(--green)}
+.rating-badge.good{background:rgba(155,220,255,.15);color:var(--blue)}
+.rating-badge.average{background:rgba(251,191,36,.15);color:var(--yellow)}
+.rating-badge.poor{background:rgba(255,107,107,.15);color:var(--danger)}
+.empty{color:var(--dim);text-align:center;padding:48px;font-size:14px}
+.debug-info{background:rgba(0,0,0,.3);border-radius:8px;padding:8px;margin-bottom:10px;font-size:11px;color:var(--dim);display:none}
+@media(max-width:900px){.sidebar{position:static;width:100%;padding:16px}.side-footer{display:none}.main{margin-left:0;padding:20px}.stats{grid-template-columns:1fr}.top{flex-direction:column}}
+</style>
+</head>
+<body>
+<aside class="sidebar">
+  <a class="brand" href="/admin/blogs">Astro<sup>✦</sup>Logic</a>
+  <div class="admin-badge">ADMIN PANEL</div>
+  <a class="side-link" href="/admin/blogs"><span class="side-icon">📝</span> Blog Management</a>
+  <a class="side-link" href="/admin/users"><span class="side-icon">👥</span> Users</a>
+  <a class="side-link" href="/admin/activity"><span class="side-icon">📋</span> User Activity</a>
+  <a class="side-link active" href="/admin/feedback"><span class="side-icon">💬</span> Testing Feedback</a>
+  <div class="side-footer">
+    <a class="side-link" href="/"><span class="side-icon">🌐</span> View Website</a>
+    <a class="side-link" href="/admin/logout"><span class="side-icon">🚪</span> Logout</a>
+  </div>
+</aside>
+
+<main class="main">
+  <section class="top">
+    <div>
+      <div class="eyebrow">🧪 EARLY TESTING</div>
+      <h1>Feedback</h1>
+      <p class="muted">Feedback submitted after Kundali downloads and Prediction testing.</p>
+    </div>
+    <div class="btn-group">
+      <a class="btn btn-outline" href="/admin/activity">📋 Activity</a>
+      <a class="btn btn-outline" href="/admin/users">👥 Users</a>
+      <a class="btn btn-outline" href="/admin/blogs">📝 Blogs</a>
+    </div>
+  </section>
+
+  <section class="stats">
+    <div class="stat">
+      <h2>{{ total_feedback | default(0) }}</h2>
+      <p>Total Feedback</p>
+      <span class="stat-trend">💬 All submissions</span>
+    </div>
+    <div class="stat">
+      <h2>{{ kundali_feedback | default(0) }}</h2>
+      <p>Kundali</p>
+      <span class="stat-trend">🔮 Chart readings</span>
+    </div>
+    <div class="stat">
+      <h2>{{ prediction_feedback | default(0) }}</h2>
+      <p>Prediction</p>
+      <span class="stat-trend">⭐ Forecast testing</span>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h3>💬 User Feedback Details</h3>
+    
+    <div class="filter-bar">
+      <button class="filter-btn active" data-filter="all">All Feedback</button>
+      <button class="filter-btn" data-filter="kundali">🔮 Kundali</button>
+      <button class="filter-btn" data-filter="prediction">⭐ Prediction</button>
+      <button class="filter-btn" data-filter="high-rated">🏆 High Rated (4-5)</button>
+    </div>
+
+    <div style="overflow-x:auto">
+      <table id="feedbackTable">
+        <thead>
+          <tr>
+            <th>Time</th>
+            <th>User</th>
+            <th>Module</th>
+            <th>Birth Data</th>
+            <th>Ratings (Details)</th>
+            <th>Comments</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in feedback_items %}
+          <!-- Debug: Display raw values -->
+          <tr style="display:none" class="debug-row">
+            <td colspan="6">
+              <div class="debug-info">
+                <strong>Debug Info:</strong><br>
+                accuracy_raw: {{ item.accuracy }}<br>
+                experience_raw: {{ item.experience }}<br>
+                usefulness_raw: {{ item.usefulness }}<br>
+                accuracy_type: {{ item.accuracy.__class__.__name__ }}<br>
+                experience_type: {{ item.experience.__class__.__name__ if item.experience else 'None' }}
+              </div>
+            </td>
+          </tr>
+          
+          <!-- Try different possible field names -->
+          {% set accuracy_value = item.accuracy_rating or item.accuracy_score or item.accuracy or item.rating_accuracy or item.acc or 0 %}
+          {% set experience_value = item.experience_rating or item.experience_score or item.experience or item.exp or 0 %}
+          {% set usefulness_value = item.usefulness_rating or item.usefulness_score or item.usefulness or item.use or 0 %}
+          
+          <!-- Convert to int, handle various formats -->
+          {% set accuracy_val = accuracy_value | int if accuracy_value and accuracy_value != '-' and accuracy_value != 'None' and accuracy_value != '' else 0 %}
+          {% set experience_val = experience_value | int if experience_value and experience_value != '-' and experience_value != 'None' and experience_value != '' else 0 %}
+          {% set usefulness_val = usefulness_value | int if usefulness_value and usefulness_value != '-' and usefulness_value != 'None' and usefulness_value != '' else 0 %}
+          
+          <!-- Calculate average -->
+          {% set total_ratings = accuracy_val + experience_val + usefulness_val %}
+          {% set avg_rating = (total_ratings / 3) | round(1) if total_ratings > 0 else 0 %}
+          
+          <tr class="feedback-row" data-module="{% if item.module %}{{ item.module.lower() }}{% endif %}" data-rating="{{ avg_rating }}">
+            <td style="white-space:nowrap">{% if item.created_at %}{{ item.created_at.strftime('%d %b %Y, %I:%M %p') }}{% else %}-{% endif %}</td>
+            <td>
+              <div class="user-cell">
+                <div class="user-avatar">{% if item.user and item.user.name %}{{ item.user.name[0] | upper }}{% else %}👤{% endif %}</div>
+                <div>
+                  <div>{% if item.user and item.user.name %}{{ item.user.name }}{% else %}Guest{% endif %}</div>
+                  <span class="sub">{% if item.user and item.user.email %}{{ item.user.email }}{% else %}guest@astrologic.com{% endif %}</span>
+                </div>
+              </div>
+            </td>
+            <td>
+              {% if item.module %}
+                {% if item.module.lower() == 'kundali' %}
+                  <span class="badge badge-kundali">🔮 KUNDALI</span>
+                {% elif item.module.lower() == 'prediction' %}
+                  <span class="badge badge-prediction">⭐ PREDICTION</span>
+                {% else %}
+                  <span class="badge">{{ item.module.title() }}</span>
+                {% endif %}
+              {% else %}
+                <span class="badge">-</span>
+              {% endif %}
+            </td>
+            <td>
+              <strong>{{ item.person_name or 'Anonymous' }}</strong>
+              <span class="sub">
+                {% if item.birth_date %}📅 {{ item.birth_date }}{% endif %}
+                {% if item.birth_time %} ⏰ {{ item.birth_time }}{% endif %}
+                {% if item.birth_city %} 📍 {{ item.birth_city }}{% endif %}
+                {% if not item.birth_date and not item.birth_time and not item.birth_city %}No birth data provided{% endif %}
+              </span>
+            </td>
+            <td>
+              <div class="rating-container">
+                <!-- Accuracy Rating -->
+                <div class="rating-item">
+                  <span class="rating-label">🎯 Accuracy:</span>
+                  <span class="rating-value">
+                    {% if accuracy_val > 0 %}
+                      {{ accuracy_val }}/5
+                      <span class="rating-stars">
+                        {% for i in range(1, 6) %}
+                          {% if i <= accuracy_val %}
+                            <span class="star filled">★</span>
+                          {% else %}
+                            <span class="star">☆</span>
+                          {% endif %}
+                        {% endfor %}
+                      </span>
+                      {% if accuracy_val >= 4 %}
+                        <span class="rating-badge excellent">Excellent</span>
+                      {% elif accuracy_val >= 3 %}
+                        <span class="rating-badge good">Good</span>
+                      {% elif accuracy_val >= 2 %}
+                        <span class="rating-badge average">Average</span>
+                      {% else %}
+                        <span class="rating-badge poor">Poor</span>
+                      {% endif %}
+                    {% else %}
+                      <span class="sub">Not rated yet</span>
+                    {% endif %}
+                  </span>
+                </div>
+                
+                <!-- Experience Rating -->
+                <div class="rating-item">
+                  <span class="rating-label">✨ Experience:</span>
+                  <span class="rating-value">
+                    {% if experience_val > 0 %}
+                      {{ experience_val }}/5
+                      <span class="rating-stars">
+                        {% for i in range(1, 6) %}
+                          {% if i <= experience_val %}
+                            <span class="star filled">★</span>
+                          {% else %}
+                            <span class="star">☆</span>
+                          {% endif %}
+                        {% endfor %}
+                      </span>
+                    {% else %}
+                      <span class="sub">Not rated yet</span>
+                    {% endif %}
+                  </span>
+                </div>
+                
+                <!-- Usefulness Rating -->
+                <div class="rating-item">
+                  <span class="rating-label">📊 Usefulness:</span>
+                  <span class="rating-value">
+                    {% if usefulness_val > 0 %}
+                      {{ usefulness_val }}/5
+                      <span class="rating-stars">
+                        {% for i in range(1, 6) %}
+                          {% if i <= usefulness_val %}
+                            <span class="star filled">★</span>
+                          {% else %}
+                            <span class="star">☆</span>
+                          {% endif %}
+                        {% endfor %}
+                      </span>
+                    {% else %}
+                      <span class="sub">Not rated yet</span>
+                    {% endif %}
+                  </span>
+                </div>
+                
+                <!-- Average Rating -->
+                {% if accuracy_val > 0 or experience_val > 0 or usefulness_val > 0 %}
+                <div class="rating-item" style="margin-top:6px; padding-top:6px; border-top:1px solid var(--border)">
+                  <span class="rating-label">📈 Average:</span>
+                  <span class="rating-value">
+                    <strong style="color:var(--gold)">{{ avg_rating }}/5</strong>
+                  </span>
+                </div>
+                {% endif %}
+              </div>
+            </td>
+            <td class="comment-cell">
+              {% if item.comments %}
+                <div style="background:rgba(255,255,255,.03); padding:8px 10px; border-radius:10px;">
+                  <span style="color:var(--dim)">💬</span> {{ item.comments }}
+                </div>
+              {% else %}
+                <span class="sub">— No comments provided —</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% else %}
+          <tr>
+            <td colspan="6" class="empty">
+              ✨ No feedback submitted yet.<br>
+              <span class="sub" style="margin-top:8px">Feedback will appear here when users test Kundali and Prediction features.</span>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<script>
+// Filter functionality
+var filterBtns = document.querySelectorAll('.filter-btn');
+var rows = document.querySelectorAll('.feedback-row');
+
+function updateFilter() {
+  var activeFilter = document.querySelector('.filter-btn.active');
+  if (!activeFilter) return;
+  
+  var filterValue = activeFilter.getAttribute('data-filter');
+  
+  for (var i = 0; i < rows.length; i++) {
+    var row = rows[i];
+    if (!row.classList || !row.classList.contains('feedback-row')) continue;
+    
+    var module = row.getAttribute('data-module') || '';
+    var rating = parseFloat(row.getAttribute('data-rating') || '0');
+    var show = false;
+    
+    if (filterValue === 'all') {
+      show = true;
+    } else if (filterValue === 'kundali') {
+      show = module === 'kundali';
+    } else if (filterValue === 'prediction') {
+      show = module === 'prediction';
+    } else if (filterValue === 'high-rated') {
+      show = rating >= 4;
+    } else {
+      show = true;
+    }
+    
+    row.style.display = show ? '' : 'none';
+  }
+}
+
+for (var i = 0; i < filterBtns.length; i++) {
+  filterBtns[i].addEventListener('click', function() {
+    for (var j = 0; j < filterBtns.length; j++) {
+      filterBtns[j].classList.remove('active');
+    }
+    this.classList.add('active');
+    updateFilter();
+  });
+}
+
+// Uncomment to show debug info (temporary)
+// var debugRows = document.querySelectorAll('.debug-row');
+// for (var i = 0; i < debugRows.length; i++) {
+//   debugRows[i].style.display = 'table-row';
+//   var debugDiv = debugRows[i].querySelector('.debug-info');
+//   if (debugDiv) debugDiv.style.display = 'block';
+// }
+</script>
 </body>
 </html>
