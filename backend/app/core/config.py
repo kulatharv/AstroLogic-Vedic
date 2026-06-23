@@ -9,8 +9,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 ROOT_DIR = Path(__file__).resolve().parents[3]
-DEFAULT_DATABASE_URL = "postgresql+psycopg2://postgres:postgres@localhost:5432/astrologicai"
-
+#DEFAULT_DATABASE_URL = "postgresql+psycopg2://postgres:postgres@localhost:5432/astrologicai"
+DEFAULT_DATABASE_URL = "sqlite:///./astrologic.db"
 
 def _csv_env(name: str, default: str = "") -> list[str]:
     value = os.getenv(name, default)

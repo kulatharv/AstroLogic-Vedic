@@ -10,8 +10,11 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import joinedload
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.middleware.sessions import SessionMiddleware
-
 from app.api.api import router as api_router
+
+from app.database import SessionLocal
+
+
 from app.api.blogs import router as admin_blog_router
 from app.core.config import settings
 from app.core.constants import PUBLIC_PATH_PREFIXES
@@ -22,10 +25,18 @@ from app.services.translation_service import load_translations
 from app.database import engine
 from app.models.user_model import Base
 
-Base.metadata.create_all(bind=engine)
+#Base.metadata.create_all(bind=engine)
 BASE_DIR = Path(__file__).resolve().parent
 
 app = FastAPI(title=settings.app_name)
+
+@app.on_event("startup")
+async def startup():
+    try:
+        Base.metadata.create_all(bind=engine)
+        print("Database connected successfully.")
+    except Exception as e:
+        print(f"Database connection failed: {e}")
 
 app.mount(
     "/static",
