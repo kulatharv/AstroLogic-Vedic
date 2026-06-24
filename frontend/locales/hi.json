@@ -1,0 +1,14 @@
+{
+  "navbar.home": "होम",
+  "navbar.kundali": "कुंडली",
+  "navbar.panchang": "पंचांग",
+  "navbar.blogs": "ब्लॉग",
+  "navbar.login": "लॉगिन",
+
+  "home.title": "AstroLogic में आपका स्वागत है",
+  "home.subtitle": "AI आधारित वैदिक ज्योतिष",
+
+  "common.submit": "जमा करें",
+  "common.generate": "बनाएं",
+  "common.save": "सहेजें"
+}

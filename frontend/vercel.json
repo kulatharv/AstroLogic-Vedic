@@ -1,0 +1,14 @@
+{
+  "routes": [
+    { "src": "^/$", "dest": "/index.html" },
+    { "src": "^/kundali$", "dest": "/kundali.html" },
+    { "src": "^/prediction$", "dest": "/prediction.html" },
+    { "src": "^/panchang$", "dest": "/panchang.html" },
+    { "src": "^/horoscope$", "dest": "/daily-horoscope.html" },
+    { "src": "^/blogs$", "dest": "/blogs.html" },
+    { "src": "^/blog-detail$", "dest": "/blog-detail.html" },
+    { "src": "^/about$", "dest": "/about.html" },
+    { "src": "^/admin-login$", "dest": "/admin-login.html" },
+    { "src": "^/admin-blog$", "dest": "/admin-blog.html" }
+  ]
+}

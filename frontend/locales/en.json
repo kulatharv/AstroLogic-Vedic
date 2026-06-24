@@ -1,0 +1,14 @@
+{
+  "navbar.home": "Home",
+  "navbar.kundali": "Kundali",
+  "navbar.panchang": "Panchang",
+  "navbar.blogs": "Blogs",
+  "navbar.login": "Login",
+
+  "home.title": "Welcome to AstroLogic",
+  "home.subtitle": "AI Powered Vedic Astrology",
+
+  "common.submit": "Submit",
+  "common.generate": "Generate",
+  "common.save": "Save"
+}
